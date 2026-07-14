@@ -787,34 +787,47 @@ body.is-locked { overflow: hidden; }
 .hero-slider__content {
   position: relative; z-index: 2;
   max-width: 720px;
-  padding: 32px 24px;
-  display: flex; flex-direction: column; gap: 16px;
+  /* Mobile: tighter 20px / 16px padding so the card doesn't
+     dominate the viewport vertically. The bigger breakpoints
+     restore the breathing room. */
+  padding: 20px 16px 72px;          /* extra bottom padding reserves space for the nav/dots */
+  display: flex; flex-direction: column; gap: 12px;
 }
-@media (min-width: 768px) { .hero-slider__content { padding: 48px 40px; } }
+@media (min-width: 768px) { .hero-slider__content { padding: 48px 40px; gap: 16px; } }
 @media (min-width: 1025px) { .hero-slider__content { padding: 56px 48px; } }
 .hero-slider__title {
   font-family: var(--font-headline);
-  font-size: clamp(24px, 4vw, 44px);
+  /* Fluid type: 1.5rem (24px) at the smallest, scaling to
+     2.2rem (35.2px) at desktop. Prevents awkward wraps on
+     long headlines on small screens. */
+  font-size: clamp(1.5rem, 5vw, 2.2rem);
   font-weight: 700;
-  line-height: 1.1;
+  line-height: 1.15;
   letter-spacing: -0.02em;
   color: var(--ice);
 }
 .hero-slider__excerpt {
   color: var(--slate-2);
-  font-size: clamp(15px, 1.6vw, 18px);
+  font-size: clamp(14px, 1.6vw, 18px);
   line-height: 1.5;
   max-width: 600px;
+  /* Hide the excerpt on the smallest phones — the title
+     and CTA are enough to convey the story. The excerpt
+     reappears from 768px up. */
+  display: none;
 }
-.hero-slider__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+@media (min-width: 768px) { .hero-slider__excerpt { display: block; } }
+.hero-slider__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+@media (min-width: 768px) { .hero-slider__actions { gap: 12px; margin-top: 8px; } }
 
 .hero-slider__nav {
-  position: absolute; bottom: 24px; right: 24px;
+  position: absolute; bottom: 16px; right: 12px;
   display: flex; gap: 8px;
   z-index: 3;
 }
+@media (min-width: 768px) { .hero-slider__nav { bottom: 24px; right: 24px; } }
 .hero-slider__nav button {
-  width: 44px; height: 44px;
+  width: 40px; height: 40px;
   display: inline-flex; align-items: center; justify-content: center;
   background: rgba(7,11,21,0.5);
   border: 1px solid var(--border);
@@ -824,24 +837,28 @@ body.is-locked { overflow: hidden; }
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
 }
+@media (min-width: 768px) { .hero-slider__nav button { width: 44px; height: 44px; } }
 .hero-slider__nav button:hover { background: var(--surface-2); color: var(--cyan); border-color: var(--cyan); }
 .hero-slider__nav button svg { width: 18px; height: 18px; }
 
 .hero-slider__dots {
-  position: absolute; bottom: 32px; left: 24px;
+  position: absolute; bottom: 24px; left: 12px;
   display: flex; gap: 6px; z-index: 3;
 }
+@media (min-width: 768px) { .hero-slider__dots { bottom: 32px; left: 24px; } }
 .hero-slider__dots button {
-  width: 28px; height: 4px;
+  width: 24px; height: 4px;
   background: rgba(255,255,255,0.25);
   border-radius: 2px;
   transition: all 0.3s ease;
 }
+@media (min-width: 768px) { .hero-slider__dots button { width: 28px; } }
 .hero-slider__dots button.is-active {
   background: var(--cyan);
   box-shadow: 0 0 8px var(--cyan);
-  width: 40px;                    /* the active dot grows to feel "selected" */
+  width: 36px;                    /* the active dot grows to feel "selected" */
 }
+@media (min-width: 768px) { .hero-slider__dots button.is-active { width: 40px; } }
 
 /* ---------- 12. Just-In ticker ----------
    A continuously scrolling marquee. The `.ticker__track`
@@ -855,6 +872,12 @@ body.is-locked { overflow: hidden; }
   border-bottom: 1px solid var(--border);
   overflow: hidden;
   margin: 0 calc(-1 * var(--margin-mobile));    /* bleed to viewport edge */
+}
+/* On mobile, give the ticker some breathing room above
+   and below the hero card / featured grid. The desktop
+   layout sits flush to the content edges on purpose. */
+@media (max-width: 767px) {
+  .just-in { margin-top: 24px; margin-bottom: 24px; border-radius: 0; }
 }
 @media (min-width: 1025px) {
   .just-in { margin: 0 calc(-1 * var(--margin-desktop)); }
@@ -1020,8 +1043,17 @@ body.is-locked { overflow: hidden; }
   border-bottom: 1px solid var(--border);
 }
 .trending h3 svg { width: 22px; height: 22px; color: var(--cyan); }
-.trending__list { display: flex; flex-direction: column; gap: 24px; }
-.trending__item { display: flex; gap: 16px; cursor: pointer; }
+.trending__list { display: flex; flex-direction: column; gap: 20px; }
+.trending__item { display: flex; gap: 16px; cursor: pointer; align-items: flex-start; }
+/* On phone, give the headline more room to breathe — the
+   numeric prefix (01, 02, ...) gets a bit more horizontal
+   space, and the headline drops a pixel in size so longer
+   titles don't wrap to 3-4 lines. */
+@media (max-width: 767px) {
+  .trending__item { gap: 20px; }
+  .trending__num { font-size: 20px; min-width: 26px; }
+  .trending__item h4 { font-size: 14px; line-height: 1.35; }
+}
 .trending__num {
   font-family: var(--font-headline);
   font-size: 24px; font-weight: 700;
@@ -2510,3 +2542,70 @@ body.is-locked { overflow: hidden; }
   margin-top: 4px;
 }
 .field__error { display: none; }
+
+/* ----------------------------------------------------
+   36. Global mobile layout rules  (max-width: 768px)
+   ----------------------------------------------------
+   One single block of cross-cutting mobile overrides
+   that pulls together the most common responsive
+   adjustments in one place. Anything in this block
+   applies to every page; component-specific mobile
+   styling stays close to the component definition
+   above.
+
+   The `.container` rule is technically redundant with
+   the `min-width: 1025px` rule on line 221 (the mobile
+   padding is already 16px by default) but is left in
+   for explicitness — the value here is the single
+   source of truth, and the min-width rule at 1025px
+   overrides for desktop.
+
+   The `.grid-layout` selector is a no-op until/unless
+   someone adds a `.grid-layout` class to a page. The
+   pattern is here so future authors can reach for it
+   without re-discovering the rule.
+   ---------------------------------------------------- */
+@media (max-width: 768px) {
+  /* Global container spacing */
+  .container {
+    padding-left:  16px;
+    padding-right: 16px;
+  }
+
+  /* Flexbox & Grid column stacks — opt-in class for
+     ad-hoc layouts that should collapse to a single
+     column on phones. Component grids (featured-grid,
+     story-grid, terminal-grid) keep their own
+     responsive logic. */
+  .grid-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Image safety net: every <img> in the article body
+     scales fluidly and respects its 16:9 container.
+     Component-level rules (story-card .story-image,
+     story-card--featured, etc.) still take precedence. */
+  .article-content img,
+  .story-card .story-image img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+}
+
+/* ----------------------------------------------------
+   37. Mobile newsletter redundancy
+   ----------------------------------------------------
+   The featured-grid sidebar contains a small newsletter
+   card. On phone viewports we hide it — the full-width
+   newsletter at the bottom of the page (and the
+   header modal) is enough. The `.newsletter--inline`
+   class is the marker; the standalone `.newsletter`
+   blocks in category.html / about.html / tools.html
+   are NOT modified by this rule, so they stay visible
+   everywhere they appear.
+   ---------------------------------------------------- */
+@media (max-width: 768px) {
+  .newsletter--inline { display: none; }
+}
