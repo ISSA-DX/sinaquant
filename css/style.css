@@ -155,8 +155,12 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
-  overflow-x: clip;                   /* clip is stronger than hidden — no scroll container, no bounce, no scrollbar */
-  overscroll-behavior-x: none;        /* kill the horizontal rubber-band on iOS / Android when the user swipes past the edge */
+  /* NOTE: horizontal-scroll lock is applied in section 41,
+     scoped to @media (max-width: 768px) so the desktop
+     view is not affected. The desktop layout legitimately
+     uses some horizontal arrangements (megamenu, compare
+     table, etc.) that must keep working. */
+  overscroll-behavior-x: none;        /* kills the horizontal rubber-band bounce on every viewport */
 }
 body {
   margin: 0;
@@ -167,9 +171,7 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: clip;                   /* stops hero gradients / ticker / negative-positioned blobs from creating horizontal scroll */
-  overscroll-behavior-x: none;        /* reinforces the html lock — no left/right bounce when swiping at the page edges */
-  max-width: 100vw;                   /* hard cap: the body can never be wider than the viewport */
+  overscroll-behavior-x: none;
   position: relative;
   transition: background-color 0.25s ease, color 0.25s ease;
 }
@@ -2913,4 +2915,85 @@ body.is-locked { overflow: hidden; }
   font-size: 15px;
   border: 1px dashed var(--border);
   border-radius: var(--card-radius);
+}
+
+/* ----------------------------------------------------
+   41. Mobile-only horizontal-scroll lock
+   ----------------------------------------------------
+   Scoped to @media (max-width: 768px) per the user's
+   request. Desktop view is not affected, so the
+   megamenu, compare table, and other intentional
+   horizontal arrangements keep their full layout.
+
+   The three rules:
+     1. Lock html + body so the page itself can never be
+        wider than the viewport, and any child that tries
+        to spill past the edge is clipped (no scrollbar,
+        no rubber-band).
+     2. Lock common containers explicitly, in case they
+        were positioned with negative offsets or absolute
+        children that escape their parent. The selectors
+        include both the user's named classes
+        (.nav-menu / .category-bar / .main-wrapper) and
+        the actual classes used in this codebase
+        (.site-header, .category-tabs, .featured-grid,
+        .terminal-grid, .story-grid) so the rule works
+        whether the future author reaches for the user's
+        naming or the existing naming.
+     3. Allow link labels inside the nav to wrap onto
+        multiple lines rather than forcing them onto one
+        line that could overflow the viewport.
+   ---------------------------------------------------- */
+@media (max-width: 768px) {
+  /* 1. Prevent all left-to-right / right-to-left layout shifting and swiping */
+  html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* 2. Lock any horizontally overflowing containers.
+        The user's named classes are first, then the
+        actual classes used in this codebase. */
+  .nav-menu,
+  .category-bar,
+  .main-wrapper,
+  .site-header,
+  .featured-grid,
+  .featured-grid__main,
+  .terminal-grid,
+  .story-grid,
+  .container,
+  main {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  /* 3. Ensure content wraps cleanly to fit the viewport
+        width instead of overflowing. */
+  .category-link,
+  .nav-item,
+  .primary-nav a,
+  .category-tabs a,
+  .drawer-nav a,
+  .drawer-categories a {
+    white-space: normal;
+  }
+
+  /* 4. EXCEPTIONS — these are intentional horizontal-scroll
+        containers that must keep working on mobile. The
+        category tabs (sticky under header), the sub-filter
+        chip row (category page), code blocks (story body),
+        and the pricing compare table all rely on
+        overflow-x: auto. We restore that here so the user
+        can still scroll through long chip rows. */
+  .category-tabs,
+  .category-tabs .container,
+  .sub-filter,
+  .article-content pre,
+  .compare-table-wrapper,
+  .article-content pre code,
+  .just-in__inner {
+    max-width: 100% !important;
+    overflow-x: auto !important;
+  }
 }

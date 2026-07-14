@@ -1348,7 +1348,7 @@ window.__sinaquant_rebind = sinaquantInit;
 // badge. If the footer shows "v…" instead of a real
 // version string, the page is on cached HTML/JS and
 // needs a hard refresh.
-window.__sinaquant_version = 'v4-2026-07-14-category-filter-features';
+window.__sinaquant_version = 'v5-2026-07-14-mobile-only-scroll-lock';
 console.log('%c Sinaquant ', 'background:#45EDF6;color:#070B15;font-weight:700;padding:2px 8px;border-radius:4px', window.__sinaquant_version);
 
 function paintBuildVersion() {
