@@ -1307,7 +1307,7 @@ body.is-locked { overflow: hidden; }
   grid-template-columns: 1fr;
   gap: 24px;
 }
-@media (min-width: 481px) { .story-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 600px) { .story-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 1025px) { .story-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (min-width: 1280px) { .story-grid { grid-template-columns: repeat(4, 1fr); } }
 
@@ -2402,7 +2402,7 @@ body.is-locked { overflow: hidden; }
 .megamenu-grid { display: grid; grid-template-columns: 1fr; gap: 48px; }
 @media (min-width: 1025px) { .megamenu-grid { grid-template-columns: 2fr 1fr; } }
 .megamenu-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
-@media (max-width: 640px) { .megamenu-cols { grid-template-columns: 1fr; gap: 24px; } }
+@media (max-width: 768px) { .megamenu-cols { grid-template-columns: 1fr; gap: 24px; } }
 .megamenu-section h3 {
   display: flex; align-items: center; gap: 10px;
   color: var(--cyan); font-size: 20px; margin: 0 0 16px;
@@ -2609,3 +2609,203 @@ body.is-locked { overflow: hidden; }
 @media (max-width: 768px) {
   .newsletter--inline { display: none; }
 }
+
+/* ----------------------------------------------------
+   38. Per-page mobile polish (audit batch)
+   ----------------------------------------------------
+   The audit agents identified ~30 concrete mobile bugs
+   across the 13 pages other than index.html. They are
+   fixed in this single section so future authors can
+   audit one block instead of searching the file.
+
+   Order:
+     a. Contact + checkout + 404 (form & utility pages)
+     b. About + tools + navigation (marketing pages)
+     c. Pricing + dashboard (terminal pages)
+     d. Search + category (result / feed pages)
+     e. News + story (magazine pages)
+     f. Author (profile pages)
+   ---------------------------------------------------- */
+
+/* ---- (a) contact / checkout / 404 -------------------- */
+
+@media (max-width: 640px) {
+  .contact-form { padding: 20px; }
+  .contact-card { padding: 16px; min-width: 0; }
+  .step { padding: 20px; }
+  .order-summary { padding: 20px; }
+  .order-summary__rep { flex-wrap: wrap; }
+  .order-summary__rep-chat { margin-left: 0; width: 100%; text-align: right; padding-top: 4px; }
+}
+
+.contact-card .mono { word-break: break-word; }
+
+/* Inline deploy-grid (checkout.html) — replace inline 1fr 1fr
+   with a class so we can collapse on mobile. */
+.deploy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 640px) { .deploy-grid { grid-template-columns: 1fr; } }
+
+.step__actions { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+.step__actions .btn { flex: 1 1 auto; min-width: 0; }
+@media (max-width: 480px) {
+  .step__actions { flex-direction: column; align-items: stretch; }
+  .step__actions .btn { width: 100%; }
+}
+
+.step__terms { display: flex; align-items: flex-start; gap: 8px; margin: 16px 0; padding-top: 16px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-2); min-width: 0; }
+.step__terms label { word-break: break-word; min-width: 0; }
+
+.pay-option { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+@media (max-width: 480px) {
+  .pay-option__head { flex: 1 1 auto; min-width: 0; }
+  .pay-option__head > div { min-width: 0; }
+  .pay-option__sub { font-size: 11px; }
+}
+
+/* 404 actions */
+.not-found__actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.not-found__actions .btn { min-width: 0; flex: 1 1 auto; justify-content: center; }
+.not-found__actions .btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+@media (max-width: 380px) {
+  .not-found__actions { flex-direction: column; align-items: stretch; }
+}
+
+/* ---- (b) about / tools / navigation ----------------- */
+
+@media (max-width: 480px) {
+  .about-stats { grid-template-columns: 1fr; padding: 24px 16px; }
+}
+
+/* tool card badge: convert from absolute to inline on
+   mobile so it stops colliding with the title. */
+@media (max-width: 768px) {
+  .tool-card__head { flex-wrap: wrap; }
+  .tool-card__badge { position: static; align-self: flex-start; }
+}
+
+/* ---- (c) pricing + dashboard ------------------------ */
+
+@media (max-width: 768px) {
+  .tier { padding: 24px 20px; }
+  .tier__amount { font-size: 36px; }
+  .tier--highlighted { transform: none; }
+  .compare-table th, .compare-table td { padding: 12px 8px; font-size: 12px; }
+}
+
+/* dashboard welcome-strip 3-col grid breaks 1fr when
+   min-width: 140px on each cell exceeds the viewport. */
+@media (max-width: 1024px) { .welcome-stat { min-width: 0; } }
+@media (max-width: 480px) {
+  .welcome-strip__stats { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .feed-panel__head { flex-wrap: wrap; gap: 8px; }
+  .feed-panel__head-meta { width: 100%; justify-content: flex-end; }
+  .feed-panel__head-meta > span { display: none; }
+  .signal__tags { flex-wrap: wrap; }
+  .signal__id { width: 100%; }
+}
+
+/* Show the feed panel before the sidebar on phone so the
+   signal feed (the actual content) is above the fold. */
+@media (max-width: 1024px) {
+  .feed-panel { order: -1; }
+}
+
+/* ---- (d) search + category -------------------------- */
+
+@media (max-width: 480px) {
+  .research-bento { padding: 20px 16px; margin: 24px 0; }
+  .paper-row { padding: 12px; gap: 10px; }
+  .research-bento__head { flex-direction: column; gap: 12px; align-items: flex-start; }
+  .result-tool__head { flex-direction: column; align-items: flex-start; }
+  .result-tool__head .result-tool__actions { width: 100%; justify-content: space-between; min-width: 0; }
+  .sub-filter { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .sub-filter::-webkit-scrollbar { display: none; }
+  .cat-header { padding: 24px 18px; }
+  .pagination button { width: 36px; height: 36px; font-size: 13px; }
+}
+
+@media (max-width: 480px) {
+  .newsletter { padding: 28px 18px; }
+  .newsletter form { flex-direction: column; }
+}
+
+/* ---- (e) news + story ------------------------------- */
+
+/* The featured card uses inline grid-column: span 2. On
+   mobile we want the card to occupy the full row at 1col,
+   not the awkward half-row 2-col layout it would create
+   at 600-768px. */
+@media (max-width: 768px) {
+  .story-card--featured { grid-column: auto !important; }
+  .story-card--featured .story-body { padding: 18px; }
+}
+
+/* The first story-card after .story-grid is the featured
+   one in news.html and the inline style still says
+   "grid-column: span 2". Override that on mobile. */
+@media (max-width: 768px) {
+  .story-grid > [style*="grid-column"] { grid-column: auto !important; }
+}
+
+/* story.html — share rail under the article. */
+@media (max-width: 1024px) {
+  .article-share-rail { width: 100%; order: 2; justify-content: center; padding: 16px 0; }
+  .article-share-rail .share-label { margin-right: 12px; }
+}
+
+@media (max-width: 768px) {
+  .article-author-box { padding: 18px; gap: 14px; }
+  .article-author-box .author-photo { width: 60px; height: 60px; }
+}
+
+@media (max-width: 480px) {
+  .section-header a { font-size: 11px; }
+}
+
+/* ---- (f) author ------------------------------------- */
+
+@media (max-width: 1024px) {
+  .author-feed-layout { grid-template-columns: 1fr !important; gap: 32px !important; }
+}
+
+@media (max-width: 480px) {
+  .author-stats { grid-template-columns: 1fr; gap: 16px; }
+}
+
+.subscribe-cta form { display: flex; flex-direction: column; gap: 12px; }
+.research-area__name, .mention-card__quote { overflow-wrap: anywhere; }
+
+/* Reading progress bar — defensive full-width. */
+.reading-progress { left: 0; right: 0; }
+
+/* ----------------------------------------------------
+   39. Mobile icon navigation bar
+   ----------------------------------------------------
+   A row of 4 icon-only quick links (Home / News / Tools /
+   Pricing) plus a "More" button that opens the existing
+   mobile drawer. Hidden on desktop (>=768px). The row
+   appears at the bottom of the header bar, replacing the
+   single hamburger button. Reduces the number of taps
+   to reach the most-used pages.
+
+   .menu-toggle class is preserved on the "More" button
+   for backwards compatibility with the existing JS that
+   toggles the drawer. main.js queries by id, not class.
+   ---------------------------------------------------- */
+.mobile-icon-nav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: auto;
+}
+@media (min-width: 768px) {
+  .mobile-icon-nav { display: none; }
+}
+.mobile-icon-nav .icon-btn {
+  display: inline-flex;   /* override .header-actions .icon-btn { display: none } */
+  padding: 8px;
+}
+.mobile-icon-nav .icon-btn svg { width: 20px; height: 20px; }
