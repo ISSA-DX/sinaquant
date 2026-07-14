@@ -1140,6 +1140,29 @@ function sinaquantInit() { 'use strict';
 // Expose for include loader (see includes.js).
 window.__sinaquant_rebind = sinaquantInit;
 
+// Build stamp — visible in the page footer so you can
+// confirm the latest JS/CSS is loaded without opening
+// DevTools. Also printed to the console with a colored
+// badge. If the footer shows "v…" instead of a real
+// version string, the page is on cached HTML/JS and
+// needs a hard refresh.
+window.__sinaquant_version = 'v3-2026-07-14-horizontal-scroll-lock';
+console.log('%c Sinaquant ', 'background:#45EDF6;color:#070B15;font-weight:700;padding:2px 8px;border-radius:4px', window.__sinaquant_version);
+
+function paintBuildVersion() {
+  const el = document.getElementById('buildVersion');
+  if (el) el.textContent = window.__sinaquant_version;
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', paintBuildVersion);
+} else {
+  paintBuildVersion();
+}
+// Re-paint after include load (footer is injected async)
+if (window.__sinaquant_rebind) {
+  setTimeout(paintBuildVersion, 500);
+}
+
 // Auto-run when DOM is ready (only if header is already in DOM, i.e. not loaded via include)
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
