@@ -1,0 +1,8 @@
+title: Sinaquant
+description: Sinaquant Intelligence — AI news, research, and tools.
+url: ""
+baseurl: ""
+exclude:
+  - SECURITY.md
+  - .gitignore
+  - README.md

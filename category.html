@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<!-- =========================================================
+     Sinaquant — CATEGORY FEED (/category)
+     ------------------------------------------------------------
+     Dedicated landing page for a single topic (here:
+     "Agentic AI"). In WP this is taxonomy.php or a
+     custom-taxonomy template — the slug in the URL would
+     match the term (e.g. /category/agentic-ai). For the
+     static build we hard-code the Agentic AI feed and let
+     the URL query (?cat=…) drive the same content shape
+     for other terms via news.html.
+
+     Sections:
+       1. Category header (icon + title + count)
+       2. Sub-filter chips (All / Long-form / Analysis / Briefs)
+       3. 3-column story grid (9 stories, load-more button)
+     ========================================================= -->
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agentic AI — Sinaquant Intelligence</title>
+  <meta name="description" content="The full Sinaquant archive for Agentic AI: autonomous agents, multi-agent systems, tool use, and the agentic economy.">
+  
+  <!-- Security headers (static-build equivalent of HTTP headers) -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https://images.unsplash.com https://*.unsplash.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+  <meta name="theme-color" content="#070B15">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Agentic AI — Sinaquant Intelligence">
+  <meta property="og:description" content="The full Sinaquant archive for Agentic AI: autonomous agents, multi-agent systems, and the agentic economy.">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" type="image/svg+xml" href="assets/includes/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" crossorigin="anonymous" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div data-include="header"></div>
+
+<main id="main">
+
+  <header class="archive-header container">
+    <span class="t-meta">Topic / Agentic AI</span>
+    <h1 class="t-h1">The agentic feed.</h1>
+    <p>Long-form analysis, briefings, and field reports on autonomous agents, multi-agent orchestration, and the platforms they run on.</p>
+  </header>
+
+  <section class="container">
+    <div class="cat-header">
+      <div style="display:flex;gap:24px;align-items:center">
+        <span class="cat-header__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a3 3 0 1 0 6 0 3 3 0 1 0-6 0"/><path d="M12 1v6m0 6v6m11-7h-6m-6 0H1m17-4-4.2 4.2m-5.6 5.6L4.6 19.4m12.8 0-4.2-4.2m-5.6-5.6L4.6 4.6"/></svg>
+        </span>
+        <div>
+          <h2 class="cat-header__title">Agentic AI</h2>
+          <p class="cat-header__count">38 reports · last updated 2h ago</p>
+        </div>
+      </div>
+      <a class="btn btn-ghost" href="news.html">
+        All Topics
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+    <div class="sub-filter" role="tablist" aria-label="Filter by content type" data-target=".story-grid" data-empty=".sub-filter-empty">
+      <button class="is-active" type="button" data-filter="all">All</button>
+      <button type="button" data-filter="long-form">Long-Form</button>
+      <button type="button" data-filter="analysis">Analysis</button>
+      <button type="button" data-filter="briefs">Briefs</button>
+      <button type="button" data-filter="tools">Tools</button>
+    </div>
+
+    <div class="story-grid">
+
+      <article class="story-card" data-type="long-form">
+        <div class="story-image">
+          <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80" alt="Agent infrastructure" loading="lazy" width="800" height="600">
+        </div>
+        <div class="story-body">
+          <span class="tag tag--cyan">Agentic AI</span>
+          <h3 class="story-title"><a href="story.html">The Sovereignty of Systems: Architecture of the Agentic Future</a></h3>
+          <p class="story-excerpt">A Sinaquant special report on the rise of autonomous digital entities and the platforms they will run on.</p>
+          <div class="story-footer"><span>2 days ago</span><span>8 min</span></div>
+        </div>
+      </article>
+
+      <article class="story-card" data-type="long-form">
+        <div class="story-image">
+          <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80" alt="Agent networks" loading="lazy" width="800" height="600">
+        </div>
+        <div class="story-body">
+          <span class="tag">Agentic AI</span>
+          <h3 class="story-title"><a href="story.html">The Rise of Agentic Workflows: Beyond Prompt Engineering</a></h3>
+          <p class="story-excerpt">How LLM agent frameworks are shifting the focus from single prompts to complex, iterative loops.</p>
+          <div class="story-footer"><span>4 days ago</span><span>11 min</span></div>
+        </div>
+      </article>
+
+      <article class="story-card" data-type="analysis">
+        <div class="story-image">
+          <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80" alt="Compute hardware" loading="lazy" width="800" height="600">
+        </div>
+        <div class="story-body">
+          <span class="tag tag--sky">Research</span>
+          <h3 class="story-title"><a href="story.html">Efficiency Benchmarks for Edge AI</a></h3>
+          <p class="story-excerpt">The silicon innovations letting agents run locally on mobile devices — and what that means for the cloud bill.</p>
+          <div class="story-footer"><span>4h ago</span><span>7 min</span></div>
+        </div>
+      </article>
+
+      <article class="story-card" data-type="analysis">
+        <div class="story-image">
+          <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800&q=80" alt="Investor meeting" loading="lazy" width="800" height="600">
+        </div>
+        <div class="story-body">
+          <span class="tag">Funding</span>
+          <h3 class="story-title"><a href="story.html">Series B: The Next Infrastructure Kings</a></h3>
+          <p class="story-excerpt">Who is building the operating systems for the agent-centric workspace?</p>
+          <div class="story-footer"><span>5h ago</span><span>6 min</span></div>
+        </div>
+      </article>
+
+      <article class="story-card" data-type="long-form">
+        <div class="story-image">
+          <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80" alt="Data center" loading="lazy" width="800" height="600">
+        </div>
+        <div class="story-body">
+          <span class="tag tag--cyan">Agentic AI</span>
+          <h3 class="story-title"><a href="story.html">Multi-Agent Consensus Protocols: A 40% Reliability Lift</a></h3>
+          <p class="story-excerpt">Frameworks we've been benchmarking in the lab show a 40% increase in autonomous task completion rates when agents vote.</p>
+          <div class="story-footer"><span>1 day ago</span><span>9 min</span></div>
+        </div>
+      </article>
+
+      <article class="story-card" data-type="analysis">
+        <div class="story-image">
+          <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80" alt="Code editor" loading="lazy" width="800" height="600">
+        </div>
+        <div class="story-body">
+          <span class="tag">Agentic AI</span>
+          <h3 class="story-title"><a href="story.html">Benchmarking AutoGPT vs BabyAGI for Enterprise Use</a></h3>
+          <p class="story-excerpt">A technical comparison of leading agent frameworks based on reliability, cost-per-token, and looping-error rate.</p>
+          <div class="story-footer"><span>3 days ago</span><span>12 min</span></div>
+        </div>
+      </article>
+
+      <article class="story-card" data-type="briefs">
+        <div class="story-image">
+          <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80" alt="Briefing" loading="lazy" width="800" height="600">
+        </div>
+        <div class="story-body">
+          <span class="tag tag--cyan">Brief</span>
+          <h3 class="story-title"><a href="story.html">Anthropic's Computer-Use API ships to general availability</a></h3>
+          <p class="story-excerpt">The agentic API that's been in private beta for nine months is now stable — and 30% cheaper.</p>
+          <div class="story-footer"><span>8h ago</span><span>4 min</span></div>
+        </div>
+      </article>
+
+      <article class="story-card" data-type="analysis">
+        <div class="story-image">
+          <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800&q=80" alt="Audit" loading="lazy" width="800" height="600">
+        </div>
+        <div class="story-body">
+          <span class="tag">Policy</span>
+          <h3 class="story-title"><a href="story.html">Audit Trails for AI Agents: What the EU AI Office Now Requires</a></h3>
+          <p class="story-excerpt">The latest draft text demands per-step logging for any "high-capability" agent. What that means for builders.</p>
+          <div class="story-footer"><span>2 days ago</span><span>7 min</span></div>
+        </div>
+      </article>
+
+      <article class="story-card" data-type="tools">
+        <div class="story-image">
+          <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80" alt="Agent demo" loading="lazy" width="800" height="600">
+        </div>
+        <div class="story-body">
+          <span class="tag tag--sky">Tool</span>
+          <h3 class="story-title"><a href="tools.html">AutoGen Studio Review: Microsoft's Open-Source Multi-Agent Framework</a></h3>
+          <p class="story-excerpt">Drag-and-drop UI for designing agent conversations and tool use. We ran it through 14 production scenarios.</p>
+          <div class="story-footer"><span>1 week ago</span><span>14 min</span></div>
+        </div>
+      </article>
+
+    </div>
+
+    <p class="sub-filter-empty text-center" style="display:none;padding:48px 16px;color:var(--text-2)" hidden>
+      No reports match that filter. <button class="btn btn-ghost" style="padding:6px 12px;font-size:12px;margin-left:8px" onclick="this.closest('section').querySelector('.sub-filter button[data-filter=all]').click()">Show all</button>
+    </p>
+
+    <div style="text-align:center;margin-top:48px">
+      <button class="btn btn-ghost">Load More Reports</button>
+    </div>
+  </section>
+
+  <section class="container section" id="newsletter">
+    <div class="newsletter" style="padding:48px 32px;text-align:center">
+      <h3 style="font-size:26px;margin-bottom:8px">Subscribe to the Agentic AI brief.</h3>
+      <p style="max-width:520px;margin:0 auto 24px;color:var(--text-2)">A weekly long-form deep-dive on autonomous agents, sent Friday mornings. Free, no spam, unsubscribe in one click.</p>
+      <form aria-label="Agentic AI newsletter signup" style="flex-direction:row;max-width:480px;margin:0 auto;flex-wrap:wrap">
+        <input class="input" type="email" placeholder="you@startup.ai" required style="flex:1;min-width:200px">
+        <button class="btn btn-primary" type="submit">Subscribe</button>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<div data-include="footer"></div>
+
+<script src="js/includes.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

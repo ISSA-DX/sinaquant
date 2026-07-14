@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<!-- =========================================================
+     Sinaquant — SINGLE STORY (/story)
+     ------------------------------------------------------------
+     The single-article template. In WordPress this is
+     single.php. Renders:
+       1. Reading progress bar (fixed to top — main.js §6)
+       2. Article hero (breadcrumb + tag + h1 + author meta)
+       3. Cover image (16:9)
+       4. 3-column body: share rail | content | sticky TOC
+       5. Author bio box
+       6. Comments placeholder (WP native comments go here)
+       7. Related stories section (3 cards)
+     ========================================================= -->
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Sovereignty of Systems: Architecture of the Agentic Future | Sinaquant</title>
+  <meta name="description" content="Unlike their predecessor models, which were largely reactive, agentic systems possess the capacity for autonomous reasoning, long-term planning, and direct execution.">
+  
+  <!-- Security headers (static-build equivalent of HTTP headers) -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https://images.unsplash.com https://*.unsplash.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+  <meta name="theme-color" content="#070B15">
+
+  <!-- Open Graph + Twitter -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="The Sovereignty of Systems: Architecture of the Agentic Future">
+  <meta property="og:description" content="A Sinaquant special report on the rise of autonomous digital entities.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&q=80">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Sovereignty of Systems: Architecture of the Agentic Future">
+  <meta name="twitter:description" content="A Sinaquant special report on the rise of autonomous digital entities.">
+
+  <link rel="icon" type="image/svg+xml" href="assets/includes/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" crossorigin="anonymous" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Schema.org Article
+       Security: in WP-conversion, every string interpolated
+       into this JSON-LD block MUST be JSON-encoded and
+       stripped of </script> sequences. The minimal
+       WordPress helper is:
+         wp_json_encode( wp_kses_post( $post->post_title ) )
+       NEVER echo get_the_title() / the_excerpt() /
+       the_content() directly. A post title like
+       "</script><img onerror=alert(1) src=x>" would
+       otherwise break out of the script element. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    "headline": "The Sovereignty of Systems: Architecture of the Agentic Future",
+    "image": ["https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&q=80"],
+    "datePublished": "2026-07-12T10:00:00+00:00",
+    "dateModified": "2026-07-14T08:00:00+00:00",
+    "author": [{ "@type": "Person", "name": "Dr. Julian Vane" }],
+    "publisher": {
+      "@type": "Organization",
+      "name": "Sinaquant",
+      "logo": { "@type": "ImageObject", "url": "https://sinaquant.ai/assets/includes/sinaquant-logo.svg" }
+    },
+    "description": "Agentic systems possess the capacity for autonomous reasoning, long-term planning, and direct execution within digital environments."
+  }
+  </script>
+</head>
+<body>
+
+<div data-include="header"></div>
+
+<!-- Reading progress bar (fixed to top) -->
+<div class="reading-progress" aria-hidden="true">
+  <div class="reading-progress__bar"></div>
+</div>
+
+<main id="main">
+
+  <article class="container article-hero">
+    <!-- Breadcrumb trail. In WP, use a function like
+         yoast_breadcrumb() or a custom one. -->
+    <div class="breadcrumb">
+      <a href="index.html">Home</a> &nbsp;›&nbsp;
+      <a href="news.html?cat=agentic-ai">Agentic AI</a> &nbsp;›&nbsp;
+      Article
+    </div>
+    <!-- The category tag above the title. In WP this is
+         the post's primary category. -->
+    <span class="tag">Agentic AI</span>
+    <h1 style="margin-top:16px">The Sovereignty of Systems: Architecture of the Agentic Future</h1>
+    <div class="article-meta">
+      <div class="author-avatar">
+        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&q=80" alt="Dr. Julian Vane" loading="lazy" width="48" height="48">
+      </div>
+      <div>
+        <div class="author-name">Dr. Julian Vane</div>
+        <!-- data-readtime is the hook that main.js section 8
+             uses to replace the placeholder text with the
+             computed "N min read" value. -->
+        <div class="author-meta">Lead Strategist · <span data-readtime>8 minute read</span> · Updated Jul 14, 2026</div>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:8px;align-items:center;color:var(--text-muted);font-size:12px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span data-readtime>8 min read</span>
+      </div>
+    </div>
+  </article>
+
+  <!-- Cover image. 16:9 ratio keeps the hero consistent
+       with the story-card--featured component. -->
+  <div class="container">
+    <figure class="article-cover">
+      <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=1600&q=80" alt="Futuristic data center with glowing fiber optic lines" loading="lazy" width="1600" height="900">
+    </figure>
+  </div>
+
+  <div class="container article-body">
+
+    <!-- Left share rail (desktop) / top share row (mobile) -->
+    <aside class="article-share-rail" aria-label="Share this article">
+      <span class="share-label">Share</span>
+      <button data-share="x" aria-label="Share on X">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2H21.5l-7.5 8.57L22.94 22H16.06l-5.39-6.86L4.6 22H1.34l8.04-9.2L1.06 2H8.1l4.86 6.27L18.24 2z"/></svg>
+      </button>
+      <button data-share="linkedin" aria-label="Share on LinkedIn">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.75h4v11.25H3V9.75zM10 9.75h3.84v1.54h.05c.53-1 1.84-2.06 3.79-2.06 4.05 0 4.8 2.66 4.8 6.12V21h-4v-5.04c0-1.2-.02-2.74-1.67-2.74-1.67 0-1.93 1.3-1.93 2.65V21H10V9.75z"/></svg>
+      </button>
+      <button data-share="facebook" aria-label="Share on Facebook">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12.07C22 6.51 17.52 2 12 2S2 6.51 2 12.07c0 5 3.66 9.13 8.44 9.93v-7.02H7.9v-2.91h2.54V9.85c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.91h-2.33V22c4.78-.8 8.44-4.93 8.44-9.93z"/></svg>
+      </button>
+      <button data-share="whatsapp" aria-label="Share on WhatsApp">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.2-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.6-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.3-.6-.4zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.3c1.4.8 3 1.2 4.7 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
+      </button>
+      <button data-share="copy" data-label="Copy link" aria-label="Copy link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+      </button>
+    </aside>
+
+    <!-- Article content -->
+    <div class="article-content">
+      <p>For the past two years, the global conversation around artificial intelligence has been dominated by the interface — the chat window. We have marvelled at the ability of large language models to simulate human conversation, summarise vast datasets, and generate creative outputs. However, we are now entering a new epoch: the era of <strong>Agentic AI</strong>.</p>
+
+      <p>Unlike their predecessor models, which were largely reactive, agentic systems possess the capacity for autonomous reasoning, long-term planning, and direct execution within digital environments. They don't just tell you how to solve a problem; they orchestrate the solution across multiple APIs, databases, and software stacks.</p>
+
+      <blockquote>
+        "The fundamental unit of value is shifting from information retrieval to task completion. We aren't building smarter librarians; we are building tireless executives."
+      </blockquote>
+
+      <h2>The Shift from Chat to Action</h2>
+      <p>The technical challenge of the next decade lies not in increasing parameter counts, but in refining the "cognitive loop" of these agents. This involves recursive error correction and the implementation of robust safety rails that prevent agents from deviating into unpredictable feedback loops.</p>
+
+      <p>At Sinaquant, we track the development of these systems through three primary lenses: <em>computational efficiency</em>, <em>alignment fidelity</em>, and <em>cross-platform interoperability</em>. The startups leading the charge are those focusing on the "glue" — the middleware that allows an AI agent to securely navigate a legacy enterprise environment.</p>
+
+      <h2>Systemic Autonomy and Safety</h2>
+      <p>Frameworks like the Agentic Framework v4.0 we've been benchmarking in the lab show a 40% increase in autonomous task completion rates when employing multi-agent consensus protocols. The risk profile changes dramatically when an agent can spend compute, not just text. New auditability standards will follow.</p>
+
+      <h3>Market Implications</h3>
+      <p>Expect three categories of incumbents to feel the most pressure in the next 18 months: BPO outsourcers, mid-market consultancies, and the legacy SaaS suites that charge per seat. The pricing model of software is being rewritten around outcomes, not licences.</p>
+
+      <p>We'll continue to publish the underlying methodology and the per-task benchmarks in the Sinaquant Data Terminal — open to subscribers. The next quarterly report lands in October.</p>
+
+      <div class="article-tags">
+        <span class="tag tag--cyan">Agentic AI</span>
+        <span class="tag tag--sky">LLMs</span>
+        <span class="tag">Reasoning</span>
+        <span class="tag tag--ghost">Architecture</span>
+        <span class="tag tag--ghost">Strategy</span>
+      </div>
+
+      <!-- Author bio box -->
+      <section class="article-author-box">
+        <div class="author-photo">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80" alt="Dr. Julian Vane" loading="lazy" width="80" height="80">
+        </div>
+        <div>
+          <h4>Dr. Julian Vane</h4>
+          <p>Julian is the Senior Research Fellow at Sinaquant, focusing on the intersection of LLM reasoning and robotic process automation. He previously led AI policy initiatives at the Global Tech Institute.</p>
+          <div class="author-links">
+            <a href="#">Follow on X</a>
+            <a href="#">LinkedIn</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Comments placeholder (WP native comments go here) -->
+      <div class="article-comments">
+        <strong>Comments</strong>
+        <p style="margin-top:8px">WordPress native comments will appear here once the theme is wired in. The container, id hooks, and aria-live region are already in place.</p>
+      </div>
+    </div>
+
+    <!-- Sticky table of contents (desktop) -->
+    <aside class="article-toc" aria-label="Table of contents">
+      <h5>Contents</h5>
+      <ul></ul>
+    </aside>
+  </div>
+
+  <!-- Related stories -->
+  <section class="container section" style="margin-top:64px;border-top:1px solid var(--border);padding-top:64px">
+    <div class="section-header">
+      <div>
+        <h2 class="t-h2">Related Analysis</h2>
+        <p style="color:var(--text-2);margin:4px 0 0">Further reading from Sinaquant Intelligence.</p>
+      </div>
+      <a href="news.html">
+        View News Feed
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+    <div class="story-grid">
+      <article class="story-card">
+        <div class="story-image">
+          <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80" alt="Abstract neural network" loading="lazy" width="800" height="600">
+        </div>
+        <div class="story-body">
+          <span class="tag tag--cyan">Policy</span>
+          <h3 class="story-title"><a href="story.html">The EU's Response to Autonomous Agents</a></h3>
+          <p class="story-excerpt">New regulatory frameworks are being drafted to address the liability of AI-led decisions.</p>
+          <div class="story-footer"><span>2h ago</span><span>9 min</span></div>
+        </div>
+      </article>
+      <article class="story-card">
+        <div class="story-image">
+          <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80" alt="Microchip macro" loading="lazy" width="800" height="600">
+        </div>
+        <div class="story-body">
+          <span class="tag">Research</span>
+          <h3 class="story-title"><a href="story.html">Efficiency Benchmarks for Edge AI</a></h3>
+          <p class="story-excerpt">The silicon innovations letting agents run locally on mobile devices — and what that means for the cloud bill.</p>
+          <div class="story-footer"><span>4h ago</span><span>7 min</span></div>
+        </div>
+      </article>
+      <article class="story-card">
+        <div class="story-image">
+          <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800&q=80" alt="Investors around a table" loading="lazy" width="800" height="600">
+        </div>
+        <div class="story-body">
+          <span class="tag tag--sky">Startups</span>
+          <h3 class="story-title"><a href="story.html">Series B: The Next Infrastructure Kings</a></h3>
+          <p class="story-excerpt">Who is building the operating systems for the agent-centric workspace?</p>
+          <div class="story-footer"><span>5h ago</span><span>6 min</span></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+</main>
+
+<div data-include="footer"></div>
+
+<script src="js/includes.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!-- =========================================================
+     Sinaquant — SHARED HEADER PARTIAL
+     ------------------------------------------------------------
+     Included by every page via <div data-include="header">.
+     In WordPress this file becomes header.php, with the
+     <head> tag split out into its own partial. IDs that JS
+     hooks into (searchTrigger, themeToggle, menuOpen,
+     mobileDrawer, etc.) MUST be preserved across the
+     conversion — main.js queries by id.
+
+     Order in this file (matches the CSS section order):
+       1. Skip-to-content link
+       2. Top header bar (brand + nav + action icons)
+       3. Category tabs (sticky secondary nav)
+       4. Mobile drawer + backdrop
+       5. Search overlay
+       6. Newsletter modal
+     ========================================================= -->
+
+<!-- 1. Skip-to-content link.
+     Hidden until focused. Lets keyboard users bypass the
+     navigation and jump straight to <main id="main">. -->
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- 2. Top header bar.
+     .site-header is sticky + shrinks on scroll past 80px
+     (.is-scrolled). The hamburger is only visible below
+     768px; the search + theme toggles only above. -->
+<header class="site-header">
+  <div class="container">
+    <div class="header-left">
+      <a class="site-brand" href="index.html" aria-label="Sinaquant home">
+        <img src="assets/includes/sinaquant-logo.svg" alt="" aria-hidden="true" width="32" height="32">
+        <span>Sinaquant</span>
+      </a>
+      <nav class="primary-nav" aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="news.html">News</a>
+        <a href="tools.html">Tools</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="navigation.html">Explore</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+    <div class="header-actions">
+      <a class="btn btn-ghost btn-pill hidden-mobile" href="dashboard.html" style="padding:8px 16px;font-size:13px">Terminal</a>
+      <a class="btn btn-primary btn-pill hidden-mobile" href="pricing.html" style="padding:8px 16px;font-size:13px">Subscribe</a>
+      <button class="icon-btn" id="searchTrigger" aria-label="Open search" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle dark / light mode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <button class="icon-btn menu-toggle" id="menuOpen" aria-label="Open menu" aria-expanded="false" aria-controls="mobileDrawer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- 3. Category tabs — sticky secondary nav directly
+     below the header. Horizontally scrollable on mobile.
+     The cyan underline on .is-active is drawn with a
+     ::after pseudo-element so we don't need extra DOM. -->
+<nav class="category-tabs" aria-label="Topic categories">
+  <div class="container">
+    <a href="news.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8z"/></svg>
+      AI News
+    </a>
+    <a href="news.html?cat=agentic-ai">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12a3 3 0 1 0 6 0 3 3 0 1 0-6 0"/><path d="M12 1v6m0 6v6m11-7h-6m-6 0H1m17-4-4.2 4.2m-5.6 5.6L4.6 19.4m12.8 0-4.2-4.2m-5.6-5.6L4.6 4.6"/></svg>
+      Agentic AI
+    </a>
+    <a href="news.html?cat=research">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7M7 16h10"/></svg>
+      Research
+    </a>
+    <a href="news.html?cat=funding">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Startups &amp; Funding
+    </a>
+    <a href="news.html?cat=policy">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+      Policy
+    </a>
+    <a href="tools.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+      Tools
+    </a>
+  </div>
+</nav>
+
+<!-- 4. Mobile drawer + backdrop.
+     The drawer is a <nav> element so screen readers treat
+     it as navigation. Three sections: General links,
+     category shortcuts, and a Subscribe CTA card.
+     aria-controls on the trigger button binds the
+     relationship for assistive tech. -->
+<div class="drawer-backdrop" id="drawerBackdrop" aria-hidden="true"></div>
+<nav class="mobile-drawer" id="mobileDrawer" aria-label="Mobile navigation">
+  <div class="drawer-header">
+    <div class="site-brand">
+      <img src="assets/includes/sinaquant-logo.svg" alt="" aria-hidden="true" width="32" height="32">
+      <span>Menu</span>
+    </div>
+    <button class="icon-btn" id="menuClose" aria-label="Close menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="drawer-body">
+    <div>
+      <div class="drawer-section-label">General</div>
+      <div class="drawer-nav">
+        <a href="index.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Home
+        </a>
+        <a href="news.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8z"/></svg>
+          News
+        </a>
+        <a href="tools.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          Tools
+        </a>
+        <a href="about.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          About
+        </a>
+        <a href="contact.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg>
+          Contact
+        </a>
+      </div>
+    </div>
+    <div>
+      <div class="drawer-section-label">Categories</div>
+      <div class="drawer-categories">
+        <a href="news.html?cat=agentic-ai">
+          <span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a3 3 0 1 0 6 0 3 3 0 1 0-6 0"/><path d="M12 1v6m0 6v6m11-7h-6m-6 0H1m17-4-4.2 4.2m-5.6 5.6L4.6 19.4m12.8 0-4.2-4.2m-5.6-5.6L4.6 4.6"/></svg>
+            Agentic AI
+          </span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+        <a href="news.html?cat=research">
+          <span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/></svg>
+            Research
+          </span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+        <a href="news.html?cat=funding">
+          <span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Funding
+          </span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+        <a href="news.html?cat=policy">
+          <span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Policy
+          </span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="drawer-cta">
+      <h3>Weekly Insight</h3>
+      <p>Get the latest AI breakthroughs delivered to your terminal.</p>
+      <a class="btn btn-primary btn-pill w-full" href="contact.html#newsletter">Subscribe</a>
+    </div>
+  </div>
+  <div class="drawer-footer">
+    <span>© 2026 Sinaquant</span>
+    <div class="drawer-footer-actions">
+      <button class="icon-btn" aria-label="Dark mode toggle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <a class="icon-btn" href="#" aria-label="Share Sinaquant">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- 5. Search overlay.
+     Slides down from the top. role="search" so assistive
+     tech understands the input's purpose. The input is
+     autofocused 100ms after open (see main.js section 3)
+     so the slide-down transition isn't interrupted. -->
+<div class="search-overlay" id="searchOverlay" role="search">
+  <div class="container">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" style="color:var(--cyan);flex-shrink:0" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input id="searchInput" name="q" type="search" placeholder="Search the intelligence terminal…" aria-label="Search Sinaquant" maxlength="100" autocomplete="off" spellcheck="false">
+    <button class="icon-btn" id="searchClose" aria-label="Close search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- 6. Newsletter modal.
+     Shown after 30s OR on exit-intent (mouse leaves
+     viewport). aria-modal="true" traps focus inside.
+     Once dismissed, sessionStorage `sq_modal_dismissed`
+     prevents it from re-appearing for the rest of the
+     session. The .modal__glow is the cyan accent line
+     along the bottom — purely decorative, aria-hidden. -->
+<div class="modal-backdrop" id="newsletterModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <button class="modal__close" data-modal-close aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="modal__body">
+      <h2 id="modalTitle">The Intelligence Brief</h2>
+      <p>Join 50k+ AI professionals receiving daily technical deep-dives into the agentic future. <span class="accent">Precision insights, zero noise.</span></p>
+      <form>
+        <input class="input" type="email" placeholder="Enter your terminal email…" required>
+        <button class="btn btn-primary w-full" type="submit">
+          Subscribe Now
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </form>
+      <p class="modal__disclaimer">No spam. High-density data only. Opt-out anytime.</p>
+    </div>
+    <div class="modal__glow" aria-hidden="true"></div>
+  </div>
+</div>

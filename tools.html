@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<!-- =========================================================
+     Sinaquant — TOOLS DIRECTORY (/tools)
+     ------------------------------------------------------------
+     Curated index of AI tools, each with a logo, vendor
+     info, rating, price, and platforms supported. In WP
+     this becomes a custom post type (CPT `tool`) archive.
+
+     Layout:
+       1. Archive header
+       2. Filter chips (data-filter matches data-category on
+          each .tool-card — main.js section 11 wires them up)
+       3. 3-column responsive grid of tool cards
+       4. Submit-Your-Tool CTA
+     ========================================================= -->
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Tools Directory | Sinaquant</title>
+  <meta name="description" content="A curated, ranked catalog of the most useful AI tools in production right now — filtered, scored, and updated weekly by the Sinaquant editorial desk.">
+  
+  <!-- Security headers (static-build equivalent of HTTP headers) -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https://images.unsplash.com https://*.unsplash.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+  <meta name="theme-color" content="#070B15">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="AI Tools Directory — Sinaquant">
+  <meta property="og:description" content="A curated, ranked catalog of the most useful AI tools in production right now.">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" type="image/svg+xml" href="assets/includes/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" crossorigin="anonymous" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div data-include="header"></div>
+
+<main id="main">
+
+  <header class="archive-header container">
+    <span class="t-meta">Curated Index</span>
+    <h1 class="t-h1">The AI Tools Directory</h1>
+    <p>Every tool listed here is reviewed by the Sinaquant editorial team. We track pricing changes, model upgrades, and uptime — so you don't have to.</p>
+  </header>
+
+  <!-- Filter chips. data-filter values must match the
+       data-category attributes on the .tool-card elements
+       below. "all" is the sentinel that shows every card. -->
+  <div class="container" style="margin-bottom:32px">
+    <div class="tool-filters" role="tablist" aria-label="Filter tools by category">
+      <button class="is-active" type="button" data-filter="all">All Tools</button>
+      <button type="button" data-filter="agents">Agentic</button>
+      <button type="button" data-filter="llm">LLM</button>
+      <button type="button" data-filter="image">Image</button>
+      <button type="button" data-filter="dev">Developer</button>
+      <button type="button" data-filter="research">Research</button>
+      <button type="button" data-filter="audio">Audio</button>
+    </div>
+  </div>
+
+  <!-- Tool grid. Each .tool-card has a data-category that
+       the filter buttons match against. The badge in
+       .tool-card__head is optional — used for editorial
+       highlights ("Top Pick", "Featured", "Trending"). -->
+  <section class="container">
+    <div class="tool-grid">
+
+      <article class="tool-card" data-category="agents">
+        <div class="tool-card__head">
+          <div class="tool-card__logo" style="background:linear-gradient(135deg,#2D5CE8,#45EDF6)">A</div>
+          <div>
+            <h3>AutoGen Studio</h3>
+            <p class="tool-card__vendor">Microsoft Research · Open Source</p>
+          </div>
+          <span class="tool-card__badge">Featured</span>
+        </div>
+        <p class="tool-card__desc">Multi-agent orchestration framework for building collaborative LLM workflows. Drag-and-drop UI for designing agent conversations and tool use.</p>
+        <div class="tool-card__meta">
+          <span>★ 4.8</span>
+          <span>Free</span>
+          <span>Python · TS</span>
+        </div>
+        <div class="tool-card__actions">
+          <a class="btn btn-primary" href="#">Visit</a>
+          <a class="btn btn-ghost" href="#">Read Review</a>
+        </div>
+      </article>
+
+      <article class="tool-card" data-category="llm">
+        <div class="tool-card__head">
+          <div class="tool-card__logo" style="background:linear-gradient(135deg,#0EA5E9,#1D4ED8)">M</div>
+          <div>
+            <h3>Mistral Large 3</h3>
+            <p class="tool-card__vendor">Mistral AI · API</p>
+          </div>
+          <span class="tool-card__badge tag--cyan">Top Pick</span>
+        </div>
+        <p class="tool-card__desc">Flagship 500k-context model from Mistral. Excellent for long-document reasoning, code synthesis, and European-sovereign deployments.</p>
+        <div class="tool-card__meta">
+          <span>★ 4.7</span>
+          <span>From $2 / 1M tok</span>
+          <span>API · On-prem</span>
+        </div>
+        <div class="tool-card__actions">
+          <a class="btn btn-primary" href="#">Visit</a>
+          <a class="btn btn-ghost" href="#">Read Review</a>
+        </div>
+      </article>
+
+      <article class="tool-card" data-category="image">
+        <div class="tool-card__head">
+          <div class="tool-card__logo" style="background:linear-gradient(135deg,#F472B6,#A855F7)">F</div>
+          <div>
+            <h3>FLUX Pro 1.5</h3>
+            <p class="tool-card__vendor">Black Forest Labs · API</p>
+          </div>
+        </div>
+        <p class="tool-card__desc">State-of-the-art text-to-image model with photorealistic rendering and exceptional prompt fidelity. First choice for editorial workflows.</p>
+        <div class="tool-card__meta">
+          <span>★ 4.9</span>
+          <span>From $0.04 / image</span>
+          <span>API</span>
+        </div>
+        <div class="tool-card__actions">
+          <a class="btn btn-primary" href="#">Visit</a>
+          <a class="btn btn-ghost" href="#">Read Review</a>
+        </div>
+      </article>
+
+      <article class="tool-card" data-category="dev">
+        <div class="tool-card__head">
+          <div class="tool-card__logo" style="background:linear-gradient(135deg,#45EDF6,#2D5CE8)">C</div>
+          <div>
+            <h3>Cursor Composer</h3>
+            <p class="tool-card__vendor">Anysphere · Freemium</p>
+          </div>
+          <span class="tool-card__badge tag--sky">Trending</span>
+        </div>
+        <p class="tool-card__desc">AI-native IDE with multi-file refactoring, codebase-wide edits, and inline agent runs. The most-used dev tool of 2026 so far.</p>
+        <div class="tool-card__meta">
+          <span>★ 4.6</span>
+          <span>Free · $20 / mo Pro</span>
+          <span>macOS · Win · Linux</span>
+        </div>
+        <div class="tool-card__actions">
+          <a class="btn btn-primary" href="#">Visit</a>
+          <a class="btn btn-ghost" href="#">Read Review</a>
+        </div>
+      </article>
+
+      <article class="tool-card" data-category="research">
+        <div class="tool-card__head">
+          <div class="tool-card__logo" style="background:linear-gradient(135deg,#10B981,#0EA5E9)">E</div>
+          <div>
+            <h3>Elicit</h3>
+            <p class="tool-card__vendor">Ought · Subscription</p>
+          </div>
+        </div>
+        <p class="tool-card__desc">AI research assistant that finds, summarises, and extracts data from academic papers. Built for scientists, used by 2M+ researchers.</p>
+        <div class="tool-card__meta">
+          <span>★ 4.5</span>
+          <span>From $10 / mo</span>
+          <span>Web</span>
+        </div>
+        <div class="tool-card__actions">
+          <a class="btn btn-primary" href="#">Visit</a>
+          <a class="btn btn-ghost" href="#">Read Review</a>
+        </div>
+      </article>
+
+      <article class="tool-card" data-category="audio">
+        <div class="tool-card__head">
+          <div class="tool-card__logo" style="background:linear-gradient(135deg,#F59E0B,#EF4444)">E</div>
+          <div>
+            <h3>ElevenLabs Turbo v3</h3>
+            <p class="tool-card__vendor">ElevenLabs · API</p>
+          </div>
+          <span class="tool-card__badge tag--cyan">Top Pick</span>
+        </div>
+        <p class="tool-card__desc">Real-time voice synthesis with 32 languages and emotion control. The default for podcast, audiobook, and dubbing pipelines.</p>
+        <div class="tool-card__meta">
+          <span>★ 4.8</span>
+          <span>From $5 / mo</span>
+          <span>API · Web</span>
+        </div>
+        <div class="tool-card__actions">
+          <a class="btn btn-primary" href="#">Visit</a>
+          <a class="btn btn-ghost" href="#">Read Review</a>
+        </div>
+      </article>
+
+      <article class="tool-card" data-category="agents">
+        <div class="tool-card__head">
+          <div class="tool-card__logo" style="background:linear-gradient(135deg,#8B5CF6,#EC4899)">L</div>
+          <div>
+            <h3>LangGraph Cloud</h3>
+            <p class="tool-card__vendor">LangChain · API</p>
+          </div>
+        </div>
+        <p class="tool-card__desc">Production-grade graph runtime for stateful, long-running agent workflows. Built-in checkpointing, human-in-the-loop, and observability.</p>
+        <div class="tool-card__meta">
+          <span>★ 4.4</span>
+          <span>Usage-based</span>
+          <span>API · Python · TS</span>
+        </div>
+        <div class="tool-card__actions">
+          <a class="btn btn-primary" href="#">Visit</a>
+          <a class="btn btn-ghost" href="#">Read Review</a>
+        </div>
+      </article>
+
+      <article class="tool-card" data-category="dev">
+        <div class="tool-card__head">
+          <div class="tool-card__logo" style="background:linear-gradient(135deg,#1D4ED8,#0EA5E9)">B</div>
+          <div>
+            <h3>Bolt.new</h3>
+            <p class="tool-card__vendor">StackBlitz · Freemium</p>
+          </div>
+        </div>
+        <p class="tool-card__desc">Prompt-to-fullstack web app builder running entirely in the browser sandbox. Ships production-ready React, Vue, and Svelte projects.</p>
+        <div class="tool-card__meta">
+          <span>★ 4.3</span>
+          <span>Free · $25 / mo</span>
+          <span>Web</span>
+        </div>
+        <div class="tool-card__actions">
+          <a class="btn btn-primary" href="#">Visit</a>
+          <a class="btn btn-ghost" href="#">Read Review</a>
+        </div>
+      </article>
+
+      <article class="tool-card" data-category="llm">
+        <div class="tool-card__head">
+          <div class="tool-card__logo" style="background:linear-gradient(135deg,#319CE7,#0F1A2E)">C</div>
+          <div>
+            <h3>Claude Opus 4.7</h3>
+            <p class="tool-card__vendor">Anthropic · API</p>
+          </div>
+          <span class="tool-card__badge">Featured</span>
+        </div>
+        <p class="tool-card__desc">Long-context reasoning model with industry-leading agentic tool use and a 1M token window. The benchmark for safe, capable assistants.</p>
+        <div class="tool-card__meta">
+          <span>★ 4.9</span>
+          <span>From $3 / 1M tok</span>
+          <span>API · Web · Mobile</span>
+        </div>
+        <div class="tool-card__actions">
+          <a class="btn btn-primary" href="#">Visit</a>
+          <a class="btn btn-ghost" href="#">Read Review</a>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Submit CTA -->
+    <div class="newsletter" style="margin-top:48px;padding:48px 32px;text-align:center">
+      <h3 style="font-size:28px;margin-bottom:8px">Built a tool we should review?</h3>
+      <p style="max-width:520px;margin:0 auto 24px;color:var(--text-2)">Sinaquant reviews 40+ new AI tools every month. Submit yours for editorial evaluation — selected entries get a full long-form review and a featured slot.</p>
+      <a class="btn btn-primary" href="contact.html">Submit Your Tool
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<div data-include="footer"></div>
+
+<script src="js/includes.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

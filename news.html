@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<!-- =========================================================
+     Sinaquant — NEWS FEED (/news)
+     ------------------------------------------------------------
+     The full archive of stories. In WordPress this is
+     home.php (or category.php for a category-scoped view,
+     fronted by ?cat=agentic-ai etc.).
+
+     Layout:
+       1. Archive header (eyebrow + h1 + intro)
+       2. Filter chips (visual only — wired to load-more in WP)
+       3. Story grid (10 cards, first one featured / 2-col span)
+       4. Load-more button → main.js section 10
+     ========================================================= -->
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Latest Intelligence | Sinaquant AI</title>
+  <meta name="description" content="The definitive record of AI, Agentic AI, LLMs, hardware, policy and startups — filtered, ranked, and updated in real time.">
+  
+  <!-- Security headers (static-build equivalent of HTTP headers) -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https://images.unsplash.com https://*.unsplash.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+  <meta name="theme-color" content="#070B15">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Latest Intelligence — Sinaquant">
+  <meta property="og:description" content="The definitive record of AI, Agentic AI, LLMs, hardware, policy and startups.">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" type="image/svg+xml" href="assets/includes/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" crossorigin="anonymous" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div data-include="header"></div>
+
+<main id="main">
+
+  <!-- Archive header. The eyebrow tag + h1 + intro is the
+       standard page-level opener used on news, tools, about,
+       and contact. See style.css `.archive-header` rules. -->
+  <header class="archive-header container">
+    <span class="t-meta">Featured Feed</span>
+    <h1 class="t-h1">The Intelligence Layer</h1>
+    <p>Filtering the signal from the noise of the global AI complex. Stories ranked by editorial weight, recency, and reader impact.</p>
+  </header>
+
+  <!-- Filter chips. In the static build these are visual
+       only — the active class toggles on click but no
+       filtering happens. In WP, the active filter drives
+       a query string (?sort=trending) that the archive
+       loop uses to reorder the cards. -->
+  <div class="container" style="margin-bottom:32px">
+    <div class="tool-filters" role="tablist" aria-label="Sort stories">
+      <button class="is-active" type="button">Latest</button>
+      <button type="button">Trending</button>
+      <button type="button">Long Form</button>
+      <button type="button">Analysis</button>
+    </div>
+  </div>
+
+  <!-- Story grid. The first card spans 2 columns (inline
+       style) so the lead story gets more visual weight.
+       data-story-grid is the selector the load-more
+       handler uses to append new cards. -->
+  <section class="container">
+    <div class="story-grid" data-story-grid>
+
+      <!-- Feature card (spans 2 cols) -->
+      <article class="story-card story-card--featured" style="grid-column:span 2">
+        <div class="story-image">
+          <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80" alt="Futuristic server room with blue lights" loading="lazy" width="1200" height="675">
+        </div>
+        <div class="story-body">
+          <div class="flex items-center gap-12 mb-16" style="margin-bottom:12px">
+            <span class="tag tag--solid-electric">Analysis</span>
+            <span class="tag tag--cyan">Top Pick</span>
+          </div>
+          <h2 class="story-title" style="font-size:clamp(22px,2.6vw,30px)"><a href="story.html">The Sovereign Agent: How LLMs Are Transitioning From Chatbots to Autonomous Digital Entities</a></h2>
+          <p class="story-excerpt">The architecture of intelligence is shifting. We explore the breakthrough protocols that allow large language models to manage complex, multi-step tasks across isolated environments without human intervention.</p>
+          <div class="story-footer">
+            <div class="flex items-center gap-12">
+              <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#45EDF6,#2D5CE8)"></div>
+              <div>
+                <div style="color:var(--text);font-weight:600;font-size:14px">Dr. Aris Thorne</div>
+                <div style="color:var(--text-muted);font-size:11px">Lead Researcher</div>
+              </div>
+            </div>
+            <span>1h ago · 12 min read</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="story-card">
+        <div class="story-image">
+          <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80" alt="Robotic hand touching holographic display" loading="lazy" width="800" height="600">
+        </div>
+        <div class="story-body">
+          <span class="tag tag--sky">Agentic AI</span>
+          <h3 class="story-title"><a href="story.html">Neural Swarms: Distributed Logic in Multi-Agent Systems</a></h3>
+          <p class="story-excerpt">Recent breakthroughs in swarm intelligence let small models outperform GPT-4 through collective synthesis.</p>
+          <div class="story-footer"><span>3h ago</span><span>9 min</span></div>
+        </div>
+      </article>
+      <article class="story-card">
+        <div class="story-image">
+          <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80" alt="Quantum computing lattice visualisation" loading="lazy" width="800" height="600">
+        </div>
+        <div class="story-body">
+          <span class="tag tag--cyan">Policy</span>
+          <h3 class="story-title"><a href="story.html">The EU AI Act: A Post-Mortem of Innovation vs Safety</a></h3>
+          <p class="story-excerpt">How the latest regulatory frameworks are impacting the venture capital landscape in Brussels and beyond.</p>
+          <div class="story-footer"><span>4h ago</span><span>11 min</span></div>
+        </div>
+      </article>
+      <article class="story-card">
+        <div class="story-image">
+          <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80" alt="Macro shot of microchip" loading="lazy" width="800" height="600">
+        </div>
+        <div class="story-body">
+          <span class="tag">Hardware</span>
+          <h3 class="story-title"><a href="story.html">Silicon Wars: The New Frontier of Edge AI Processing</a></h3>
+          <p class="story-excerpt">Analyzing the specialized NPU architectures designed to bring local inference to consumer mobile devices.</p>
+          <div class="story-footer"><span>5h ago</span><span>7 min</span></div>
+        </div>
+      </article>
+      <article class="story-card">
+        <div class="story-image">
+          <img src="https://images.unsplash.com/photo-1551033406-611cf9a28f67?w=800&q=80" alt="Dark coding workspace with monitor" loading="lazy" width="800" height="600">
+        </div>
+        <div class="story-body">
+          <span class="tag tag--cyan">Tools</span>
+          <h3 class="story-title"><a href="story.html">Open-Source Supremacy: The Best Local LLMs of Q2</a></h3>
+          <p class="story-excerpt">A comprehensive benchmark of Llama 3 derivatives and Mistral fine-tunes for developer productivity.</p>
+          <div class="story-footer"><span>6h ago</span><span>14 min</span></div>
+        </div>
+      </article>
+      <article class="story-card">
+        <div class="story-image">
+          <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80" alt="Digital eye with circuit iris" loading="lazy" width="800" height="600">
+        </div>
+        <div class="story-body">
+          <span class="tag tag--sky">Research</span>
+          <h3 class="story-title"><a href="story.html">Bio-Digital Convergence: LLMs in Drug Discovery</a></h3>
+          <p class="story-excerpt">How generative chemistry is reducing the R&amp;D timeline for rare-disease therapeutics by up to 70%.</p>
+          <div class="story-footer"><span>7h ago</span><span>9 min</span></div>
+        </div>
+      </article>
+      <article class="story-card">
+        <div class="story-image">
+          <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800&q=80" alt="Investment board meeting" loading="lazy" width="800" height="600">
+        </div>
+        <div class="story-body">
+          <span class="tag">Startups</span>
+          <h3 class="story-title"><a href="story.html">Series B: The Next Infrastructure Kings</a></h3>
+          <p class="story-excerpt">Who is building the operating systems for the agent-centric workspace?</p>
+          <div class="story-footer"><span>8h ago</span><span>6 min</span></div>
+        </div>
+      </article>
+      <article class="story-card">
+        <div class="story-image">
+          <img src="https://images.unsplash.com/photo-1535378620166-273708d44e4c?w=800&q=80" alt="Robotic hand holding plant" loading="lazy" width="800" height="600">
+        </div>
+        <div class="story-body">
+          <span class="tag tag--cyan">Sustainability</span>
+          <h3 class="story-title"><a href="story.html">Autonomous Grid Management Cuts City Carbon 15%</a></h3>
+          <p class="story-excerpt">Copenhagen's agent-driven grid shifts renewable loads in milliseconds. The next 12 cities have queued up.</p>
+          <div class="story-footer"><span>9h ago</span><span>8 min</span></div>
+        </div>
+      </article>
+      <article class="story-card">
+        <div class="story-image">
+          <img src="https://images.unsplash.com/photo-1592478411213-6153e4ebc07d?w=800&q=80" alt="VR headset" loading="lazy" width="800" height="600">
+        </div>
+        <div class="story-body">
+          <span class="tag tag--sky">Interface</span>
+          <h3 class="story-title"><a href="story.html">Neural Interfaces: 2026 as the Year of the Direct Link</a></h3>
+          <p class="story-excerpt">Three early FDA approvals, one failed trial, and what the next 12 months of brain-computer research actually looks like.</p>
+          <div class="story-footer"><span>10h ago</span><span>15 min</span></div>
+        </div>
+      </article>
+    </div>
+
+    <!-- Load more. data-load-more is the selector that
+         main.js section 10 binds to; the handler fetches
+         the next page of posts (WP REST API) and appends
+         3 .story-card nodes to [data-story-grid]. -->
+    <div class="load-more">
+      <button class="btn btn-primary" data-load-more>
+        Load more stories
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<div data-include="footer"></div>
+
+<script src="js/includes.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

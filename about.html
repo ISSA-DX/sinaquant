@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<!-- =========================================================
+     Sinaquant — ABOUT (/about)
+     ------------------------------------------------------------
+     Static brand page. Sections, in order:
+       1. Page hero (eyebrow + h1 + intro)
+       2. Three "pillar" cards (Independent, Verified, Long-Form)
+       3. Editorial-desk team grid (4 cards, 1/2/3/4-col responsive)
+       4. Stats band (4 metrics, gradient numerals)
+       5. Newsletter CTA
+     In WordPress, the team and stats sections could be
+     driven by custom fields / a custom post type so the
+     editorial desk can update without touching templates.
+     ========================================================= -->
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Sinaquant | Intelligence for the Agentic Era</title>
+  <meta name="description" content="Sinaquant is an independent intelligence desk covering the rise of agentic AI, frontier models, and the platforms shaping the next decade of compute.">
+  
+  <!-- Security headers (static-build equivalent of HTTP headers) -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https://images.unsplash.com https://*.unsplash.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+  <meta name="theme-color" content="#070B15">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="About Sinaquant — Intelligence for the Agentic Era">
+  <meta property="og:description" content="An independent intelligence desk covering the rise of agentic AI, frontier models, and the platforms shaping the next decade of compute.">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" type="image/svg+xml" href="assets/includes/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" crossorigin="anonymous" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div data-include="header"></div>
+
+<main id="main">
+
+  <!-- Hero -->
+  <section class="container section" style="padding-top:48px">
+    <div class="about-hero">
+      <span class="t-meta">About Sinaquant</span>
+      <h1 class="t-h1" style="max-width:760px;margin-top:12px">A precision intelligence desk for the agentic era.</h1>
+      <p class="t-lead" style="max-width:640px;margin-top:16px;color:var(--text-2)">
+        Sinaquant exists to filter the signal from the noise of the global AI complex. We are researchers, former operators, and engineers who publish only what we have independently verified. No hype cycles. No press-release rewrites. No sponsored placements.
+      </p>
+    </div>
+  </section>
+
+  <!-- Mission pillars -->
+  <section class="container section">
+    <div class="about-pillars">
+      <article class="pillar">
+        <div class="pillar__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <h3>Independent</h3>
+        <p>We take no advertising from the companies we cover. Our only revenue is reader subscriptions and licensed data feeds — and we publish our methodology openly.</p>
+      </article>
+      <article class="pillar">
+        <div class="pillar__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <h3>Verified</h3>
+        <p>Every benchmark, claim, and stat in a Sinaquant story is reproducible. Source code and data live in our public methodology repo and the Sinaquant Data Terminal.</p>
+      </article>
+      <article class="pillar">
+        <div class="pillar__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h3>Long-Form</h3>
+        <p>The shift to agentic AI is a structural change — not a news cycle. We write 8,000-word deep-dives because the work deserves more than a headline.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- Team -->
+  <section class="container section">
+    <div class="section-header">
+      <div>
+        <h2 class="t-h2">The Editorial Desk</h2>
+        <p style="color:var(--text-2);margin:4px 0 0">Research, engineering, and policy — the humans behind every Sinaquant report.</p>
+      </div>
+    </div>
+    <div class="team-grid">
+      <article class="team-card">
+        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80" alt="Dr. Aris Thorne" loading="lazy" width="400" height="400">
+        <h4>Dr. Aris Thorne</h4>
+        <span class="team-card__role">Lead Researcher</span>
+        <p>Former OpenAI alignment team. PhD in reinforcement learning, ETH Zürich.</p>
+      </article>
+      <article class="team-card">
+        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80" alt="Elena Vance" loading="lazy" width="400" height="400">
+        <h4>Elena Vance</h4>
+        <span class="team-card__role">Senior Tech Analyst</span>
+        <p>12 years covering silicon, infrastructure, and the economics of compute. Ex-Information.</p>
+      </article>
+      <article class="team-card">
+        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80" alt="Dr. Julian Vane" loading="lazy" width="400" height="400">
+        <h4>Dr. Julian Vane</h4>
+        <span class="team-card__role">Senior Research Fellow</span>
+        <p>Specialist in LLM reasoning and robotic process automation. Former Global Tech Institute.</p>
+      </article>
+      <article class="team-card">
+        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=80" alt="Mira Okafor" loading="lazy" width="400" height="400">
+        <h4>Mira Okafor</h4>
+        <span class="team-card__role">Policy &amp; Regulation</span>
+        <p>Tracks EU and US AI legislation. JD/PhD, Stanford Law. Former FTC tech-policy fellow.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- Stats band -->
+  <section class="container section">
+    <div class="about-stats">
+      <div class="about-stat">
+        <span class="about-stat__num">50K+</span>
+        <span class="about-stat__label">Newsletter readers</span>
+      </div>
+      <div class="about-stat">
+        <span class="about-stat__num">120</span>
+        <span class="about-stat__label">Long-form reports / yr</span>
+      </div>
+      <div class="about-stat">
+        <span class="about-stat__num">2.4M</span>
+        <span class="about-stat__label">Monthly readers</span>
+      </div>
+      <div class="about-stat">
+        <span class="about-stat__num">0</span>
+        <span class="about-stat__label">Sponsored placements</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="container section" id="newsletter">
+    <div class="newsletter" style="padding:48px 32px;text-align:center">
+      <h3 style="font-size:30px;margin-bottom:8px">Subscribe to the intelligence brief.</h3>
+      <p style="max-width:560px;margin:0 auto 24px">Join 50,000+ founders, researchers, and policy professionals who get Sinaquant's weekly long-form in their inbox.</p>
+      <form aria-label="Newsletter signup" style="flex-direction:row;max-width:480px;margin:0 auto;flex-wrap:wrap">
+        <input class="input" type="email" placeholder="you@startup.ai" required style="flex:1;min-width:200px">
+        <button class="btn btn-primary" type="submit">Subscribe</button>
+      </form>
+      <p class="disclaimer" style="margin-top:16px">No spam · Unsubscribe in one click</p>
+    </div>
+  </section>
+
+</main>
+
+<div data-include="footer"></div>
+
+<script src="js/includes.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

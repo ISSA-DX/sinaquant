@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<!-- =========================================================
+     Sinaquant — SUBSCRIBER TERMINAL DASHBOARD (/dashboard)
+     ------------------------------------------------------------
+     The post-login landing page for Professional &
+     Enterprise subscribers. Layout:
+       1. Welcome strip  (name + status + 3 stat tiles)
+       2. Terminal grid  (3-col sidebar + 9-col main feed)
+            Sidebar : Market Movers, Active Agents, Priority Reports
+            Main    : Live "Intelligence Feed" of synthetic signals
+     The feed auto-injects a new .signal row every 5s
+     (main.js section 19). The .scanline overlay is a
+     decorative top-to-bottom cyan beam.
+     ========================================================= -->
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Terminal | Sinaquant</title>
+  <meta name="description" content="The Sinaquant Intelligence Terminal — real-time signals, market movers, and active AI agents.">
+  <meta name="theme-color" content="#070B15">
+
+  
+  <!-- Security headers (static-build equivalent of HTTP headers) -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https://images.unsplash.com https://*.unsplash.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+  <meta name="robots" content="noindex">
+
+  <link rel="icon" type="image/svg+xml" href="assets/includes/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" crossorigin="anonymous" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div data-include="header"></div>
+
+<main id="main">
+
+  <section class="container" style="padding-top:32px">
+    <div class="welcome-strip">
+      <div>
+        <p class="welcome-strip__status">● System Status: Operational</p>
+        <h1>Welcome to the Terminal, <span class="name">Alex Thorne</span></h1>
+      </div>
+      <div class="welcome-strip__stats">
+        <div class="glass-panel welcome-stat">
+          <span class="welcome-stat__label">Tier</span>
+          <span class="welcome-stat__value">Professional</span>
+        </div>
+        <div class="glass-panel welcome-stat">
+          <span class="welcome-stat__label">API Usage</span>
+          <span class="welcome-stat__value is-plain">84.2%</span>
+          <div class="welcome-stat__bar"><div class="welcome-stat__bar-fill" style="width:84.2%"></div></div>
+        </div>
+        <div class="glass-panel welcome-stat">
+          <span class="welcome-stat__label">Saved</span>
+          <span class="welcome-stat__value is-plain">12 Reports</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="terminal-grid">
+      <div class="scanline" aria-hidden="true"></div>
+
+      <!-- Sidebar -->
+      <aside class="terminal-sidebar">
+
+        <div class="glass-panel">
+          <div class="terminal-panel__head">
+            <h3>Market Movers</h3>
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          </div>
+          <div>
+            <div class="market-row">
+              <div><p class="market-row__sym">NVDA</p><p class="market-row__name">NVIDIA Corp</p></div>
+              <div><p class="market-row__change is-up">+2.45%</p><p class="market-row__price">$872.10</p></div>
+            </div>
+            <div class="market-row">
+              <div><p class="market-row__sym">AVGO</p><p class="market-row__name">Broadcom Inc</p></div>
+              <div><p class="market-row__change is-down">-0.82%</p><p class="market-row__price">$1,324.50</p></div>
+            </div>
+            <div class="market-row">
+              <div><p class="market-row__sym">ARM</p><p class="market-row__name">Arm Holdings</p></div>
+              <div><p class="market-row__change is-up">+5.12%</p><p class="market-row__price">$128.40</p></div>
+            </div>
+            <div class="market-row">
+              <div><p class="market-row__sym">ASML</p><p class="market-row__name">ASML Holding</p></div>
+              <div><p class="market-row__change is-up">+1.78%</p><p class="market-row__price">$1,082.20</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-panel">
+          <div class="terminal-panel__head">
+            <h3>Active Agents</h3>
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" style="color:var(--sky)"><path d="M12 8V4H8"/><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M2 14h2M20 14h2M15 13v2M9 13v2"/></svg>
+          </div>
+          <div>
+            <div class="agent-row">
+              <span class="agent-row__dot is-pulse"></span>
+              <div><p class="agent-row__name">Sentiment-Watcher-Alpha</p><p class="agent-row__meta">Monitoring: Reddit, X, Discord</p></div>
+            </div>
+            <div class="agent-row">
+              <span class="agent-row__dot is-pulse"></span>
+              <div><p class="agent-row__name">Arbitrage-Bot-04</p><p class="agent-row__meta">Monitoring: Llama-3 fine-tunes</p></div>
+            </div>
+            <div class="agent-row agent-row--idle">
+              <span class="agent-row__dot is-idle"></span>
+              <div><p class="agent-row__name">Report-Gen-Beta</p><p class="agent-row__meta">Idle — scheduled for 18:00 UTC</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-panel">
+          <div class="terminal-panel__head">
+            <h3>Priority Reports</h3>
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </div>
+          <div>
+            <button class="priority-row" type="button">
+              <span class="priority-row__name">Q3_LLM_Infrastructure_Outlook.pdf</span>
+              <svg class="priority-row__dl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </button>
+            <button class="priority-row" type="button">
+              <span class="priority-row__name">Semi_State_of_Play_May24.pdf</span>
+              <svg class="priority-row__dl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </button>
+            <button class="priority-row" type="button">
+              <span class="priority-row__name">Agent_Safety_Framework_v2.pdf</span>
+              <svg class="priority-row__dl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </button>
+          </div>
+        </div>
+
+      </aside>
+
+      <!-- Main feed -->
+      <section class="feed-panel">
+        <div class="feed-panel__head">
+          <div class="feed-panel__head-title">
+            <span class="dot" aria-hidden="true"></span>
+            <h3>Intelligence Feed</h3>
+          </div>
+          <div class="feed-panel__head-meta">
+            <span>Source confidence: HIGH</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="cursor:pointer"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="cursor:pointer"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </div>
+        </div>
+        <div class="feed-panel__body" id="signalFeed">
+
+          <div class="signal">
+            <div class="signal__time">14:22:01</div>
+            <div class="signal__body">
+              <div class="signal__tags">
+                <span class="signal__tag is-model">Model Release</span>
+                <span class="signal__id">ID: 9X-442-SIG</span>
+              </div>
+              <p class="signal__msg"><strong>Anthropic</strong> has silently updated the Claude 4.5 Sonnet weights. Benchmark performance in complex coding tasks shows a 4.2% lift in zero-shot accuracy across Python / Rust evaluations.</p>
+              <div class="signal__footer">
+                <span>✓ Confidence: 98%</span>
+                <a href="#">Source Reference →</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="signal">
+            <div class="signal__time">14:15:30</div>
+            <div class="signal__body">
+              <div class="signal__tags">
+                <span class="signal__tag is-market">Market Signal</span>
+                <span class="signal__id">ID: 2M-102-MKT</span>
+              </div>
+              <p class="signal__msg">Massive block trade detected in <strong>ASML</strong> call options for June expiry. Implied-volatility spike of 12% in the last 15 minutes. High correlation with rumored export license approvals for high-NA EUV machinery.</p>
+              <div class="signal__footer">
+                <span>Confidence: 91%</span>
+                <a href="#">Source Reference →</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="signal">
+            <div class="signal__time">14:02:18</div>
+            <div class="signal__body">
+              <div class="signal__tags">
+                <span class="signal__tag is-policy">Policy</span>
+                <span class="signal__id">ID: 4P-991-GOV</span>
+              </div>
+              <p class="signal__msg">Leaked draft from the <strong>EU AI Office</strong> suggests new tiering requirements for "Systemic Risk" models with compute over 10²⁵ FLOPs. Could impact upcoming GPT-5 deployment timelines.</p>
+              <div class="signal__footer">
+                <span>Confidence: 84%</span>
+                <a href="#">Source Reference →</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="feed-panel__fade" aria-hidden="true"></div>
+      </section>
+
+    </div>
+  </section>
+
+</main>
+
+<div data-include="footer"></div>
+
+<script src="js/includes.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

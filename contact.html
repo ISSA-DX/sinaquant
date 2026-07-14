@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<!-- =========================================================
+     Sinaquant — CONTACT (/contact)
+     ------------------------------------------------------------
+     Two-column layout: a working contact form on the left,
+     contact-info cards on the right. The form is wired
+     to a no-op handler in main.js section 13 (front-end
+     validation + status message). In WP, swap that
+     handler for a fetch to the WP contact-form plugin
+     (CF7, WS Form, Formidable, etc.) or a custom REST
+     endpoint registered at /wp-json/sinaquant/v1/contact.
+
+     The hidden #newsletter anchor at the bottom is the
+     jump target for the mobile-drawer's "Subscribe" CTA.
+     ========================================================= -->
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact | Sinaquant</title>
+  <meta name="description" content="Reach the Sinaquant editorial desk — story tips, corrections, partnerships, or a tool you'd like reviewed.">
+  
+  <!-- Security headers (static-build equivalent of HTTP headers) -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https://images.unsplash.com https://*.unsplash.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+  <meta name="theme-color" content="#070B15">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Contact the Sinaquant Desk">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" type="image/svg+xml" href="assets/includes/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" crossorigin="anonymous" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div data-include="header"></div>
+
+<main id="main">
+
+  <header class="archive-header container">
+    <span class="t-meta">Get in touch</span>
+    <h1 class="t-h1">Contact the desk.</h1>
+    <p>Story tips, corrections, partnership inquiries, or tools you'd like reviewed — we read every message and reply within one business day.</p>
+  </header>
+
+  <section class="container section">
+    <div class="contact-grid">
+
+      <!-- Contact form -->
+      <!--
+        Security notes:
+        - Same hardening pattern as the checkout form:
+          novalidate + JS validation, maxlength caps, name
+          regex, explicit autocomplete.
+        - The actual submission goes to /wp-json/sinaquant/v1/
+          contact in WP, guarded by a nonce + current_user_can
+          (or, for an unauthenticated contact form, a
+          hCaptcha / Cloudflare Turnstile token).
+        - The mailto: addresses on the right are
+          intentionally visible to users but should be
+          served by a contact-form router in production to
+          avoid email-harvester scraping. The Cloudflare
+          "Email Address Obfuscation" feature handles this
+          automatically.
+      -->
+      <form id="contactForm" class="contact-form" novalidate autocomplete="on">
+        <h2 style="font-size:24px;margin-bottom:8px">Send a message</h2>
+        <p style="color:var(--text-2);margin-bottom:24px">For secure tips, use our encrypted Signal line listed on the right.</p>
+
+        <div class="form-row">
+          <label class="form-label" for="c-name">Full name <span class="req">*</span></label>
+          <input class="input" id="c-name" name="name" type="text" required
+                 placeholder="Ada Lovelace"
+                 maxlength="80" minlength="2"
+                 autocomplete="name" spellcheck="false"
+                 pattern="[A-Za-z0-9 .'\-]{2,80}"
+                 title="Letters, digits, spaces, dots, apostrophes and hyphens only.">
+        </div>
+
+        <div class="form-row">
+          <label class="form-label" for="c-email">Email <span class="req">*</span></label>
+          <input class="input" id="c-email" name="email" type="email" required
+                 placeholder="ada@startup.ai"
+                 maxlength="120"
+                 autocomplete="email" inputmode="email" spellcheck="false">
+        </div>
+
+        <div class="form-row">
+          <label class="form-label" for="c-subject">Subject</label>
+          <select class="input" id="c-subject" name="subject">
+            <option>Story tip</option>
+            <option>Correction</option>
+            <option>Partnership / press</option>
+            <option>Tool submission</option>
+            <option>Subscriptions / billing</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label class="form-label" for="c-message">Message <span class="req">*</span></label>
+          <textarea class="input" id="c-message" name="message" rows="6" required
+                    placeholder="Tell us what's on your mind."
+                    maxlength="4000" minlength="10"></textarea>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Send message
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+        <div class="form-status" role="status" aria-live="polite"></div>
+      </form>
+
+      <!-- Sidebar contact info -->
+      <aside class="contact-aside">
+        <div class="contact-card">
+          <h3>Editorial</h3>
+          <p>For story tips, leaks, and corrections.</p>
+          <a href="mailto:desk@sinaquant.ai">desk@sinaquant.ai</a>
+        </div>
+        <div class="contact-card">
+          <h3>Partnerships</h3>
+          <p>Press, syndication, and events.</p>
+          <a href="mailto:partners@sinaquant.ai">partners@sinaquant.ai</a>
+        </div>
+        <div class="contact-card">
+          <h3>Subscriptions</h3>
+          <p>Data Terminal, billing, account help.</p>
+          <a href="mailto:billing@sinaquant.ai">billing@sinaquant.ai</a>
+        </div>
+        <div class="contact-card">
+          <h3>Secure tips</h3>
+          <p>Signal: <span class="mono">+1&nbsp;555&nbsp;0134</span><br>PGP key on /key.txt</p>
+        </div>
+        <div class="contact-card">
+          <h3>Office</h3>
+          <p>1 Market St, Suite 4400<br>San Francisco, CA 94105</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Newsletter anchor target -->
+  <section class="container section" id="newsletter" style="display:none"></section>
+
+</main>
+
+<div data-include="footer"></div>
+
+<script src="js/includes.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

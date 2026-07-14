@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<!-- =========================================================
+     Sinaquant — HOME (/)
+     ------------------------------------------------------------
+     The landing page. The first viewport always shows the
+     5-slide hero slider, followed by the just-in ticker,
+     featured story + secondary cards + trending sidebar,
+     a 4-card "latest intelligence" grid, and a big
+     newsletter CTA.
+
+     WordPress mapping: index.php (front-page.php if a
+     static front page is set). Each section is a
+     reusable template part in the WP theme.
+     ========================================================= -->
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sinaquant | Intelligent Future AI News</title>
+  <meta name="description" content="Sinaquant is the precision data terminal for AI professionals — daily intelligence on Agentic AI, LLMs, hardware, policy and the agentic future.">
+  
+  <!-- Security headers (static-build equivalent of HTTP headers) -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https://images.unsplash.com https://*.unsplash.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+  <meta name="theme-color" content="#070B15">
+
+  <!-- Open Graph + Twitter -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Sinaquant — Intelligent Future AI News">
+  <meta property="og:description" content="Daily intelligence on Agentic AI, LLMs, hardware, policy and the agentic future.">
+  <meta property="og:url" content="https://sinaquant.ai/">
+  <meta property="og:image" content="assets/images/og-default.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Sinaquant — Intelligent Future AI News">
+  <meta name="twitter:description" content="Daily intelligence on Agentic AI, LLMs, hardware, policy and the agentic future.">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/includes/favicon.svg">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" crossorigin="anonymous" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+
+  <!-- Sinaquant stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Sinaquant",
+    "url": "https://sinaquant.ai/",
+    "description": "Precision data terminal for AI professionals.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "search.html?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+</head>
+<body>
+
+<!-- Header (loaded from partial — see assets/includes/header.html) -->
+<div data-include="header"></div>
+
+<main id="main">
+
+  <!-- Hero slider: 5 full-bleed slides, auto-advance every 5s
+       (see main.js section 5). Each <article> is one slide;
+       the .is-active class drives the cross-fade. -->
+  <section class="container" style="padding-top:24px">
+    <div class="hero-slider" aria-roledescription="carousel" aria-label="Featured stories">
+      <div class="hero-slider__viewport">
+
+        <article class="hero-slider__slide is-active" style="background-image:linear-gradient(135deg,#0B1C36,#133B5C)">
+          <div class="hero-slider__content">
+            <span class="tag tag--solid-electric">Exclusive Report</span>
+            <h1 class="hero-slider__title">The Singularity Shift: How Agentic AI Is Rewriting the Global Economic Ledger</h1>
+            <p class="hero-slider__excerpt">New research from Sinaquant Intelligence reveals that 40% of financial transactions will be autonomous by 2026 — and three sectors are already there.</p>
+            <div class="hero-slider__actions">
+              <a class="btn btn-primary" href="story.html">Read Investigation
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </a>
+              <a class="btn btn-ghost" href="#featured">View Data Map</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="hero-slider__slide" style="background-image:linear-gradient(135deg,#133B5C,#070B15)">
+          <div class="hero-slider__content">
+            <span class="tag">Agentic AI</span>
+            <h1 class="hero-slider__title">The Sovereign Agent: How LLMs Are Becoming Autonomous Digital Entities</h1>
+            <p class="hero-slider__excerpt">Breakthrough protocols allow large language models to manage complex, multi-step tasks across isolated environments without human intervention.</p>
+            <div class="hero-slider__actions">
+              <a class="btn btn-primary" href="story.html">Read Report
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <article class="hero-slider__slide" style="background-image:linear-gradient(135deg,#0F1A2E,#2D5CE8)">
+          <div class="hero-slider__content">
+            <span class="tag tag--cyan">Hardware</span>
+            <h1 class="hero-slider__title">Photonic Computing Hits Commercial Scale</h1>
+            <p class="hero-slider__excerpt">Light-based processors promise 100× efficiency gains for training next-generation models — and a Texas fab is the first to ship at scale.</p>
+            <div class="hero-slider__actions">
+              <a class="btn btn-primary" href="story.html">Read Analysis
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <article class="hero-slider__slide" style="background-image:linear-gradient(135deg,#1A1F2E,#319CE7)">
+          <div class="hero-slider__content">
+            <span class="tag tag--sky">Policy</span>
+            <h1 class="hero-slider__title">EU AI Act v2.0: The Compliance Paradox for Seed-Stage Startups</h1>
+            <p class="hero-slider__excerpt">New regulatory frameworks are inadvertently favoring incumbent tech giants over emerging architectural innovators. A Sinaquant special report.</p>
+            <div class="hero-slider__actions">
+              <a class="btn btn-primary" href="story.html">Read Brief
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <article class="hero-slider__slide" style="background-image:linear-gradient(135deg,#0B1C36,#45EDF6)">
+          <div class="hero-slider__content">
+            <span class="tag">Research</span>
+            <h1 class="hero-slider__title">Bio-Digital Convergence: LLMs in Drug Discovery</h1>
+            <p class="hero-slider__excerpt">How generative chemistry is cutting the R&amp;D timeline for rare-disease therapeutics by up to 70% — and what it means for the FDA pipeline.</p>
+            <div class="hero-slider__actions">
+              <a class="btn btn-primary" href="story.html">Read Story
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <div class="hero-slider__dots" role="tablist" aria-label="Slide navigation">
+        <button class="is-active" aria-label="Slide 1"></button>
+        <button aria-label="Slide 2"></button>
+        <button aria-label="Slide 3"></button>
+        <button aria-label="Slide 4"></button>
+        <button aria-label="Slide 5"></button>
+      </div>
+
+      <div class="hero-slider__nav">
+        <button data-slider-prev aria-label="Previous slide">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button data-slider-next aria-label="Next slide">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Just-In ticker. CSS keyframe `ticker` translates the
+       track by -50% — that's why the inner spans are
+       duplicated in the markup. -->
+  <div class="just-in" aria-label="Latest headlines">
+    <div class="just-in__inner">
+      <div class="just-in__label">
+        <span class="just-in__pulse" aria-hidden="true"></span>
+        Just In
+      </div>
+      <div class="ticker">
+        <div class="ticker__track">
+          <span>OpenAI confirms GPT-5 training clusters are live in Nevada</span>
+          <span>Nvidia market cap breaks $4T as AI demand surges</span>
+          <span>EU Parliament passes updated AI Liability Act</span>
+          <span>Mistral releases Large-3 with 500k context window</span>
+          <span>DeepMind solves fundamental protein folding paradox</span>
+          <span>Anthropic partners with global telcos for localized LLMs</span>
+          <span>OpenAI confirms GPT-5 training clusters are live in Nevada</span>
+          <span>Nvidia market cap breaks $4T as AI demand surges</span>
+          <span>EU Parliament passes updated AI Liability Act</span>
+          <span>Mistral releases Large-3 with 500k context window</span>
+          <span>DeepMind solves fundamental protein folding paradox</span>
+          <span>Anthropic partners with global telcos for localized LLMs</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Featured story (large) + secondary cards + Trending sidebar.
+       .featured-grid is a 2/1 split on desktop. The secondary
+       row of two cards appears under the main featured story
+       inside .featured-grid__main. -->
+  <section class="container section" id="featured">
+    <div class="featured-grid">
+      <div class="featured-grid__main">
+        <article class="story-card story-card--featured">
+          <div class="story-image">
+            <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&q=80" alt="Conference room with holographic data visualisation" loading="lazy" width="1200" height="675">
+          </div>
+          <div class="story-body">
+            <div class="flex items-center justify-between mb-16" style="margin-bottom:12px">
+              <span class="tag tag--cyan">Startups &amp; Funding</span>
+              <span class="t-meta" style="font-size:12px">14 min read</span>
+            </div>
+            <h2 class="story-title"><a href="story.html">The $10B Bet: Why Silicon Valley Is Pouring Capital into Compute-Native Infrastructure</a></h2>
+            <p class="story-excerpt">A deep dive into the massive infrastructure pivots happening at the world's largest venture firms as they prepare for the next generation of LLMs — and the founders quietly building the picks and shovels.</p>
+            <div class="story-footer" style="margin-top:auto">
+              <div class="flex items-center gap-12">
+                <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#2D5CE8,#45EDF6)"></div>
+                <div>
+                  <div style="color:var(--text);font-weight:600;font-size:14px">Elena Vance</div>
+                  <div style="color:var(--text-muted);font-size:11px">Senior Tech Analyst</div>
+                </div>
+              </div>
+              <span>3h ago</span>
+            </div>
+          </div>
+        </article>
+
+        <div class="secondary-row">
+          <article class="story-card">
+            <div class="story-image">
+              <img src="https://images.unsplash.com/photo-1633412802994-5c058f151b66?w=800&q=80" alt="Transparent processor with glowing circuits" loading="lazy" width="800" height="600">
+            </div>
+            <div class="story-body">
+              <span class="tag tag--sky">Hardware</span>
+              <h3 class="story-title"><a href="story.html">Photonic Computing Hits Commercial Scale</a></h3>
+              <p class="story-excerpt">Light-based processors promise 100× efficiency gains for training large-scale models.</p>
+              <div class="story-footer">
+                <span>5h ago</span><span>8 min read</span>
+              </div>
+            </div>
+          </article>
+          <article class="story-card">
+            <div class="story-image">
+              <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80" alt="Abstract neural network visualisation" loading="lazy" width="800" height="600">
+            </div>
+            <div class="story-body">
+              <span class="tag">Research</span>
+              <h3 class="story-title"><a href="story.html">The Neural Bridge: Mapping LLM Latent Space</a></h3>
+              <p class="story-excerpt">Scientists have finally found a way to visualize the "thought process" of generative models.</p>
+              <div class="story-footer">
+                <span>6h ago</span><span>11 min read</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <aside class="featured-grid__sidebar">
+        <div class="trending">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+            Trending Now
+          </h3>
+          <div class="trending__list">
+            <a class="trending__item" href="story.html">
+              <span class="trending__num">01</span>
+              <div>
+                <h4>Global regulatory framework for AGI draft leaked</h4>
+                <p>24.5k reads · 2h ago</p>
+              </div>
+            </a>
+            <a class="trending__item" href="story.html">
+              <span class="trending__num">02</span>
+              <div>
+                <h4>Why open-source models are winning the context war</h4>
+                <p>18.2k reads · 4h ago</p>
+              </div>
+            </a>
+            <a class="trending__item" href="story.html">
+              <span class="trending__num">03</span>
+              <div>
+                <h4>Quantum-resistant encryption for AI agents</h4>
+                <p>15.9k reads · 6h ago</p>
+              </div>
+            </a>
+            <a class="trending__item" href="story.html">
+              <span class="trending__num">04</span>
+              <div>
+                <h4>The ethics of digital biological twins in research</h4>
+                <p>12.1k reads · 8h ago</p>
+              </div>
+            </a>
+            <a class="trending__item" href="story.html">
+              <span class="trending__num">05</span>
+              <div>
+                <h4>TSMC announces 1.4nm pilot production schedule</h4>
+                <p>9.4k reads · 10h ago</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <div class="newsletter">
+          <h3>The Intelligence Edge</h3>
+          <p>Join 50,000+ AI professionals receiving our weekly deep-dives into the future of autonomous systems.</p>
+          <form aria-label="Newsletter signup">
+            <input class="input" type="email" placeholder="professional@email.com" required>
+            <button class="btn btn-secondary w-full" type="submit">Subscribe Now</button>
+          </form>
+          <p class="disclaimer">By subscribing, you agree to our Terms of Service.</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Latest stories grid — 4 cards. In WP this section
+       pulls from the latest posts (wp_query with posts_per_page=4).
+       The "View Archive" link goes to news.html. -->
+  <section class="container section">
+    <div class="section-header">
+      <h2 class="t-h2">Latest Intelligence</h2>
+      <a href="news.html">
+        View Archive
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+      </a>
+    </div>
+    <div class="story-grid" data-story-grid>
+      <article class="story-card">
+        <div class="story-image">
+          <img src="https://images.unsplash.com/photo-1535378620166-273708d44e4c?w=800&q=80" alt="Robotic hand holding a seedling" loading="lazy" width="800" height="600">
+        </div>
+        <div class="story-body">
+          <span class="tag tag--cyan">Sustainability</span>
+          <h3 class="story-title"><a href="story.html">Autonomous Grid Management Reduces City Carbon by 15%</a></h3>
+          <div class="story-footer">
+            <span>2h ago</span><span>8 min read</span>
+          </div>
+        </div>
+      </article>
+      <article class="story-card">
+        <div class="story-image">
+          <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80" alt="AI-assisted microsurgery visualisation" loading="lazy" width="800" height="600">
+        </div>
+        <div class="story-body">
+          <span class="tag tag--sky">Health</span>
+          <h3 class="story-title"><a href="story.html">AI-Driven Biotech Firm Claims Cure for Rare Neuro-Disease</a></h3>
+          <div class="story-footer">
+            <span>4h ago</span><span>12 min read</span>
+          </div>
+        </div>
+      </article>
+      <article class="story-card">
+        <div class="story-image">
+          <img src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=800&q=80" alt="Smart city skyline at dusk" loading="lazy" width="800" height="600">
+        </div>
+        <div class="story-body">
+          <span class="tag">Policy</span>
+          <h3 class="story-title"><a href="story.html">Smart City Sovereign Zones: The Rise of Autonomous Enclaves</a></h3>
+          <div class="story-footer">
+            <span>6h ago</span><span>10 min read</span>
+          </div>
+        </div>
+      </article>
+      <article class="story-card">
+        <div class="story-image">
+          <img src="https://images.unsplash.com/photo-1592478411213-6153e4ebc07d?w=800&q=80" alt="VR headset on desk" loading="lazy" width="800" height="600">
+        </div>
+        <div class="story-body">
+          <span class="tag tag--cyan">Interface</span>
+          <h3 class="story-title"><a href="story.html">Neural Interfaces: Is 2024 the Year of the Direct Link?</a></h3>
+          <div class="story-footer">
+            <span>8h ago</span><span>15 min read</span>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Big newsletter block — full-width version of the
+       .newsletter card. Anchored by id="newsletter" so the
+       contact page's CTA can deep-link to it. -->
+  <section class="container section" id="newsletter">
+    <div class="newsletter" style="padding:48px 32px;text-align:center">
+      <h3 style="font-size:32px;margin-bottom:8px">Don't miss the next breakthrough.</h3>
+      <p style="max-width:560px;margin:0 auto 24px">Sinaquant's intelligence brief is read by 50,000+ founders, researchers, and policy professionals. Get the daily signal — no noise.</p>
+      <form aria-label="Newsletter signup" style="flex-direction:row;max-width:480px;margin:0 auto;flex-wrap:wrap">
+        <input class="input" type="email" placeholder="you@startup.ai" required style="flex:1;min-width:200px">
+        <button class="btn btn-primary" type="submit">Subscribe</button>
+      </form>
+      <p class="disclaimer" style="margin-top:16px">No spam · Unsubscribe in one click</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- Footer (loaded from partial — see assets/includes/footer.html) -->
+<div data-include="footer"></div>
+
+<!-- Sinaquant scripts.
+     includes.js must load BEFORE main.js so the partial
+     fetch can finish and re-bind the global handlers. -->
+<script src="js/includes.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

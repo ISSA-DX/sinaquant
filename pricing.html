@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<!-- =========================================================
+     Sinaquant — PRICING / SUBSCRIPTION (/pricing)
+     ------------------------------------------------------------
+     Public subscription page. Sections:
+       1. Hero
+       2. Three pricing tiers (Basic / Pro / Enterprise)
+       3. Capability comparison table
+       4. FAQ (collapsible <details> elements)
+       5. Final CTA
+     In WP this page is built with a custom page template
+     + Stripe / WooCommerce Subscriptions. The buttons in
+     each tier would POST to /subscribe?plan=basic|pro|ent.
+     ========================================================= -->
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing &amp; Subscriptions | Sinaquant Terminal</title>
+  <meta name="description" content="Choose a Sinaquant subscription tier. Real-time AI news, deep-dive technical reports, hardware benchmarks, and the Sinaquant Data Terminal.">
+  
+  <!-- Security headers (static-build equivalent of HTTP headers) -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https://images.unsplash.com https://*.unsplash.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+  <meta name="theme-color" content="#070B15">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Sinaquant Terminal — Pricing">
+  <meta property="og:description" content="Real-time AI news, deep-dive analysis, and proprietary data for the modern AI professional.">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" type="image/svg+xml" href="assets/includes/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" crossorigin="anonymous" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div data-include="header"></div>
+
+<main id="main">
+
+  <section class="container section" style="padding-top:64px;text-align:center;max-width:880px">
+    <span class="t-meta">The Terminal Access</span>
+    <h1 class="t-h1" style="margin-top:12px">Unlock the future of intelligence.</h1>
+    <p class="t-lead" style="max-width:620px;margin:16px auto 0;color:var(--text-2)">Join the world's most advanced AI research community. Get raw signals, proprietary models, and deep-technical analysis before the markets move.</p>
+  </section>
+
+  <section class="container section">
+    <div class="pricing-grid">
+
+      <article class="tier">
+        <h3 class="tier__name">Basic</h3>
+        <p class="tier__tagline">Latest news stream</p>
+        <div class="tier__price">
+          <span class="tier__amount">$0</span>
+          <span class="tier__period">/ mo</span>
+        </div>
+        <ul class="tier__features">
+          <li>Real-time AI news wire</li>
+          <li>Daily digest newsletter</li>
+          <li>Community forum access</li>
+        </ul>
+        <button class="btn btn-ghost tier__cta" disabled>Current Plan</button>
+      </article>
+
+      <article class="tier tier--highlighted">
+        <span class="tier__badge">Recommended</span>
+        <h3 class="tier__name">Professional</h3>
+        <p class="tier__tagline" style="color:var(--electric)">Intelligence &amp; analysis</p>
+        <div class="tier__price">
+          <span class="tier__amount">$29</span>
+          <span class="tier__period">/ mo</span>
+        </div>
+        <ul class="tier__features">
+          <li><strong>Deep-dive technical reports</strong></li>
+          <li>AI hardware benchmarks</li>
+          <li>Early access to beta models</li>
+          <li>Proprietary tool reviews</li>
+          <li>Ad-free reading experience</li>
+        </ul>
+        <a class="btn btn-primary tier__cta" href="checkout.html">Upgrade to Pro</a>
+      </article>
+
+      <article class="tier">
+        <h3 class="tier__name">Enterprise</h3>
+        <p class="tier__tagline">High-density scaling</p>
+        <div class="tier__price">
+          <span class="tier__amount">Custom</span>
+          <span class="tier__period">/ annual</span>
+        </div>
+        <ul class="tier__features">
+          <li>Full Terminal API access</li>
+          <li>Custom technical reports</li>
+          <li>Dedicated analyst support</li>
+          <li>On-premise deployment</li>
+        </ul>
+        <a class="btn btn-ghost tier__cta" href="contact.html">Contact Sales</a>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="container section">
+    <h2 class="t-h2 text-center" style="margin-bottom:32px">Compare capabilities</h2>
+    <div style="overflow-x:auto">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Capability</th>
+            <th class="text-center">Basic</th>
+            <th class="text-center is-pro">Professional</th>
+            <th class="text-center">Enterprise</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Real-time news wire</td>
+            <td class="text-center"><span class="check">✓</span></td>
+            <td class="text-center is-pro"><span class="check">✓</span></td>
+            <td class="text-center"><span class="check">✓</span></td>
+          </tr>
+          <tr>
+            <td>Deep-dive analysis</td>
+            <td class="text-center"><span class="cross">—</span></td>
+            <td class="text-center is-pro"><span class="check">✓</span></td>
+            <td class="text-center"><span class="check">✓</span></td>
+          </tr>
+          <tr>
+            <td>Proprietary data access</td>
+            <td class="text-center"><span class="cross">—</span></td>
+            <td class="text-center is-pro"><span class="check">✓</span></td>
+            <td class="text-center"><span class="check">✓</span></td>
+          </tr>
+          <tr>
+            <td>API / webhook integration</td>
+            <td class="text-center"><span class="cross">—</span></td>
+            <td class="text-center is-pro" style="color:var(--text-2)">Read-only</td>
+            <td class="text-center"><span class="check">✓</span></td>
+          </tr>
+          <tr>
+            <td>Custom research requests</td>
+            <td class="text-center"><span class="cross">—</span></td>
+            <td class="text-center is-pro"><span class="cross">—</span></td>
+            <td class="text-center"><span class="check">✓</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="container section" style="max-width:900px">
+    <h2 class="t-h2 text-center" style="margin-bottom:32px">System FAQs</h2>
+    <div>
+      <details class="faq-item" open>
+        <summary>How often are technical reports published?</summary>
+        <p>Professional members receive two major technical deep-dives per week, plus daily sector briefs and model-performance evaluations. The Sinaquant Data Terminal refreshes the underlying benchmark datasets every 24 hours.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Can I cancel my Professional subscription?</summary>
+        <p>Yes. You can cancel at any time from your dashboard. Access remains active until the end of your current billing period, and we pro-rate refunds on annual plans.</p>
+      </details>
+      <details class="faq-item">
+        <summary>What is included in the Enterprise API?</summary>
+        <p>The Enterprise API provides RESTful endpoints for our proprietary sentiment engine, hardware benchmark database, and the Sinaquant Alpha signal stream. Rate limits and SLAs are tailored per contract.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Do you offer educational or non-profit pricing?</summary>
+        <p>Yes — accredited universities and registered non-profits get 50% off the Professional tier. Contact us with proof of status and we'll set you up.</p>
+      </details>
+    </div>
+  </section>
+
+  <section class="container section">
+    <div class="glass-panel" style="padding:64px 32px;text-align:center;position:relative;overflow:hidden">
+      <div style="position:absolute;top:-25%;left:-10%;width:300px;height:300px;background:rgba(45,92,232,0.18);border-radius:50%;filter:blur(100px);pointer-events:none" aria-hidden="true"></div>
+      <div style="position:absolute;bottom:-25%;right:-10%;width:300px;height:300px;background:rgba(69,237,246,0.10);border-radius:50%;filter:blur(100px);pointer-events:none" aria-hidden="true"></div>
+      <h2 class="t-h1" style="margin-bottom:24px">Ready for the deep edge?</h2>
+      <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center">
+        <a class="btn btn-primary" href="checkout.html">Start 7-Day Trial</a>
+        <a class="btn btn-ghost" href="contact.html">View All Docs</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div data-include="footer"></div>
+
+<script src="js/includes.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

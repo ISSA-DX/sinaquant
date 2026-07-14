@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<!-- =========================================================
+     Sinaquant — ENTERPRISE CHECKOUT (/checkout)
+     ------------------------------------------------------------
+     Multi-step enterprise signup. The form is split into
+     three .step sections (data-step="1|2|3") that main.js
+     section 16 advances through. The .checkout-progress
+     bar at the top fills to (step/3)*100%.
+
+     Step 1 — Company info      (legal name, size, industry)
+     Step 2 — Payment method    (wire transfer / credit card)
+     Step 3 — Deployment choice (cloud / on-prem) + submit
+     The submit handler shows a fake "Processing…" state
+     for 2s, then alerts success. In WP this would POST
+     to /wp-json/sinaquant/v1/checkout and trigger the
+     Salesforce → Stripe → MSA workflow.
+     ========================================================= -->
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enterprise Checkout | Sinaquant</title>
+  <meta name="description" content="Request Sinaquant enterprise activation. Custom research, dedicated analyst support, and on-premise deployment.">
+  <meta name="theme-color" content="#070B15">
+
+  
+  <!-- Security headers (static-build equivalent of HTTP headers) -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https://images.unsplash.com https://*.unsplash.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+  <meta name="robots" content="noindex">
+
+  <link rel="icon" type="image/svg+xml" href="assets/includes/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" crossorigin="anonymous" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="checkout-progress" aria-hidden="true">
+  <div class="checkout-progress__bar"></div>
+</div>
+
+<div data-include="header"></div>
+
+<main id="main" style="padding-top:24px">
+
+  <section class="container section" style="padding-top:32px">
+    <div class="checkout-grid">
+
+      <!-- LEFT — Order summary -->
+      <aside class="order-summary">
+        <div class="order-summary__tier">
+          <span class="order-summary__tier-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg>
+          </span>
+          <h3>Enterprise Tier</h3>
+        </div>
+        <div class="order-summary__price">
+          <span class="order-summary__amount">Custom</span>
+          <span class="order-summary__period">/ annually</span>
+        </div>
+        <div class="order-summary__includes">
+          <h4>Plan inclusions</h4>
+          <ul>
+            <li>Full Terminal API access (unlimited)</li>
+            <li>Custom algorithmic reports</li>
+            <li>Dedicated enterprise architect</li>
+            <li>On-premise deployment available</li>
+          </ul>
+        </div>
+        <div class="order-summary__rep">
+          <img class="order-summary__rep-avatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&q=80" alt="Marcus Vance" loading="lazy" width="48" height="48">
+          <div>
+            <p class="order-summary__rep-name">Marcus Vance</p>
+            <p class="order-summary__rep-role">Senior Solutions Lead</p>
+          </div>
+          <a class="order-summary__rep-chat" href="#">Chat Now</a>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:16px;margin-top:24px;border:1px solid var(--border);border-radius:8px;background:var(--navy-2)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" style="color:var(--cyan);flex-shrink:0"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <p style="font-size:12px;color:var(--text-2);margin:0;line-height:1.5">Your transaction is protected by enterprise-grade AES-256 encryption. Final activation requires contract verification by our legal department.</p>
+        </div>
+      </aside>
+
+      <!-- RIGHT — Multi-step form -->
+      <!--
+        Security notes for the form below:
+        - novalidate disables the browser's native bubble UI
+          (we render our own .field--invalid style on submit).
+        - In WordPress this form must be paired with a per-
+          session CSRF nonce. Render the nonce as a hidden
+          input here, e.g.
+            <input type="hidden" name="_sinaquant_nonce" value="<?php echo wp_create_nonce('sinaquant_checkout'); ?>">
+          and on submit verify it server-side with
+            wp_verify_nonce($_POST['_sinaquant_nonce'], 'sinaquant_checkout')
+          AND a current_user_can('manage_options') check.
+        - All input lengths are capped via maxlength to
+          prevent trivial payload-bomb submissions. The
+          character whitelist for company name / industry
+          (letters, digits, common punctuation) is enforced
+          both client-side via `pattern` and server-side.
+        - autocomplete attributes are explicit so password
+          managers and the browser don't guess wrong.
+      -->
+      <form id="checkoutForm" novalidate autocomplete="on">
+
+        <!-- Step 1 — Company info -->
+        <section class="step step--active" data-step="1">
+          <div class="step__head">
+            <span class="step__num"><span>1</span></span>
+            <h3 class="step__title">Company Information</h3>
+          </div>
+          <div class="field-grid">
+            <div class="field field--full">
+              <label for="co-name">Legal company name</label>
+              <input class="input" id="co-name" name="company_name" type="text"
+                     placeholder="e.g. Acme Corp Intelligence" required
+                     maxlength="120" minlength="2"
+                     autocomplete="organization" spellcheck="false"
+                     pattern="[A-Za-z0-9 &amp;.,'\-\(\)/]{2,120}"
+                     title="Letters, digits, spaces and common punctuation only.">
+            </div>
+            <div class="field">
+              <label for="co-size">Company size</label>
+              <select class="input" id="co-size" name="company_size" required autocomplete="off">
+                <option value="">Select range</option>
+                <option>1-100 employees</option>
+                <option>100-500 employees</option>
+                <option>501-2,000 employees</option>
+                <option>2,000+ employees</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="co-industry">Industry</label>
+              <input class="input" id="co-industry" name="industry" type="text"
+                     placeholder="e.g. FinTech" required
+                     maxlength="60" minlength="2"
+                     autocomplete="organization-title" spellcheck="false"
+                     pattern="[A-Za-z0-9 &amp;.,'\-]{2,60}"
+                     title="Letters, digits, spaces and basic punctuation only.">
+            </div>
+          </div>
+          <div class="step__actions step__actions--end">
+            <button class="btn btn-primary" data-next="2" type="button">Continue to Payment</button>
+          </div>
+        </section>
+
+        <!-- Step 2 — Payment method -->
+        <section class="step step--inactive" data-step="2">
+          <div class="step__head">
+            <span class="step__num"><span>2</span></span>
+            <h3 class="step__title">Payment Method</h3>
+          </div>
+          <div>
+            <div class="pay-option pay-option--active" data-method="wire">
+              <div class="pay-option__head">
+                <svg class="pay-option__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg>
+                <div>
+                  <p class="pay-option__title">Invoice / Wire Transfer</p>
+                  <p class="pay-option__sub">Recommended for Enterprise · Net-30 terms</p>
+                </div>
+              </div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" style="color:var(--cyan)"><circle cx="12" cy="12" r="9" fill="currentColor"/></svg>
+            </div>
+            <div class="pay-option pay-option--disabled" data-method="card">
+              <div class="pay-option__head">
+                <svg class="pay-option__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                <div>
+                  <p class="pay-option__title">Corporate Credit Card</p>
+                  <p class="pay-option__sub">Available for contracts under $50k</p>
+                </div>
+              </div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" style="color:var(--text-muted)"><circle cx="12" cy="12" r="9"/></svg>
+            </div>
+          </div>
+          <div class="step__actions">
+            <button class="btn btn-ghost" data-prev="1" type="button">Back</button>
+            <button class="btn btn-primary" data-next="3" type="button">Continue to Deployment</button>
+          </div>
+        </section>
+
+        <!-- Step 3 — Deployment -->
+        <section class="step step--inactive" data-step="3">
+          <div class="step__head">
+            <span class="step__num"><span>3</span></span>
+            <h3 class="step__title">Deployment Options</h3>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div class="deploy-option deploy-option--active">
+              <svg class="deploy-option__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><path d="M17.5 19a4.5 4.5 0 1 0 0-9 5.5 5.5 0 0 0-10.7 1.7A4 4 0 0 0 6 19h11.5z"/></svg>
+              <p class="deploy-option__title">Cloud-Native</p>
+              <p class="deploy-option__sub">Hosted on Sinaquant's secure, geographically distributed clusters. Instant activation.</p>
+            </div>
+            <div class="deploy-option">
+              <svg class="deploy-option__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              <p class="deploy-option__title">On-Premise</p>
+              <p class="deploy-option__sub">Self-hosted binary within your VPN. Requires technical verification call.</p>
+            </div>
+          </div>
+          <div class="step__terms">
+            <input id="terms" type="checkbox" required>
+            <label for="terms">I acknowledge that this request initiates the Sinaquant Master Services Agreement (MSA) process. Service activation is subject to financial and technical verification.</label>
+          </div>
+          <div class="step__actions">
+            <button class="btn btn-ghost" data-prev="2" type="button">Back</button>
+            <button class="btn btn-primary" type="submit">Request Activation</button>
+          </div>
+        </section>
+
+      </form>
+
+    </div>
+  </section>
+
+</main>
+
+<div data-include="footer"></div>
+
+<script src="js/includes.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
