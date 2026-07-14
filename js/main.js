@@ -1085,6 +1085,56 @@ function sinaquantInit() { 'use strict';
     apply();
   }
 
+  /* ----------------------------------------------------
+     18. Horizontal scroll lock (mobile)
+     ----------------------------------------------------
+     Belt-and-suspenders for the CSS-level `overflow-x:
+     clip` + `overscroll-behavior-x: none` rules in
+     style.css. On some iOS Safari versions, the CSS
+     rules alone are not enough to stop the page from
+     being panned horizontally during a vertical swipe.
+
+     This handler intercepts touchmove events that try
+     to scroll a non-scrollable-X element. It allows
+     horizontal scroll only on elements that explicitly
+     have horizontal overflow (overflow-x: auto / scroll)
+     — the category tabs, sub-filter chips, code blocks,
+     and the pricing compare table.
+
+     The check `el.scrollWidth <= el.clientWidth + 1`
+     means "this element has no horizontal content
+     to scroll", so we prevent the default and the
+     page never moves horizontally.
+     ---------------------------------------------------- */
+  let lastTouchX = 0;
+  let lastTouchY = 0;
+  document.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 1) {
+      lastTouchX = e.touches[0].clientX;
+      lastTouchY = e.touches[0].clientY;
+    }
+  }, { passive: true });
+  document.addEventListener('touchmove', (e) => {
+    if (e.touches.length !== 1) return;
+    const dx = e.touches[0].clientX - lastTouchX;
+    const dy = e.touches[0].clientY - lastTouchY;
+    // Only act on near-horizontal gestures (|dx| > 2x |dy|).
+    if (Math.abs(dx) <= Math.abs(dy) * 2) return;
+    // Walk up from the touch target. If any ancestor
+    // can scroll horizontally, allow the gesture. If
+    // none can, block it so the page itself doesn't
+    // pan.
+    let node = e.target;
+    while (node && node !== document.body) {
+      const cs = getComputedStyle(node);
+      if (cs.overflowX === 'auto' || cs.overflowX === 'scroll') {
+        if (node.scrollWidth > node.clientWidth + 1) return;
+      }
+      node = node.parentNode;
+    }
+    e.preventDefault();
+  }, { passive: false });
+
 }
 
 // Expose for include loader (see includes.js).
