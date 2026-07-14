@@ -754,7 +754,7 @@ function sinaquantInit() { 'use strict';
   });
 
   /* ----------------------------------------------------
-     18. Pagination active page
+     19. Dashboard intelligence-feed injector
      ----------------------------------------------------
      The pagination component is a static list of <button>s.
      This handler flips the .is-active class to whichever
@@ -771,7 +771,7 @@ function sinaquantInit() { 'use strict';
   });
 
   /* ----------------------------------------------------
-     19. Dashboard intelligence-feed injector
+     20. Dashboard intelligence-feed injector
      ----------------------------------------------------
      The terminal dashboard renders a live stream of
      "signals" — synthetic news events. Every 5s we
@@ -1086,7 +1086,94 @@ function sinaquantInit() { 'use strict';
   }
 
   /* ----------------------------------------------------
-     18. Horizontal scroll lock (mobile)
+     18. Category filter (news.html)
+     ----------------------------------------------------
+     The header category tabs link to news.html with a
+     `?cat=agentic-ai` (or research, funding, policy)
+     query string. This section reads the query string
+     on page load, marks the active tab in the sticky
+     category-tabs nav, and hides any .story-card whose
+     data-cat doesn't match. The "AI News" tab (no query)
+     shows everything.
+
+     On click of a category tab, we update the URL via
+     history.pushState and re-apply — that way the user
+     can use the back button to undo a filter, and the
+     URL is always shareable.
+
+     The active class on .category-tabs a is set by
+     section 14 (path-based fallback) on first load; this
+     section overrides it once the query is read.
+     ---------------------------------------------------- */
+  const grid = document.querySelector('[data-story-grid]');
+  if (grid) {
+    const cards = grid.querySelectorAll('.story-card');
+    const tabs = document.querySelectorAll('.category-tabs a');
+
+    const applyCat = (cat) => {
+      let shown = 0;
+      cards.forEach(card => {
+        const c = (card.dataset.cat || '').toLowerCase();
+        const match = !cat || c === cat.toLowerCase();
+        card.hidden = !match;
+        if (match) shown++;
+      });
+      // Toggle the active tab indicator. The "AI News" tab
+      // (href=news.html without a query) is active when cat
+      // is empty.
+      tabs.forEach(a => {
+        const href = (a.getAttribute('href') || '').toLowerCase();
+        const aCat = (href.split('cat=')[1] || '').toLowerCase();
+        a.classList.toggle('is-active', (!cat && !aCat) || (cat && aCat === cat.toLowerCase()));
+      });
+      // Empty-state message. We append a small message if
+      // the filter shows nothing. The element is reused on
+      // re-filter so it doesn't pile up.
+      let empty = grid.parentElement.querySelector('.story-grid-empty');
+      if (shown === 0) {
+        if (!empty) {
+          empty = document.createElement('div');
+          empty.className = 'story-grid-empty';
+          empty.textContent = 'No stories in this category yet. Check back soon.';
+          grid.parentElement.appendChild(empty);
+        }
+        empty.hidden = false;
+      } else if (empty) {
+        empty.hidden = true;
+      }
+    };
+
+    // Read the ?cat= query string on load.
+    const params = new URLSearchParams(window.location.search);
+    const initialCat = params.get('cat') || '';
+    applyCat(initialCat);
+
+    // On tab click, update the URL and re-apply.
+    tabs.forEach(a => {
+      a.addEventListener('click', (e) => {
+        const href = a.getAttribute('href') || '';
+        if (!href.includes('news.html')) return;   // ignore the Tools tab
+        e.preventDefault();
+        const u = new URL(href, window.location.href);
+        const newCat = u.searchParams.get('cat') || '';
+        const newUrl = window.location.pathname + (newCat ? '?cat=' + newCat : '');
+        history.pushState({ cat: newCat }, '', newUrl);
+        applyCat(newCat);
+        // Scroll to the top of the grid so the user sees the
+        // new filtered result immediately.
+        grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    // Handle back/forward navigation between filters.
+    window.addEventListener('popstate', () => {
+      const c = new URLSearchParams(window.location.search).get('cat') || '';
+      applyCat(c);
+    });
+  }
+
+  /* ----------------------------------------------------
+     19. Horizontal scroll lock (mobile)
      ----------------------------------------------------
      Belt-and-suspenders for the CSS-level `overflow-x:
      clip` + `overscroll-behavior-x: none` rules in
@@ -1135,6 +1222,121 @@ function sinaquantInit() { 'use strict';
     e.preventDefault();
   }, { passive: false });
 
+  /* ----------------------------------------------------
+     27. Keyboard shortcut: Ctrl+K / Cmd+K to open search
+     ----------------------------------------------------
+     Power-user shortcut. When the user presses Ctrl+K
+     (Windows/Linux) or Cmd+K (Mac), the search overlay
+     opens and the input is focused. Escape closes it.
+     The browser's default Ctrl+K behaviour ("focus the
+     address bar") is suppressed so the shortcut feels
+     native. The "/" key (when not in an input) also
+     opens search — same pattern as GitHub.
+     ---------------------------------------------------- */
+  document.addEventListener('keydown', (e) => {
+    // Don't hijack typing inside an input or textarea.
+    if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+    const isMac = navigator.platform.toUpperCase().includes('MAC');
+    const isShortcut = (isMac ? e.metaKey : e.ctrlKey) && e.key.toLowerCase() === 'k';
+    if (isShortcut || e.key === '/') {
+      e.preventDefault();
+      const trigger = document.getElementById('searchTrigger');
+      const input = document.getElementById('searchInput');
+      if (trigger) trigger.click();
+      setTimeout(() => { if (input) input.focus(); }, 120);
+    }
+  });
+
+  /* ----------------------------------------------------
+     28. Bookmark articles (localStorage)
+     ----------------------------------------------------
+     Any element with [data-bookmark] is a "Save" toggle.
+     On click, the article's URL + title are stored in
+     localStorage under 'sq_bookmarks' (a JSON array).
+     The button's label flips to "Saved" and gets a
+     checkmark; clicking again removes the bookmark.
+
+     The save-state is read on page load so refreshing
+     keeps the button in the right state. Bookmarks are
+     namespaced per-domain; the dashboard page can read
+     the same list to display the user's saved articles.
+
+     localStorage is a per-origin, per-browser store. It
+     has no XSS surface from external sources because we
+     only ever read/write our own keys.
+     ---------------------------------------------------- */
+  const BOOKMARK_KEY = 'sq_bookmarks_v1';
+  const readBookmarks = () => {
+    try { return JSON.parse(localStorage.getItem(BOOKMARK_KEY) || '[]'); }
+    catch (e) { return []; }
+  };
+  const writeBookmarks = (list) => {
+    try { localStorage.setItem(BOOKMARK_KEY, JSON.stringify(list)); }
+    catch (e) { /* quota or private mode */ }
+  };
+  document.querySelectorAll('[data-bookmark]').forEach(btn => {
+    const url = btn.dataset.bookmark || window.location.pathname;
+    const title = btn.dataset.title || document.title;
+    const sync = () => {
+      const list = readBookmarks();
+      const saved = list.some(b => b.url === url);
+      btn.classList.toggle('is-saved', saved);
+      const label = btn.querySelector('.bookmark-label');
+      if (label) label.textContent = saved ? 'Saved' : 'Save';
+    };
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const list = readBookmarks();
+      const idx = list.findIndex(b => b.url === url);
+      if (idx >= 0) {
+        list.splice(idx, 1);
+      } else {
+        list.unshift({ url, title, savedAt: new Date().toISOString() });
+      }
+      writeBookmarks(list);
+      sync();
+      toast(idx >= 0 ? 'Removed from saved articles' : 'Saved for later', 'success');
+    });
+    sync();
+  });
+
+  /* ----------------------------------------------------
+     29. Back-to-top button
+     ----------------------------------------------------
+     A floating button appears after the user has
+     scrolled 600px down. Clicking it smooth-scrolls
+     back to the top. The button is created on demand
+     the first time it's needed (so pages that don't
+     need it don't carry the markup). It respects
+     prefers-reduced-motion: when set, the smooth
+     scroll is replaced with an instant jump.
+     ---------------------------------------------------- */
+  let btt = null;
+  const ensureBtt = () => {
+    if (btt) return btt;
+    btt = document.createElement('button');
+    btt.className = 'back-to-top';
+    btt.setAttribute('aria-label', 'Back to top');
+    btt.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>';
+    btt.addEventListener('click', () => {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    });
+    document.body.appendChild(btt);
+    return btt;
+  };
+  let bttTicking = false;
+  const onScroll = () => {
+    if (bttTicking) return;
+    bttTicking = true;
+    requestAnimationFrame(() => {
+      const btn = ensureBtt();
+      btn.classList.toggle('is-visible', window.scrollY > 600);
+      bttTicking = false;
+    });
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+
 }
 
 // Expose for include loader (see includes.js).
@@ -1146,7 +1348,7 @@ window.__sinaquant_rebind = sinaquantInit;
 // badge. If the footer shows "v…" instead of a real
 // version string, the page is on cached HTML/JS and
 // needs a hard refresh.
-window.__sinaquant_version = 'v3-2026-07-14-horizontal-scroll-lock';
+window.__sinaquant_version = 'v4-2026-07-14-category-filter-features';
 console.log('%c Sinaquant ', 'background:#45EDF6;color:#070B15;font-weight:700;padding:2px 8px;border-radius:4px', window.__sinaquant_version);
 
 function paintBuildVersion() {

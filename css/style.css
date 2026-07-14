@@ -2817,3 +2817,100 @@ body.is-locked { overflow: hidden; }
   padding: 8px;
 }
 .mobile-icon-nav .icon-btn svg { width: 20px; height: 20px; }
+
+/* ----------------------------------------------------
+   40. Professional polish features
+   ----------------------------------------------------
+   Three new user-facing features:
+     a) Category-tab is-active indicator (cyan underline)
+     b) data-bookmark save button styling
+     c) Back-to-top floating button
+   Plus a story-grid empty state for the category filter.
+   ---------------------------------------------------- */
+
+/* (a) Active state on the sticky category tabs.
+      The category-tabs a is .is-active when the current
+      ?cat= matches, set by main.js section 18. */
+.category-tabs a {
+  position: relative;
+  padding: 4px 2px;
+  transition: color .2s ease;
+}
+.category-tabs a.is-active { color: var(--cyan); }
+.category-tabs a::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 2px;
+  background: var(--cyan);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .2s ease;
+}
+.category-tabs a.is-active::after { transform: scaleX(1); }
+.category-tabs a:hover { color: var(--cyan); }
+
+/* (b) Bookmark button — same shape as the share buttons. */
+[data-bookmark] {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-2);
+  transition: all .2s ease;
+  cursor: pointer;
+}
+[data-bookmark] svg { width: 18px; height: 18px; }
+[data-bookmark]:hover { color: var(--cyan); border-color: var(--cyan); }
+[data-bookmark].is-saved {
+  color: var(--cyan);
+  border-color: var(--cyan);
+  background: rgba(69, 237, 246, 0.08);
+}
+[data-bookmark].is-saved svg { fill: var(--cyan); }
+
+/* (c) Back-to-top floating button. Created on demand by
+      main.js section 29, hidden by default, slides up
+      when the user has scrolled past 600px. */
+.back-to-top {
+  position: fixed;
+  right: 20px; bottom: 20px;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--navy);
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  z-index: 90;
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: opacity .2s ease, transform .2s ease, background .2s ease;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.back-to-top.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.back-to-top:hover {
+  background: var(--cyan);
+  color: var(--void);
+}
+@media (max-width: 480px) {
+  .back-to-top { right: 14px; bottom: 14px; width: 40px; height: 40px; }
+}
+
+/* story-grid empty state — shows when the category filter
+   matches no cards. */
+.story-grid-empty {
+  grid-column: 1 / -1;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-2);
+  font-size: 15px;
+  border: 1px dashed var(--border);
+  border-radius: var(--card-radius);
+}
