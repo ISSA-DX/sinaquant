@@ -370,7 +370,11 @@ figure, blockquote { margin: 0; }
 @media (min-width: 768px) { .menu-toggle { display: none; } }
 
 /* Category tabs — secondary nav row sticky beneath the header.
-   Hidden scrollbar, horizontal scroll for overflow on mobile. */
+   On mobile, this collapses into a compact pill-bar carousel
+   (tighter padding, smaller font, smaller gap) so it reads
+   as part of the header chrome instead of dominating the
+   viewport. The horizontal-scroll behaviour is preserved so
+   all 6 categories remain reachable. */
 .category-tabs {
   position: sticky;
   top: var(--header-height);
@@ -386,8 +390,17 @@ figure, blockquote { margin: 0; }
   overflow-x: auto;
   scrollbar-width: none;                    /* Firefox */
   -ms-overflow-style: none;                 /* legacy Edge */
+  /* Right-edge fade hints that the row is scrollable.
+     Pure CSS — no extra DOM needed. */
+  -webkit-mask-image: linear-gradient(to right, black 92%, transparent 100%);
+          mask-image: linear-gradient(to right, black 92%, transparent 100%);
 }
 .category-tabs .container::-webkit-scrollbar { display: none; }   /* Chrome / Safari */
+@media (max-width: 767px) {
+  .category-tabs .container { gap: 14px; padding-top: 8px; padding-bottom: 8px; }
+  .category-tabs a { font-size: 12px; padding: 2px 0; }
+  .category-tabs a.is-active::after { bottom: -8px; }
+}
 .category-tabs a {
   display: inline-flex; align-items: center; gap: 8px;
   white-space: nowrap;
@@ -2159,18 +2172,41 @@ body.is-locked { overflow: hidden; }
 .welcome-strip {
   display: flex; flex-direction: column; gap: 24px; margin-bottom: 32px;
 }
-@media (min-width: 768px) { .welcome-strip { flex-direction: row; align-items: flex-end; justify-content: space-between; } }
-.welcome-strip h1 { font-size: 36px; color: var(--ice); margin: 8px 0 0; }
+/* Keep the welcome-strip stacked on mobile AND tablet so
+   the H1 and the 3 status cards never share a row in the
+   768-1024px band (where both would crowd the viewport).
+   Row layout only kicks in on desktop. */
+@media (min-width: 1025px) {
+  .welcome-strip { flex-direction: row; align-items: flex-end; justify-content: space-between; gap: 32px; }
+}
+.welcome-strip h1 { font-size: clamp(28px, 4.5vw, 40px); color: var(--ice); margin: 8px 0 0; line-height: 1.1; }
 .welcome-strip h1 .name { color: var(--sky); }
 .welcome-strip__status { font-size: 12px; color: var(--cyan); text-transform: uppercase; letter-spacing: .12em; margin: 0; }
+/* 3-column grid keeps the status cards as equal-width
+   tiles on phone/tablet. Switches to a flex row only on
+   desktop where there's room to let the H1 sit beside it. */
 .welcome-strip__stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-@media (min-width: 768px) { .welcome-strip__stats { display: flex; gap: 16px; } }
+@media (min-width: 1025px) { .welcome-strip__stats { display: flex; gap: 16px; flex-shrink: 0; } }
 .welcome-stat { padding: 16px 20px; min-width: 140px; }
 .welcome-stat__label { font-size: 10px; text-transform: uppercase; letter-spacing: .12em; color: var(--text-muted); display: block; }
 .welcome-stat__value { font-weight: 700; color: var(--cyan); font-size: 16px; display: block; margin-top: 4px; }
 .welcome-stat__value.is-plain { color: var(--text); }
-.welcome-stat__bar { width: 100%; height: 4px; background: var(--border); border-radius: 2px; margin-top: 8px; overflow: hidden; }
-.welcome-stat__bar-fill { height: 100%; background: var(--cyan); }
+/* Thicker, fully-rounded pill so the API-usage indicator
+   reads as a "data viz" element rather than a thin line.
+   The fill gets a cyan-to-sky gradient + soft glow. */
+.welcome-stat__bar {
+  width: 100%; height: 8px;
+  background: var(--border);
+  border-radius: 999px;
+  margin-top: 10px; overflow: hidden;
+}
+.welcome-stat__bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyan), var(--sky));
+  border-radius: 999px;
+  box-shadow: 0 0 12px rgba(69, 237, 246, 0.4);
+  transition: width .4s ease;
+}
 
 @keyframes pulse {
   0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(69, 237, 246, 0.5); }
