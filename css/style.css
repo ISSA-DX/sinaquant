@@ -690,6 +690,70 @@ body.is-locked { overflow: hidden; }
 .card-title a:hover { color: var(--cyan); }
 .card-meta { color: var(--text-muted); font-size: 13px; margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
 
+/* ---------- 9a. Scroll reveal + hover lift ----------
+   Cards start slightly below their final position and
+   fade in as they enter the viewport. The Intersection
+   Observer in main.js toggles `.reveal-visible`. Stagger
+   delays create a cascading “deck” feel in grids.
+
+   Hover states are enhanced with a cyan glow and lift so
+   every card feels clickable and alive. */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  will-change: opacity, transform;
+}
+.reveal.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered entrance for cards inside grids. The JS also
+   applies inline delays, but these CSS defaults cover common
+   layouts without JS measurement. */
+.reveal-visible:nth-child(1) { transition-delay: 0ms; }
+.reveal-visible:nth-child(2) { transition-delay: 80ms; }
+.reveal-visible:nth-child(3) { transition-delay: 160ms; }
+.reveal-visible:nth-child(4) { transition-delay: 240ms; }
+.reveal-visible:nth-child(5) { transition-delay: 320ms; }
+.reveal-visible:nth-child(6) { transition-delay: 400ms; }
+.reveal-visible:nth-child(7) { transition-delay: 480ms; }
+.reveal-visible:nth-child(8) { transition-delay: 560ms; }
+
+/* Larger, more tactile lift on cards. */
+.card:hover,
+.story-card:hover,
+.tool-card:hover,
+.team-card:hover,
+.contact-card:hover,
+.newsletter:hover,
+.pricing-card:hover,
+.glass-panel:hover,
+.mention-card:hover {
+  transform: translateY(-6px);
+}
+
+/* Reduce or disable motion for users who prefer it. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .card:hover,
+  .story-card:hover,
+  .tool-card:hover,
+  .team-card:hover,
+  .contact-card:hover,
+  .newsletter:hover,
+  .pricing-card:hover,
+  .glass-panel:hover,
+  .mention-card:hover {
+    transform: none;
+  }
+}
+
 /* Story card — image-on-top grid card. Used in story grids
    on the home page, news feed, and related-stories. The
    image uses `object-fit: cover` and a 4:3 aspect ratio so

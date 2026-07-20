@@ -323,6 +323,69 @@ function sinaquantInit() { 'use strict';
   }
 
   /* ----------------------------------------------------
+     5b. Scroll reveal for cards and panels
+     ----------------------------------------------------
+     Cards start hidden and slide/fade in as they enter the
+     viewport. We add .reveal to a broad set of card/panel
+     selectors, then use IntersectionObserver to toggle
+     .reveal-visible. The observer also applies a small stagger
+     delay based on the element's index inside its parent so
+     grids feel like a cascading deck.
+
+     Respects prefers-reduced-motion by immediately revealing
+     everything and skipping transforms.
+     ---------------------------------------------------- */
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const revealSelectors = [
+    '.card',
+    '.story-card',
+    '.story-card--featured',
+    '.tool-card',
+    '.team-card',
+    '.contact-card',
+    '.newsletter',
+    '.pricing-card',
+    '.glass-panel',
+    '.mention-card',
+    '.contact-form',
+    '.drawer-cta',
+    '.hero-slider__slide--image',
+  ];
+  const revealTargets = document.querySelectorAll(revealSelectors.join(','));
+
+  if (revealTargets.length && !reducedMotion.matches) {
+    revealTargets.forEach((el) => el.classList.add('reveal'));
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const parent = el.parentElement;
+          let delay = 0;
+          if (parent) {
+            const siblings = Array.from(parent.children).filter((c) =>
+              c.classList.contains('reveal')
+            );
+            const index = siblings.indexOf(el);
+            delay = Math.min(index * 90, 600);
+          }
+          setTimeout(() => el.classList.add('reveal-visible'), delay);
+          observer.unobserve(el);
+        }
+      });
+    }, {
+      root: null,
+      rootMargin: '0px 0px -60px 0px',
+      threshold: 0.12,
+    });
+
+    revealTargets.forEach((el) => observer.observe(el));
+  } else if (revealTargets.length) {
+    // Reduced motion: keep everything visible.
+    revealTargets.forEach((el) => el.classList.add('reveal-visible'));
+  }
+
+  /* ----------------------------------------------------
      6. Reading progress (single story)
      ----------------------------------------------------
      Sets the width of the gradient bar at the top of the
