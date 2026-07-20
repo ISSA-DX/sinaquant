@@ -45,5 +45,14 @@
     document.dispatchEvent(new CustomEvent('sinaquant:included'));
     // Re-bind handlers that depend on the injected DOM.
     if (typeof window.__sinaquant_rebind === 'function') window.__sinaquant_rebind();
+
+    // Load the shared background animation after the header canvas is in place.
+    if (!document.getElementById('sinaquant-bg-script')) {
+      const bgScript = document.createElement('script');
+      bgScript.id = 'sinaquant-bg-script';
+      bgScript.src = 'js/background.js';
+      bgScript.defer = true;
+      document.body.appendChild(bgScript);
+    }
   });
 })();

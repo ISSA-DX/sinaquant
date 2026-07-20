@@ -186,6 +186,32 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-headline); color: var(--text); 
 p { margin: 0 0 1em; }
 figure, blockquote { margin: 0; }
 
+/* ---------- 2b. Living background canvas ----------
+   The neural-network background injected by
+   assets/includes/header.html. It sits fixed behind every
+   page, uses brand colours from the CSS tokens, and respects
+   reduced-motion / light-mode automatically. */
+#sinaquant-bg {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.55;
+  transition: opacity 0.4s ease;
+}
+
+/* Light mode: soften the background so it stays readable
+   against white surfaces. */
+.light-mode #sinaquant-bg { opacity: 0.28; }
+
+/* Reduced motion: hide the canvas entirely so users who
+   disable animations get a static, distraction-free page. */
+@media (prefers-reduced-motion: reduce) {
+  #sinaquant-bg { opacity: 0; }
+}
+
 /* ---------- 3. Accessibility primitives ----------
    Skip link — a keyboard-only "jump to main" link. It's
    hidden visually until focused (Tab from the address bar
