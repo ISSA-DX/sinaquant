@@ -1,0 +1,3140 @@
+/* =========================================================
+   Sinaquant — Global Stylesheet
+   Design system: Void/Navy/Steel/Electric/Sky/Cyan/Ice/Slate
+   Mobile-first; min-width queries at 481, 768, 1025, 1441.
+   ========================================================= */
+
+/* =========================================================
+   Sinaquant — Global Stylesheet
+   ------------------------------------------------------------
+   This is the single source of truth for the Sinaquant
+   marketing/news theme. The cascade is organised in 25
+   numbered sections, each one grouped by component family
+   rather than by page, so designers can locate and edit
+   one piece (e.g. all hero-slider styles) without paging
+   through page-specific CSS.
+
+   WordPress conversion note: when this stylesheet is split
+   into a parent theme + child theme, section 1 (Tokens) maps
+   to :root in style.css; section 14 (Footer) becomes the
+   footer template part; section 17 (Article body) becomes
+   the single.php content wrapper. The rest of the cascade
+   stays in style.css.
+
+   Authoring rules used throughout this file:
+   • Mobile-first — base styles target the smallest screen,
+     then `@media (min-width: …)` layers in tablet / desktop
+     overrides. Breakpoints: 481, 768, 1025, 1441.
+   • All colour, radius, and shadow values come from CSS
+     custom properties on :root so the light-mode override
+     (see `.light-mode` below) flips the whole theme by
+     changing a small set of tokens — no per-component
+     light-mode code is needed.
+   • Component class names are BEM-ish (block__element) where
+     it helps the design system scale, but pragmatic single
+     names (.card, .btn, .input) are kept for atoms.
+   ========================================================= */
+
+
+/* ---------- 1. Design Tokens ----------
+   The complete Sinaquant colour, type, radius, and layout
+   vocabulary. Every component below consumes these — never
+   reach for a raw hex value. To re-skin the entire site,
+   override these tokens; nothing else needs to change. */
+:root {
+  /* --- Brand palette (dark mode is the default) ---
+     Void / Navy / Steel form the deep background gradient
+     stack. Electric and Sky are the two interactive blue
+     tones — Electric is the "click" colour, Sky is the
+     "calm link" colour. Cyan is reserved for highlights,
+     focus rings, and the live ticker pulse. Ice and Slate
+     are the two foreground text colours. */
+  --void:           #070B15;   /* page background */
+  --navy:           #0B1C36;   /* card surface 1 */
+  --navy-2:         #0F1A2E;   /* card surface 2 (footer, deeper) */
+  --steel:          #133B5C;   /* 1px hairlines + borders */
+  --electric:       #2D5CE8;   /* primary CTA, focus glows */
+  --sky:            #319CE7;   /* secondary links, in-body anchors */
+  --cyan:           #45EDF6;   /* accent — pulse, hover, live state */
+  --ice:            #A7F3FB;   /* brightest heading text */
+  --slate:          #8FA6C4;   /* body / muted text */
+  --slate-2:        #C4C5D7;   /* higher-emphasis body in dark mode */
+
+  /* --- Semantic surface tokens ---
+     The rest of the stylesheet references these aliases
+     instead of raw colours. Light mode overrides the
+     aliases (see .light-mode below), not the brand hues, so
+     the cyan/electric accents stay vibrant in both modes. */
+  --bg:             var(--void);
+  --surface:        var(--navy);
+  --surface-2:      #131F36;
+  --border:         var(--steel);
+  --text:           var(--ice);
+  --text-2:         var(--slate);
+  --text-muted:     #6F86A6;
+  --link:           var(--sky);
+  --link-hover:     var(--cyan);
+  --primary:        var(--electric);
+  --primary-hover:  #4170F0;
+  --accent:         var(--cyan);
+
+  /* --- Surfaces / glows ---
+     `glass-bg` is the translucent navy used on cards that
+     sit on top of a hero / image — paired with
+     `backdrop-filter: blur` further down. The three glow
+     values are reusable "neon" shadows for hover, focus,
+     and CTA elevation. */
+  --glass-bg:       rgba(11, 28, 54, 0.7);
+  --glass-border:   var(--steel);
+  --cyan-glow:      0 0 15px rgba(69, 237, 246, 0.25);
+  --cyan-glow-soft: 0 0 10px rgba(69, 237, 246, 0.15);
+  --electric-glow:  0 0 15px rgba(45, 92, 232, 0.4);
+
+  /* --- Radii ---
+     card-radius (8px) is the default for cards, sliders,
+     tocs, etc. inputs are tighter (4px) to feel more like
+     form fields. Pills (tags, chips) are full-rounded. */
+  --card-radius:    8px;
+  --input-radius:   4px;
+  --pill-radius:    999px;
+
+  /* --- Typography ---
+     Geist is the headline / display face — it has the
+     tight tracking and condensed "tech" feel we want for
+     hero titles. Inter is the body workhorse. Both come
+     from Google Fonts (see each page's <head>). */
+  --font-headline:  "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-body:      "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono:      "Geist Mono", "JetBrains Mono", ui-monospace, monospace;
+
+  /* --- Layout ---
+     Container max-width matches a 12-col ~1280 grid.
+     Header / tabs heights are exposed so category tabs can
+     `position: sticky; top: var(--header-height)` and slot
+     directly under the shrinking header. */
+  --container-max:  1280px;
+  --gutter:         24px;
+  --margin-mobile:  16px;
+  --margin-desktop: 40px;
+  --header-height:  72px;
+  --tabs-height:    56px;
+}
+
+/* Light-mode override — applied when the dark/light toggle
+   in the header sets `.light-mode` on the <html> element.
+   Only the SEMANTIC tokens flip here (bg, surface, text,
+   border, link). The brand accent colours (cyan, electric,
+   sky) stay the same so CTAs and focus states look the same
+   in both modes. When the theme is later moved to WordPress,
+   this swap should be persisted in `localStorage` and
+   applied before paint to avoid a flash. */
+.light-mode {
+  --void:           #F4F7FB;
+  --navy:           #FFFFFF;
+  --navy-2:         #F8FAFC;
+  --steel:          #D5DEEA;
+  --text:           #0B1C36;
+  --text-2:         #44566E;
+  --text-muted:     #6B7B92;
+  --bg:             #F4F7FB;
+  --surface:        #FFFFFF;
+  --surface-2:      #F8FAFC;
+  --border:         #D5DEEA;
+  --link:           #1C50DD;
+  --link-hover:     #2D5CE8;
+  --glass-bg:       rgba(255, 255, 255, 0.85);
+}
+
+/* ---------- 2. Reset & base ----------
+   A minimal, opinionated reset. We don't pull in normalize
+   or a full Eric Meyer reset — we only fix the things that
+   actually break our layout (margin, list styles, media
+   sizing, form font inheritance). Box-sizing is border-box
+   site-wide so width math is predictable. */
+*, *::before, *::after { box-sizing: border-box; }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  /* NOTE: horizontal-scroll lock is applied in section 41,
+     scoped to @media (max-width: 768px) so the desktop
+     view is not affected. The desktop layout legitimately
+     uses some horizontal arrangements (megamenu, compare
+     table, etc.) that must keep working. */
+  overscroll-behavior-x: none;        /* kills the horizontal rubber-band bounce on every viewport */
+}
+body {
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--text-2);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior-x: none;
+  position: relative;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+img, picture, svg, video { display: block; max-width: 100%; }
+img { height: auto; }
+a { color: var(--link); text-decoration: none; transition: color 0.2s ease; }
+a:hover { color: var(--link-hover); }
+button { font-family: inherit; cursor: pointer; border: 0; background: none; color: inherit; }
+input, textarea, select { font-family: inherit; font-size: inherit; color: inherit; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+h1, h2, h3, h4, h5, h6 { font-family: var(--font-headline); color: var(--text); margin: 0; line-height: 1.2; font-weight: 600; }
+p { margin: 0 0 1em; }
+figure, blockquote { margin: 0; }
+
+/* ---------- 2b. Living background canvas ----------
+   The neural-network background injected by
+   assets/includes/header.html. It sits fixed behind every
+   page, uses brand colours from the CSS tokens, and respects
+   reduced-motion / light-mode automatically. */
+#sinaquant-bg {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.55;
+  transition: opacity 0.4s ease;
+}
+
+/* Light mode: soften the background so it stays readable
+   against white surfaces. */
+.light-mode #sinaquant-bg { opacity: 0.28; }
+
+/* Reduced motion: hide the canvas entirely so users who
+   disable animations get a static, distraction-free page. */
+@media (prefers-reduced-motion: reduce) {
+  #sinaquant-bg { opacity: 0; }
+}
+
+/* ---------- 3. Accessibility primitives ----------
+   Skip link — a keyboard-only "jump to main" link. It's
+   hidden visually until focused (Tab from the address bar
+   surfaces it in the top-left). `visually-hidden` is the
+   standard SR-only pattern for screen-reader text.
+   `:focus-visible` is used everywhere instead of `:focus`
+   so mouse clicks don't show rings, but keyboard tabbing
+   does. */
+.skip-link {
+  position: absolute; left: -9999px; top: 0;
+  background: var(--electric); color: #fff; padding: 12px 16px;
+  border-radius: 0 0 8px 0; z-index: 1000; font-weight: 600;
+}
+.skip-link:focus { left: 0; }
+
+.visually-hidden {
+  position: absolute !important; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ---------- 4. Layout primitives ----------
+   `.container` is the responsive 12-col wrapper. It is
+   intentionally margin-constrained rather than full-bleed
+   because most of the design wants a centered column on
+   large screens. The mobile padding is 16px, desktop 40px.
+   `.section` adds a generous vertical rhythm; using it
+   instead of ad-hoc padding keeps the visual cadence even
+   across all 6 page templates. */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding-left:  var(--margin-mobile);
+  padding-right: var(--margin-mobile);
+}
+@media (min-width: 1025px) {
+  .container { padding-left:  var(--margin-desktop); padding-right: var(--margin-desktop); }
+}
+
+.section { padding: 56px 0; }
+@media (min-width: 768px) { .section { padding: 80px 0; } }
+@media (min-width: 1025px) { .section { padding: 100px 0; } }
+
+.divider {
+  height: 1px; background: var(--border); border: 0; margin: 0;
+}
+
+/* ---------- 5. Typography utilities ----------
+   The `.t-*` family is the page-level type scale. Use
+   `.t-h1` for archive / page titles, `.t-h2` for section
+   titles, `.t-h3` for card titles, and `.t-lead` for the
+   introductory paragraph under a page title. `clamp()`
+   gives us fluid type without media queries. */
+.t-display {
+  font-family: var(--font-headline);
+  font-size: clamp(32px, 6vw, 56px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+.t-h1 {
+  font-family: var(--font-headline);
+  font-size: clamp(28px, 4.5vw, 44px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: var(--text);
+}
+.t-h2 {
+  font-family: var(--font-headline);
+  font-size: clamp(22px, 3vw, 32px);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--text);
+}
+.t-h3 {
+  font-family: var(--font-headline);
+  font-size: clamp(18px, 2.2vw, 24px);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text);
+}
+.t-lead {
+  font-size: clamp(16px, 1.6vw, 19px);
+  line-height: 1.6;
+  color: var(--text-2);
+}
+.t-meta {
+  font-family: var(--font-headline);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+.t-body { color: var(--text-2); line-height: 1.65; }
+
+/* ---------- 6. Header & navigation ----------
+   The Sinaquant header is a 4-piece stack:
+   1. `.site-header`  — sticky bar, brand + primary nav +
+                         action icons. Shrinks on scroll
+                         (`.is-scrolled`) so the page content
+                         gets more real estate.
+   2. `.category-tabs` — sticky row directly under the
+                         header carrying the 6 topic links.
+                         Also slides up on scroll.
+   3. `.mobile-drawer` — slide-in panel from the right
+                         (only < 768px). Uses `translateX`
+                         for GPU-accelerated animation.
+   4. `.search-overlay` — full-width overlay that drops down
+                          from the top when the search icon
+                          is clicked. The drawer + overlay
+                          are mutually exclusive.
+   Z-index scale (site-wide): header 50, tabs 40, drawer
+   backdrop 60, drawer 70, search 80, modal 90, skip link
+   1000. Keep this scale intact or stacking breaks. */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(7, 11, 21, 0.85);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  transition: padding 0.25s ease, background 0.25s ease;
+}
+.site-header.is-scrolled { padding: 0; }
+.site-header .container {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; padding-top: 14px; padding-bottom: 14px;
+  transition: padding 0.25s ease;
+}
+.site-header.is-scrolled .container { padding-top: 10px; padding-bottom: 10px; }
+
+.site-brand {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--font-headline);
+  font-size: 22px; font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+.site-brand:hover { color: var(--cyan); }
+.site-brand img { width: 32px; height: 32px; border-radius: 6px; flex-shrink: 0; }
+.site-header.is-scrolled .site-brand img { width: 28px; height: 28px; }
+
+.primary-nav {
+  display: none;          /* hidden on mobile — drawer takes over */
+  gap: 28px;
+  align-items: center;
+}
+.primary-nav a {
+  color: var(--text-2);
+  font-family: var(--font-headline);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 6px 0;
+  position: relative;
+}
+.primary-nav a:hover, .primary-nav a.is-active { color: var(--cyan); }
+.primary-nav a.is-active::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -2px;
+  height: 2px; background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+}
+@media (min-width: 768px) { .primary-nav { display: flex; } }
+
+.header-actions { display: flex; align-items: center; gap: 8px; }
+.header-actions .icon-btn { display: none; }   /* hide search/theme icons on mobile — they live in the drawer footer */
+@media (min-width: 768px) { .header-actions .icon-btn { display: inline-flex; } }
+
+.icon-btn {
+  width: 40px; height: 40px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 8px;
+  color: var(--text-2);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.icon-btn:hover { background: rgba(255,255,255,0.05); color: var(--cyan); }
+.icon-btn svg { width: 22px; height: 22px; }
+
+.menu-toggle { display: inline-flex; }   /* hamburger only on mobile */
+@media (min-width: 768px) { .menu-toggle { display: none; } }
+
+/* Category tabs — secondary nav row sticky beneath the header.
+   On mobile, this collapses into a compact pill-bar carousel
+   (tighter padding, smaller font, smaller gap) so it reads
+   as part of the header chrome instead of dominating the
+   viewport. The horizontal-scroll behaviour is preserved so
+   all 6 categories remain reachable. */
+.category-tabs {
+  position: sticky;
+  top: var(--header-height);
+  z-index: 40;
+  background: var(--void);
+  border-bottom: 1px solid var(--border);
+  transition: top 0.25s ease;
+}
+.site-header.is-scrolled + .category-tabs { top: 64px; }   /* tabs slide up to follow the shrunk header */
+.category-tabs .container {
+  display: flex; align-items: center; gap: 24px;
+  padding-top: 12px; padding-bottom: 12px;
+  overflow-x: auto;
+  scrollbar-width: none;                    /* Firefox */
+  -ms-overflow-style: none;                 /* legacy Edge */
+  /* Right-edge fade hints that the row is scrollable.
+     Pure CSS — no extra DOM needed. */
+  -webkit-mask-image: linear-gradient(to right, black 92%, transparent 100%);
+          mask-image: linear-gradient(to right, black 92%, transparent 100%);
+}
+.category-tabs .container::-webkit-scrollbar { display: none; }   /* Chrome / Safari */
+@media (max-width: 767px) {
+  .category-tabs .container { gap: 14px; padding-top: 8px; padding-bottom: 8px; }
+  .category-tabs a { font-size: 12px; padding: 2px 0; }
+  .category-tabs a.is-active::after { bottom: -8px; }
+}
+.category-tabs a {
+  display: inline-flex; align-items: center; gap: 8px;
+  white-space: nowrap;
+  color: var(--text-2);
+  font-family: var(--font-headline);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 4px 0;
+  position: relative;
+  flex-shrink: 0;
+}
+.category-tabs a svg { width: 16px; height: 16px; }
+.category-tabs a:hover, .category-tabs a.is-active { color: var(--cyan); }
+.category-tabs a.is-active::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -14px;
+  height: 2px; background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+}
+
+/* Mobile drawer (slide-in from right) ----------------
+   Toggled open by adding `.is-open` from main.js. Body
+   gets `is-locked` so the underlying page can't scroll.
+   Uses `100dvh` so the drawer fills the visible viewport
+   on mobile browsers that have dynamic toolbars. */
+.mobile-drawer {
+  position: fixed; top: 0; right: 0;
+  height: 100dvh; width: 85%; max-width: 320px;
+  background: var(--navy);
+  border-left: 1px solid var(--border);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  z-index: 70;
+  display: flex; flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-out;
+  box-shadow: -20px 0 60px rgba(0,0,0,0.5);
+}
+.mobile-drawer.is-open { transform: translateX(0); }
+.drawer-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(7, 11, 21, 0.7);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  z-index: 60;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.drawer-backdrop.is-open { opacity: 1; pointer-events: auto; }
+body.is-locked { overflow: hidden; }
+
+.drawer-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px; border-bottom: 1px solid var(--border);
+}
+.drawer-body {
+  flex: 1; overflow-y: auto;
+  padding: 20px 16px;
+  display: flex; flex-direction: column; gap: 28px;
+}
+.drawer-section-label {
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0 12px; margin-bottom: 8px;
+}
+.drawer-nav a {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  color: var(--text-2);
+  font-family: var(--font-headline);
+  font-weight: 600;
+  font-size: 18px;
+}
+.drawer-nav a:hover, .drawer-nav a.is-active {
+  background: rgba(45, 92, 232, 0.15);
+  color: var(--cyan);
+  box-shadow: 0 0 15px rgba(69, 237, 246, 0.18);
+}
+.drawer-nav a svg { width: 22px; height: 22px; }
+.drawer-categories a {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 15px;
+  margin-bottom: 8px;
+  transition: border-color 0.2s ease;
+}
+.drawer-categories a:hover { border-color: rgba(69,237,246,0.4); }
+.drawer-categories a > span { display: inline-flex; align-items: center; gap: 10px; }
+.drawer-categories a svg { width: 20px; height: 20px; }
+.drawer-cta {
+  margin-top: 4px;
+  padding: 18px;
+  background: linear-gradient(135deg, rgba(45,92,232,0.35), var(--surface-2));
+  border: 1px solid rgba(69,237,246,0.25);
+  border-radius: 14px;
+}
+.drawer-cta h3 { font-size: 16px; margin-bottom: 6px; color: var(--ice); }
+.drawer-cta p { font-size: 13px; color: var(--text-2); margin-bottom: 12px; }
+.drawer-footer {
+  padding: 16px 20px; border-top: 1px solid var(--border);
+  background: rgba(7, 11, 21, 0.5);
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 11px; color: var(--text-muted);
+}
+.drawer-footer .drawer-footer-actions { display: flex; align-items: center; gap: 14px; }
+.drawer-footer .icon-btn { width: 32px; height: 32px; }
+
+/* Search overlay (header-driven) --------------------
+   Slides down from the top of the page. Esc / close
+   button dismisses. The autofocus moves to the input
+   after the transition completes (see main.js). */
+.search-overlay {
+  position: fixed; top: 0; left: 0; right: 0;
+  background: rgba(7, 11, 21, 0.96);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  z-index: 80;
+  transform: translateY(-100%);
+  transition: transform 0.3s ease;
+}
+.search-overlay.is-open { transform: translateY(0); }
+.search-overlay .container {
+  display: flex; align-items: center; gap: 12px;
+  padding-top: 16px; padding-bottom: 16px;
+}
+.search-overlay input {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  color: var(--text);
+  font-size: 16px;
+}
+.search-overlay input:focus {
+  outline: none; border-color: var(--cyan);
+  box-shadow: 0 0 12px rgba(69, 237, 246, 0.3);
+}
+.search-overlay .icon-btn { width: 44px; height: 44px; }
+
+/* ---------- 7. Buttons ----------
+   Three variants — primary (Electric blue with shadow,
+   for the main CTA), secondary (Cyan with neon glow, for
+   newsletter / accent CTAs), and ghost (transparent with
+   border, for secondary actions on dark backgrounds). All
+   variants share the same geometry (12×22 padding, 8 radius,
+   uppercase Geist label) so they line up visually when used
+   in a row. */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 8px;
+  font-family: var(--font-headline);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.btn svg { width: 16px; height: 16px; }
+
+.btn-primary {
+  background: var(--electric);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(45, 92, 232, 0.25);
+}
+.btn-primary:hover {
+  background: var(--primary-hover);
+  color: #fff;
+  box-shadow: 0 0 18px rgba(69, 237, 246, 0.45);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: var(--cyan);
+  color: var(--void);
+  box-shadow: 0 0 10px rgba(69, 237, 246, 0.4);
+}
+.btn-secondary:hover { filter: brightness(1.1); color: var(--void); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+
+.btn-pill { border-radius: 999px; }
+
+/* ---------- 8. Forms ----------
+   `.input` is the single form-control atom. It works on
+   `<input>`, `<textarea>`, and `<select>` (we add a thin
+   size override on textarea via `.textarea`). The cyan
+   focus ring uses `box-shadow` rather than `outline` so it
+   stays consistent across browsers. */
+.input, .textarea, .select {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--input-radius);
+  padding: 14px 16px;
+  color: var(--text);
+  font-size: 15px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.input::placeholder, .textarea::placeholder { color: var(--text-muted); }
+.input:focus, .textarea:focus, .select:focus {
+  outline: none;
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(69, 237, 246, 0.2);
+}
+.textarea { min-height: 140px; resize: vertical; }
+
+.field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+.field label { font-family: var(--font-headline); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-2); }
+
+/* ---------- 9. Cards ----------
+   `.card` is the generic glass surface used for short
+   text-only cards (newsletter, trending, contact cards).
+   `.story-card` is the image-on-top variant used in all
+   story grids. Both share the cyan glow + lift on hover
+   so the site has a consistent "clickable surface" feel. */
+.card {
+  background: var(--glass-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: 20px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+.card:hover {
+  border-color: var(--cyan);
+  box-shadow: var(--cyan-glow);
+  transform: translateY(-2px);
+}
+.card-title { color: var(--text); font-size: 18px; line-height: 1.3; }
+.card-title a { color: inherit; }
+.card-title a:hover { color: var(--cyan); }
+.card-meta { color: var(--text-muted); font-size: 13px; margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* ---------- 9a. Scroll reveal + hover lift ----------
+   Cards start slightly below their final position and
+   fade in as they enter the viewport. The Intersection
+   Observer in main.js toggles `.reveal-visible`. Stagger
+   delays create a cascading “deck” feel in grids.
+
+   Hover states are enhanced with a cyan glow and lift so
+   every card feels clickable and alive. */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  will-change: opacity, transform;
+}
+.reveal.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered entrance for cards inside grids. The JS also
+   applies inline delays, but these CSS defaults cover common
+   layouts without JS measurement. */
+.reveal-visible:nth-child(1) { transition-delay: 0ms; }
+.reveal-visible:nth-child(2) { transition-delay: 80ms; }
+.reveal-visible:nth-child(3) { transition-delay: 160ms; }
+.reveal-visible:nth-child(4) { transition-delay: 240ms; }
+.reveal-visible:nth-child(5) { transition-delay: 320ms; }
+.reveal-visible:nth-child(6) { transition-delay: 400ms; }
+.reveal-visible:nth-child(7) { transition-delay: 480ms; }
+.reveal-visible:nth-child(8) { transition-delay: 560ms; }
+
+/* Larger, more tactile lift on cards. */
+.card:hover,
+.story-card:hover,
+.tool-card:hover,
+.team-card:hover,
+.contact-card:hover,
+.newsletter:hover,
+.pricing-card:hover,
+.glass-panel:hover,
+.mention-card:hover {
+  transform: translateY(-6px);
+}
+
+/* Reduce or disable motion for users who prefer it. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .card:hover,
+  .story-card:hover,
+  .tool-card:hover,
+  .team-card:hover,
+  .contact-card:hover,
+  .newsletter:hover,
+  .pricing-card:hover,
+  .glass-panel:hover,
+  .mention-card:hover {
+    transform: none;
+  }
+}
+
+/* Story card — image-on-top grid card. Used in story grids
+   on the home page, news feed, and related-stories. The
+   image uses `object-fit: cover` and a 4:3 aspect ratio so
+   grids stay aligned regardless of source image dimensions. */
+.story-card {
+  display: flex; flex-direction: column;
+  background: var(--glass-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  height: 100%;
+}
+.story-card:hover {
+  border-color: var(--cyan);
+  box-shadow: var(--cyan-glow);
+  transform: translateY(-3px);
+}
+.story-card .story-image {
+  aspect-ratio: 4 / 3;
+  width: 100%;
+  background-color: var(--surface-2);
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  position: relative;
+}
+.story-card .story-image img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+.story-card:hover .story-image img { transform: scale(1.06); }   /* subtle Ken-Burns on hover */
+.story-card .story-body {
+  padding: 20px;
+  display: flex; flex-direction: column; gap: 12px;
+  flex: 1;
+}
+.story-card .story-title {
+  font-size: 18px; line-height: 1.35; color: var(--text);
+  flex: 1;
+}
+.story-card .story-title a { color: inherit; }
+.story-card .story-title a:hover { color: var(--cyan); }
+.story-card .story-excerpt {
+  color: var(--text-2);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.story-card .story-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 12px;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+  margin-top: auto;            /* push footer to the bottom of the card so cards line up */
+}
+
+/* Featured (large) story card — used as the lead card on
+   the home page. Wider image (16:9) and larger body padding. */
+.story-card--featured .story-image { aspect-ratio: 16 / 9; }
+.story-card--featured .story-body { padding: 28px; }
+.story-card--featured .story-title { font-size: clamp(22px, 2.5vw, 28px); line-height: 1.2; }
+.story-card--featured .story-excerpt { font-size: 16px; }
+
+/* Compact (no-excerpt) card variant — used in dense grids
+   and in the "load more" stubs. */
+.story-card--compact .story-body { padding: 16px; }
+.story-card--compact .story-title { font-size: 16px; }
+
+/* ---------- 10. Category / meta tags ----------
+   Tags are pill-shaped inline labels used to mark category
+   or editorial weight. Five variants:
+   • default    — translucent electric blue (primary)
+   • --cyan     — translucent cyan (highlight)
+   • --sky      — translucent sky (secondary link)
+   • --solid-electric — opaque electric for high-contrast callouts
+   • --ghost    — transparent with border for low-emphasis */
+.tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-headline);
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: var(--pill-radius);
+  background: rgba(45, 92, 232, 0.15);
+  color: var(--electric);
+  border: 1px solid rgba(45, 92, 232, 0.3);
+  width: max-content;
+}
+.tag--cyan { background: rgba(69, 237, 246, 0.12); color: var(--cyan); border-color: rgba(69, 237, 246, 0.3); }
+.tag--sky  { background: rgba(49, 156, 231, 0.12); color: var(--sky); border-color: rgba(49, 156, 231, 0.3); }
+.tag--solid-electric { background: var(--electric); color: #fff; border-color: var(--electric); }
+.tag--ghost { background: transparent; border: 1px solid var(--border); color: var(--text-2); }
+
+/* ---------- 11. Hero slider ----------
+   The slider uses a cross-fade (opacity) rather than a
+   translateX slide so all slides are always present in the
+   DOM (good for SEO and for users who disable JS — they'll
+   just see the first slide). Navigation is via dots, prev /
+   next buttons, and touch swipe (50px threshold), all wired
+   up in main.js. Auto-advance every 5s pauses on hover. */
+.hero-slider {
+  position: relative;
+  height: 480px;
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  background: var(--navy);
+  border: 1px solid var(--border);
+}
+@media (min-width: 768px) { .hero-slider { height: 560px; } }
+@media (min-width: 1025px) { .hero-slider { height: 620px; } }
+
+.hero-slider__viewport { position: absolute; inset: 0; }
+.hero-slider__slide {
+  position: absolute; inset: 0;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  display: flex; align-items: flex-end;     /* content sits at the bottom over the gradient scrim */
+  background-size: cover; background-position: center;
+  pointer-events: none;                     /* disabled slides don't intercept clicks */
+}
+.hero-slider__slide.is-active { opacity: 1; pointer-events: auto; }
+.hero-slider__slide::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(7,11,21,0.95) 0%, rgba(7,11,21,0.6) 40%, rgba(7,11,21,0.2) 70%, transparent 100%);
+}
+
+/* Media slides: video + image backgrounds need a different
+   scrim in light mode so the white text stays readable. */
+.light-mode .hero-slider__slide--image::after,
+.light-mode .hero-slider__slide--video::after {
+  background: linear-gradient(to top, rgba(7,11,21,0.92) 0%, rgba(7,11,21,0.55) 45%, rgba(7,11,21,0.15) 75%, transparent 100%);
+}
+
+/* Video slide: the branded intro fills the viewport without
+   distortion. A subtle zoom-in animation gives it momentum. */
+.hero-slider__slide--video {
+  align-items: center;            /* centre the welcome text */
+  justify-content: center;
+  text-align: center;
+}
+.hero-slider__slide--video .hero-slider__content {
+  align-items: center;
+  max-width: 900px;
+  padding-top: 120px;
+}
+.hero-slider__slide--video .hero-slider__title,
+.hero-slider__slide--video .hero-slider__excerpt {
+  text-shadow: 0 2px 20px rgba(7,11,21,0.8);
+}
+.hero-slider__media {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  transform: scale(1.05);
+  animation: heroVideoZoom 7s ease-out forwards;
+}
+@keyframes heroVideoZoom {
+  from { transform: scale(1.12); }
+  to   { transform: scale(1.05); }
+}
+
+/* Image slides get a slow Ken Burns zoom for a premium feel. */
+.hero-slider__slide--image {
+  animation: heroImageZoom 6s ease-out forwards;
+  animation-play-state: paused;
+}
+.hero-slider__slide--image.is-active { animation-play-state: running; }
+@keyframes heroImageZoom {
+  from { background-size: 105%; }
+  to   { background-size: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-slider__media,
+  .hero-slider__slide--image { animation: none; }
+}
+.hero-slider__content {
+  position: relative; z-index: 2;
+  max-width: 720px;
+  /* Mobile: tighter 20px / 16px padding so the card doesn't
+     dominate the viewport vertically. The bigger breakpoints
+     restore the breathing room. */
+  padding: 20px 16px 72px;          /* extra bottom padding reserves space for the nav/dots */
+  display: flex; flex-direction: column; gap: 12px;
+}
+@media (min-width: 768px) { .hero-slider__content { padding: 48px 40px; gap: 16px; } }
+@media (min-width: 1025px) { .hero-slider__content { padding: 56px 48px; } }
+.hero-slider__title {
+  font-family: var(--font-headline);
+  /* Fluid type: 1.5rem (24px) at the smallest, scaling to
+     2.2rem (35.2px) at desktop. Prevents awkward wraps on
+     long headlines on small screens. */
+  font-size: clamp(1.5rem, 5vw, 2.2rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--ice);
+}
+.hero-slider__excerpt {
+  color: var(--slate-2);
+  font-size: clamp(14px, 1.6vw, 18px);
+  line-height: 1.5;
+  max-width: 600px;
+  /* Hide the excerpt on the smallest phones — the title
+     and CTA are enough to convey the story. The excerpt
+     reappears from 768px up. */
+  display: none;
+}
+@media (min-width: 768px) { .hero-slider__excerpt { display: block; } }
+.hero-slider__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+@media (min-width: 768px) { .hero-slider__actions { gap: 12px; margin-top: 8px; } }
+
+.hero-slider__nav {
+  position: absolute; bottom: 16px; right: 12px;
+  display: flex; gap: 8px;
+  z-index: 3;
+}
+@media (min-width: 768px) { .hero-slider__nav { bottom: 24px; right: 24px; } }
+.hero-slider__nav button {
+  width: 40px; height: 40px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: rgba(7,11,21,0.5);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-2);
+  transition: all 0.2s ease;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+@media (min-width: 768px) { .hero-slider__nav button { width: 44px; height: 44px; } }
+.hero-slider__nav button:hover { background: var(--surface-2); color: var(--cyan); border-color: var(--cyan); }
+.hero-slider__nav button svg { width: 18px; height: 18px; }
+
+.hero-slider__dots {
+  position: absolute; bottom: 24px; left: 12px;
+  display: flex; gap: 6px; z-index: 3;
+}
+@media (min-width: 768px) { .hero-slider__dots { bottom: 32px; left: 24px; } }
+.hero-slider__dots button {
+  width: 24px; height: 4px;
+  background: rgba(255,255,255,0.25);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+@media (min-width: 768px) { .hero-slider__dots button { width: 28px; } }
+.hero-slider__dots button.is-active {
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+  width: 36px;                    /* the active dot grows to feel "selected" */
+}
+@media (min-width: 768px) { .hero-slider__dots button.is-active { width: 40px; } }
+
+/* ---------- 12. Just-In ticker ----------
+   A continuously scrolling marquee. The `.ticker__track`
+   is duplicated inline (same headlines twice) so the
+   translateX(-50%) keyframe creates a seamless loop. The
+   pulse dot uses a soft opacity animation, and the whole
+   block respects `prefers-reduced-motion` (see section 25). */
+.just-in {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  margin: 0 calc(-1 * var(--margin-mobile));    /* bleed to viewport edge */
+}
+/* On mobile, give the ticker some breathing room above
+   and below the hero card / featured grid. The desktop
+   layout sits flush to the content edges on purpose. */
+@media (max-width: 767px) {
+  .just-in { margin-top: 24px; margin-bottom: 24px; border-radius: 0; }
+}
+@media (min-width: 1025px) {
+  .just-in { margin: 0 calc(-1 * var(--margin-desktop)); }
+}
+.just-in__inner {
+  display: flex; align-items: center; gap: 16px;
+  padding: 14px var(--margin-mobile);
+}
+@media (min-width: 1025px) { .just-in__inner { padding: 14px var(--margin-desktop); } }
+.just-in__label {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-headline);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--cyan);
+  padding-right: 16px;
+  border-right: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.just-in__pulse {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+.ticker { flex: 1; overflow: hidden; }
+.ticker__track {
+  display: flex; gap: 36px;
+  white-space: nowrap;
+  animation: ticker 50s linear infinite;
+}
+.ticker__track span { color: var(--text-2); font-size: 14px; }
+.ticker__track span::before { content: '• '; color: var(--cyan); margin-right: 6px; }
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }       /* depends on the track being duplicated inline */
+}
+
+/* ---------- 13. Newsletter signup ----------
+   Reusable card used in 3 places: the home-page sidebar
+   (compact), the home-page big CTA (centered, no border
+   radius inheritance issue), and the modal. The radial
+   gradient ::before adds a soft cyan glow in the top-right
+   corner. When used inline on a hero / slider, the
+   `glass-bg` gives it a frosted look. */
+.newsletter {
+  background: var(--navy);
+  border: 1px solid rgba(69, 237, 246, 0.3);
+  border-radius: var(--card-radius);
+  padding: 32px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.newsletter::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at top right, rgba(69,237,246,0.1), transparent 60%);
+  pointer-events: none;
+}
+.newsletter h3 { font-size: 24px; color: var(--cyan); margin-bottom: 8px; }
+.newsletter p { color: var(--text-2); font-size: 14px; margin-bottom: 20px; }
+.newsletter form { display: flex; flex-direction: column; gap: 12px; }
+.newsletter .disclaimer { color: var(--text-muted); font-size: 11px; text-align: center; margin-top: 8px; }
+
+/* ---------- 14. Footer ----------
+   4-column desktop layout (2fr 1fr 1fr 1fr) collapses to
+   a single column on mobile. The bottom bar carries the
+   copyright, a "systems operational" status pill, and any
+   legal links. The whole footer is included via the shared
+   partial (assets/includes/footer.html) so it stays
+   byte-identical across every page. */
+.site-footer {
+  background: var(--navy-2);
+  border-top: 1px solid var(--border);
+  padding: 56px 0 24px;
+  margin-top: 80px;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+@media (min-width: 768px) { .footer-grid { grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; } }
+.footer-brand p { color: var(--text-2); font-size: 14px; max-width: 360px; margin: 12px 0 20px; }
+.footer-socials { display: flex; gap: 12px; }
+.footer-socials a {
+  width: 38px; height: 38px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 8px;
+  color: var(--text-2);
+  transition: all 0.2s ease;
+}
+.footer-socials a:hover { color: var(--cyan); filter: drop-shadow(0 0 6px var(--cyan)); }
+.footer-socials a svg { width: 18px; height: 18px; }
+.footer-col h4 {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--electric);
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+.footer-col ul { display: flex; flex-direction: column; gap: 10px; }
+.footer-col a { color: var(--text-2); font-size: 14px; }
+.footer-col a:hover { color: var(--cyan); }
+.footer-mini-form { display: flex; gap: 0; margin-top: 8px; }
+.footer-mini-form input {
+  flex: 1; min-width: 0;
+  background: var(--void); color: var(--text);
+  border: 1px solid var(--border);
+  border-right: 0;                          /* merge input + button into a single visual unit */
+  border-radius: 8px 0 0 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+}
+.footer-mini-form input:focus { outline: none; border-color: var(--cyan); }
+.footer-mini-form button {
+  background: var(--cyan); color: var(--void);
+  border-radius: 0 8px 8px 0;
+  padding: 0 14px;
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.footer-bottom {
+  display: flex; flex-direction: column; gap: 12px; align-items: center;
+  padding-top: 24px; border-top: 1px solid var(--border);
+  font-size: 12px; color: var(--text-muted);
+  text-align: center;
+}
+@media (min-width: 768px) { .footer-bottom { flex-direction: row; justify-content: space-between; text-align: left; } }
+.footer-bottom .status {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--cyan);
+}
+.footer-bottom .status::before {
+  content: ''; width: 8px; height: 8px; border-radius: 50%;
+  background: var(--cyan); box-shadow: 0 0 6px var(--cyan);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+/* ---------- 15. Trending sidebar ----------
+   The right-rail of the home page. The big translucent
+   numerals (`.trending__num`) start at 50% opacity and
+   brighten to 100% on row hover — a small interaction
+   that draws the eye to the headline. */
+.trending {
+  background: var(--glass-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: 28px;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+.trending h3 {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 20px;
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.trending h3 svg { width: 22px; height: 22px; color: var(--cyan); }
+.trending__list { display: flex; flex-direction: column; gap: 20px; }
+.trending__item { display: flex; gap: 16px; cursor: pointer; align-items: flex-start; }
+/* On phone, give the headline more room to breathe — the
+   numeric prefix (01, 02, ...) gets a bit more horizontal
+   space, and the headline drops a pixel in size so longer
+   titles don't wrap to 3-4 lines. */
+@media (max-width: 767px) {
+  .trending__item { gap: 20px; }
+  .trending__num { font-size: 20px; min-width: 26px; }
+  .trending__item h4 { font-size: 14px; line-height: 1.35; }
+}
+.trending__num {
+  font-family: var(--font-headline);
+  font-size: 24px; font-weight: 700;
+  color: var(--cyan); opacity: 0.5;
+  flex-shrink: 0;
+  transition: opacity 0.2s ease;
+}
+.trending__item:hover .trending__num { opacity: 1; }
+.trending__item h4 { color: var(--text); font-size: 15px; line-height: 1.4; }
+.trending__item:hover h4 { color: var(--cyan); }
+.trending__item p { color: var(--text-muted); font-size: 12px; margin: 6px 0 0; }
+
+/* ---------- 16. Reading progress (single story) ----------
+   A 4px gradient bar fixed to the very top of the page.
+   Width is driven by JS (main.js section 6) — width: X%
+   is set inline on .reading-progress__bar as the user
+   scrolls the article. Sits above the header (z-index 100). */
+.reading-progress {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 4px;
+  background: transparent;
+  z-index: 100;
+}
+.reading-progress__bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--electric), var(--cyan));
+  transition: width 0.1s ease;
+}
+
+/* ---------- 17. Article body (single story) ----------
+   The single-story layout uses a 3-column grid on desktop
+   (80px share rail | article | 280px TOC). On mobile the
+   share rail collapses into a horizontal row above the
+   article and the TOC hides. The sticky offsets account
+   for both the header AND the category tabs (top: 140px). */
+.article-hero { padding-top: 40px; padding-bottom: 32px; }
+.article-hero .breadcrumb { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
+.article-hero h1 {
+  font-size: clamp(28px, 4.5vw, 48px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--ice);
+  margin-bottom: 24px;
+}
+.article-hero .article-meta {
+  display: flex; align-items: center; gap: 16px;
+  padding: 18px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.article-hero .author-avatar {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.article-hero .author-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.article-hero .author-name { color: var(--text); font-weight: 600; }
+.article-hero .author-meta { color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+.article-cover {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  margin-bottom: 40px;
+  border: 1px solid var(--border);
+  position: relative;
+}
+.article-cover img { width: 100%; height: 100%; object-fit: cover; }
+.article-cover::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 70%, rgba(7,11,21,0.4) 100%);
+  pointer-events: none;
+}
+
+.article-body {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+@media (min-width: 1025px) {
+  .article-body { grid-template-columns: 80px minmax(0, 720px) 280px; gap: 40px; }
+}
+
+.article-share-rail {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  order: 2;                                 /* appear after the article on mobile */
+}
+@media (min-width: 1025px) { .article-share-rail { order: 0; flex-direction: column; gap: 16px; position: sticky; top: 140px; } }
+.article-share-rail .share-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); }
+.article-share-rail button, .article-share-rail a {
+  width: 44px; height: 44px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  transition: all 0.2s ease;
+}
+.article-share-rail button:hover, .article-share-rail a:hover {
+  border-color: var(--cyan);
+  color: var(--cyan);
+  box-shadow: 0 0 12px rgba(69, 237, 246, 0.3);
+}
+.article-share-rail svg { width: 18px; height: 18px; }
+
+.article-content { max-width: 720px; }
+.article-content h2 {
+  font-size: clamp(22px, 2.6vw, 30px);
+  color: var(--ice);
+  margin: 40px 0 16px;
+  scroll-margin-top: 140px;                 /* offset for sticky header so anchor jumps aren't hidden */
+}
+.article-content h3 { font-size: 22px; color: var(--ice); margin: 32px 0 12px; }
+.article-content p { color: var(--slate-2); font-size: 17px; line-height: 1.75; margin-bottom: 1.4em; }
+.article-content a { color: var(--sky); border-bottom: 1px dotted var(--sky); }
+.article-content a:hover { color: var(--cyan); border-bottom-color: var(--cyan); }
+.article-content ul, .article-content ol { color: var(--slate-2); padding-left: 24px; margin-bottom: 1.4em; }
+.article-content ul { list-style: disc; }
+.article-content ol { list-style: decimal; }
+.article-content li { margin-bottom: 8px; line-height: 1.7; }
+.article-content blockquote {
+  border-left: 3px solid var(--cyan);
+  padding: 16px 24px;
+  margin: 32px 0;
+  background: rgba(19, 59, 92, 0.15);
+  font-style: italic;
+  color: var(--text);
+  font-size: 19px;
+  line-height: 1.6;
+}
+.article-content pre, .article-content code {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+.article-content code { padding: 2px 8px; }
+.article-content pre { padding: 18px 22px; overflow-x: auto; margin: 24px 0; }
+.article-content pre code { background: none; border: 0; padding: 0; }
+
+.article-toc {
+  display: none;
+  background: var(--glass-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: 24px;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 140px;
+}
+@media (min-width: 1025px) { .article-toc { display: block; } }
+.article-toc h5 {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: 18px;
+}
+.article-toc ul { display: flex; flex-direction: column; gap: 12px; }
+.article-toc a {
+  display: block;
+  font-size: 13px;
+  color: var(--text-2);
+  padding-left: 14px;
+  border-left: 2px solid transparent;
+  line-height: 1.4;
+  transition: all 0.2s ease;
+}
+.article-toc a:hover, .article-toc a.is-active { color: var(--cyan); border-left-color: var(--cyan); }
+
+.article-author-box {
+  display: flex; gap: 20px; align-items: flex-start;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: 28px;
+  margin-top: 40px;
+}
+.article-author-box .author-photo {
+  width: 80px; height: 80px;
+  border-radius: 12px; overflow: hidden;
+  border: 1px solid rgba(69,237,246,0.3);
+  flex-shrink: 0;
+  background: var(--surface-2);
+}
+.article-author-box .author-photo img { width: 100%; height: 100%; object-fit: cover; }
+.article-author-box h4 { color: var(--text); font-size: 20px; margin-bottom: 8px; }
+.article-author-box p { color: var(--text-2); font-size: 14px; margin-bottom: 12px; }
+.article-author-box .author-links { display: flex; gap: 14px; }
+.article-author-box .author-links a {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--cyan);
+}
+
+.article-tags {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.article-comments {
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: var(--card-radius);
+  padding: 32px;
+  text-align: center;
+  color: var(--text-muted);
+  margin-top: 40px;
+}
+
+/* ---------- 18. Featured grid (home) ----------
+   A 2/1 main + sidebar split on desktop. On mobile, the
+   sidebar (`featured-grid__sidebar`) drops below the main
+   column. The main column's secondary-row stacks two
+   compact cards side-by-side from tablet up. */
+.featured-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+@media (min-width: 1025px) {
+  .featured-grid { grid-template-columns: 2fr 1fr; gap: 32px; }
+}
+.featured-grid__main { display: flex; flex-direction: column; gap: 24px; }
+.featured-grid__main .secondary-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+@media (min-width: 768px) { .featured-grid__main .secondary-row { grid-template-columns: 1fr 1fr; } }
+.featured-grid__sidebar { display: flex; flex-direction: column; gap: 24px; }
+
+/* ---------- 19. Story grid (home + archive) ----------
+   Responsive 1 → 2 → 3 → 4 column grid. The first card
+   on the news archive spans 2 columns (set inline with
+   `style="grid-column:span 2"`). Cards stretch to full
+   grid height via `height: 100%` on .story-card. */
+.story-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+@media (min-width: 600px) { .story-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1025px) { .story-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1280px) { .story-grid { grid-template-columns: repeat(4, 1fr); } }
+
+/* Section header — the "H2 + 'see all' arrow link" pattern
+   used at the top of every content section on the home
+   and archive pages. */
+.section-header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  padding-bottom: 16px;
+  margin-bottom: 32px;
+  border-bottom: 1px solid var(--border);
+  gap: 16px; flex-wrap: wrap;
+}
+.section-header h2 { font-size: clamp(24px, 3vw, 32px); }
+.section-header a { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+.section-header a:hover { color: var(--cyan); }
+.section-header a svg { width: 16px; height: 16px; }
+
+/* ---------- 20. Tool directory ----------
+   The Tools page (tools.html) is a filterable grid of tool
+   cards. Each card has its own logo swatch (a gradient
+   square with the tool's first letter) + a list of
+   meta facts (rating, price, platforms) + 2 actions.
+   Filtering is purely CSS (display:none) driven by the
+   `data-category` attribute and `.is-active` filter chip. */
+.tool-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+@media (min-width: 768px) { .tool-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1025px) { .tool-grid { grid-template-columns: repeat(3, 1fr); } }
+
+.tool-card {
+  background: var(--navy);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: 24px;
+  display: flex; flex-direction: column; gap: 16px;
+  transition: all 0.3s ease;
+  height: 100%;
+}
+.tool-card:hover {
+  border-color: var(--cyan);
+  box-shadow: var(--cyan-glow);
+  transform: translateY(-3px);
+}
+.tool-card__head {
+  display: flex; align-items: flex-start; gap: 14px;
+  position: relative;
+}
+.tool-card__logo {
+  width: 48px; height: 48px;
+  border-radius: 10px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--font-headline);
+  font-weight: 700;
+  font-size: 20px;
+  color: #fff;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+}
+.tool-card__head h3 {
+  font-size: 18px; color: var(--ice);
+  line-height: 1.3;
+  flex: 1;
+}
+.tool-card__vendor { color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+.tool-card__badge {
+  position: absolute; top: 0; right: 0;
+  font-family: var(--font-headline);
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--cyan);
+  border: 1px solid rgba(69, 237, 246, 0.4);
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+.tool-card__desc { color: var(--text-2); font-size: 14px; line-height: 1.6; flex: 1; }
+.tool-card__meta {
+  display: flex; flex-wrap: wrap; gap: 8px 14px;
+  font-size: 12px; color: var(--text-muted);
+  padding-top: 12px; border-top: 1px solid var(--border);
+}
+.tool-card__meta span { display: inline-flex; align-items: center; gap: 4px; }
+.tool-card__actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.tool-card__actions .btn { padding: 8px 16px; font-size: 12px; }
+
+/* Filter chip row — used at the top of tools.html. The
+   `.is-active` chip gets the inverted cyan treatment. */
+.tool-filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.tool-filters button {
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-family: var(--font-headline);
+  font-size: 12px; font-weight: 600;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--text-2);
+  background: transparent;
+  border: 1px solid var(--border);
+  transition: all 0.2s ease;
+}
+.tool-filters button:hover { border-color: var(--cyan); color: var(--cyan); }
+.tool-filters button.is-active {
+  background: var(--cyan);
+  color: var(--void);
+  border-color: var(--cyan);
+  box-shadow: 0 0 12px rgba(69, 237, 246, 0.35);
+}
+
+/* ---------- 21. Category archive (news.html) ----------
+   `.archive-header` is the eyebrow + h1 + intro pattern
+   used at the top of the news feed, tools page, about
+   page, and contact page. `.load-more` centres the load
+   more button with extra vertical breathing room. */
+.archive-header { padding: 40px 0 24px; }
+.archive-header .t-meta { color: var(--cyan); letter-spacing: 0.2em; margin-bottom: 8px; }
+.archive-header h1 { font-size: clamp(28px, 4.5vw, 48px); margin-bottom: 12px; }
+.archive-header p { color: var(--text-2); font-size: 17px; max-width: 720px; }
+
+.load-more {
+  display: flex; justify-content: center; padding: 56px 0;
+}
+
+/* ---------- 22. About / Contact / 404 ----------
+   Shared layout primitives for the three content pages
+   that don't have a story grid or hero. */
+
+/* About page */
+.about-hero { text-align: center; padding: 32px 0 48px; }
+.about-hero .t-meta { color: var(--cyan); letter-spacing: 0.2em; margin-bottom: 12px; }
+.about-hero h1 { font-size: clamp(32px, 5vw, 52px); }
+.about-hero .t-lead { margin: 20px auto 0; }
+
+.about-pillars {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+@media (min-width: 768px) { .about-pillars { grid-template-columns: repeat(3, 1fr); } }
+.pillar {
+  background: var(--glass-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: 32px 28px;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+.pillar:hover { border-color: var(--cyan); box-shadow: var(--cyan-glow-soft); transform: translateY(-2px); }
+.pillar__icon {
+  width: 56px; height: 56px;
+  margin: 0 auto 20px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(45,92,232,0.2), rgba(69,237,246,0.1));
+  border: 1px solid rgba(69, 237, 246, 0.3);
+  color: var(--cyan);
+}
+.pillar__icon svg { width: 26px; height: 26px; }
+.pillar h3 { font-size: 20px; color: var(--ice); margin-bottom: 12px; }
+.pillar p { color: var(--text-2); font-size: 15px; line-height: 1.6; }
+
+.about-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  background: var(--navy);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: 32px;
+}
+@media (min-width: 768px) { .about-stats { grid-template-columns: repeat(4, 1fr); } }
+.about-stat { text-align: center; padding: 16px 8px; }
+.about-stat__num {
+  display: block;
+  font-family: var(--font-headline);
+  font-size: clamp(32px, 4vw, 44px);
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--electric), var(--cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.about-stat__label {
+  font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+/* Team grid */
+.team-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-top: 40px;
+}
+@media (min-width: 481px) { .team-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 768px) { .team-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1025px) { .team-grid { grid-template-columns: repeat(4, 1fr); } }
+
+.team-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: 24px;
+  text-align: center;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  transition: all 0.3s ease;
+}
+.team-card:hover { border-color: var(--cyan); box-shadow: var(--cyan-glow-soft); }
+.team-card img {
+  width: 96px; height: 96px;
+  border-radius: 50%;
+  margin: 0 auto 16px;
+  background: var(--surface-2);
+  border: 2px solid var(--border);
+  object-fit: cover;
+}
+.team-card h4 { color: var(--text); font-size: 18px; margin-bottom: 4px; }
+.team-card__role { color: var(--cyan); font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; margin: 0 0 12px; display: block; }
+.team-card p { color: var(--text-2); font-size: 14px; }
+
+/* Contact page */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  margin-top: 40px;
+}
+@media (min-width: 1025px) { .contact-grid { grid-template-columns: 1.2fr 1fr; gap: 56px; } }
+
+.contact-aside { display: flex; flex-direction: column; gap: 16px; }
+.contact-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: 24px;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  transition: all 0.2s ease;
+}
+.contact-card:hover { border-color: rgba(69, 237, 246, 0.4); }
+.contact-card h3 { font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--cyan); margin-bottom: 8px; }
+.contact-card p { color: var(--text-2); font-size: 14px; line-height: 1.6; margin: 0 0 8px; }
+.contact-card a { color: var(--ice); font-weight: 600; }
+.contact-card a:hover { color: var(--cyan); }
+.mono { font-family: var(--font-mono); color: var(--cyan); font-size: 14px; }
+
+.contact-form { background: var(--glass-bg); border: 1px solid var(--border); border-radius: var(--card-radius); padding: 32px; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+.form-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+.form-label {
+  font-family: var(--font-headline);
+  font-size: 12px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--text-2);
+}
+.req { color: var(--cyan); }
+.form-status { padding: 12px 16px; border-radius: 8px; margin-top: 16px; font-size: 14px; display: none; }
+.form-status.is-visible { display: block; }
+.form-status--success { background: rgba(69, 237, 246, 0.1); border: 1px solid var(--cyan); color: var(--cyan); }
+
+/* 404 */
+.not-found {
+  text-align: center;
+  padding: 80px 0;
+  min-height: 60vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.not-found__num {
+  font-family: var(--font-headline);
+  font-size: clamp(120px, 22vw, 220px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  background: linear-gradient(135deg, var(--electric), var(--cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  line-height: 1;
+}
+.not-found .t-meta { color: var(--cyan); letter-spacing: 0.2em; margin-top: 8px; }
+.not-found h1 { font-size: clamp(24px, 3.4vw, 36px); margin: 16px 0 12px; }
+.not-found p { color: var(--text-2); font-size: 17px; max-width: 520px; margin: 0 auto; }
+.not-found__actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 28px; }
+
+/* Legacy error-404 alias (kept for the older template name) */
+.error-404 {
+  min-height: calc(100vh - var(--header-height) - 200px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 80px 0;
+  text-align: center;
+}
+.error-404__inner { max-width: 480px; }
+.error-404__code {
+  font-family: var(--font-headline);
+  font-size: clamp(96px, 18vw, 200px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  background: linear-gradient(135deg, var(--electric), var(--cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  line-height: 1;
+}
+.error-404 h2 { font-size: 28px; margin: 16px 0 12px; }
+.error-404 p { color: var(--text-2); margin-bottom: 28px; }
+
+/* ---------- 23. Newsletter modal ----------
+   Triggered by main.js (section 9) — appears after 30s OR
+   on exit-intent (mouse leaves the viewport). Backdrop
+   click, Esc, and the X button all close it. The session
+   storage key prevents it from showing more than once. */
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(7, 11, 21, 0.85);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  z-index: 90;
+  display: none;
+  align-items: center; justify-content: center;
+  padding: 20px;
+}
+.modal-backdrop.is-open { display: flex; }
+.modal {
+  background: var(--navy);
+  border: 1px solid rgba(69, 237, 246, 0.3);
+  border-radius: var(--card-radius);
+  max-width: 560px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 30px rgba(45, 92, 232, 0.25), 0 0 60px rgba(69, 237, 246, 0.1);
+  animation: modalIn 0.3s ease-out;
+}
+@keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+.modal__close {
+  position: absolute; top: 12px; right: 12px;
+  width: 40px; height: 40px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 8px;
+  color: var(--text-2);
+  z-index: 2;
+}
+.modal__close:hover { color: var(--cyan); background: rgba(255,255,255,0.05); }
+.modal__close svg { width: 20px; height: 20px; }
+.modal__body { padding: 36px 32px 32px; }
+.modal__body h2 { font-size: 26px; margin-bottom: 8px; color: var(--ice); }
+.modal__body p { color: var(--text-2); font-size: 15px; margin-bottom: 24px; }
+.modal__body p .accent { color: var(--cyan); font-weight: 600; }
+.modal__body form { display: flex; flex-direction: column; gap: 12px; }
+.modal__disclaimer { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 12px; }
+.modal__glow {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  opacity: 0.6;
+}
+
+/* ---------- 24. Helpers ----------
+   Small, single-purpose utility classes for layout and
+   spacing. They are intentionally minimal — for anything
+   that needs more than one property, write a real
+   component class. */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-8 { gap: 8px; } .gap-12 { gap: 12px; } .gap-16 { gap: 16px; } .gap-24 { gap: 24px; } .gap-32 { gap: 32px; }
+.mt-8 { margin-top: 8px; } .mt-16 { margin-top: 16px; } .mt-24 { margin-top: 24px; } .mt-32 { margin-top: 32px; } .mt-40 { margin-top: 40px; } .mt-56 { margin-top: 56px; }
+.mb-8 { margin-bottom: 8px; } .mb-16 { margin-bottom: 16px; } .mb-24 { margin-bottom: 24px; } .mb-32 { margin-bottom: 32px; } .mb-40 { margin-bottom: 40px; }
+.text-center { text-align: center; }
+.w-full { width: 100%; }
+.hidden-mobile { display: none; }
+@media (min-width: 768px) { .hidden-mobile { display: initial; } }
+@media (max-width: 767px) { .hidden-desktop { display: none; } }
+
+/* ---------- 25. Reduced motion ----------
+   Honour the user's OS-level `prefers-reduced-motion`
+   setting. We collapse all animations + transitions to
+   near-instant so vestibular-sensitive users don't get
+   motion sickness from the marquee, pulse, or modal
+   entrance. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .ticker__track { animation: none; }
+  .just-in__pulse { animation: none; }
+}
+
+/* =========================================================
+   Sinaquant — Additional component classes
+   ------------------------------------------------------------
+   This block extends the base stylesheet with the new
+   component classes required by the pages that did not
+   exist in the first build:
+     - pricing.html       (tier cards, comparison table, FAQ)
+     - checkout.html      (multi-step form, glass panel)
+     - dashboard.html     (terminal panels, signal feed)
+     - author.html        (profile header, stats, research)
+     - search.html        (filter sidebar, result cards)
+     - navigation.html    (mega-menu columns)
+     - category.html      (category header + filters)
+   ========================================================= */
+
+/* ---------- 26. Glass panel (re-usable frosted card) ----------
+   The "glassmorphism" surface used on dashboard, author,
+   search, and pricing pages. Translucent navy + blur +
+   thin steel border that glows cyan on hover. */
+.glass-panel {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--card-radius);
+  padding: 24px;
+  transition: border-color .3s ease, box-shadow .3s ease, transform .3s ease;
+}
+.glass-panel:hover {
+  border-color: var(--cyan);
+  box-shadow: var(--cyan-glow-soft);
+}
+
+/* ---------- 27. Author profile ----------
+   Page-specific classes for the author-byline page.
+   Author header = hero row of photo + name + role +
+   follow button. Stats bar = 3-column metrics. Research
+   areas = progress-bar list. Mentions = pull-quote cards. */
+.author-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+  padding: 48px 24px;
+  background: linear-gradient(180deg, rgba(45, 92, 232, 0.08), transparent);
+  border-radius: var(--card-radius);
+  border: 1px solid var(--border);
+}
+@media (min-width: 768px) {
+  .author-header { flex-direction: row; text-align: left; align-items: flex-start; gap: 32px; }
+}
+.author-header__photo {
+  width: 144px; height: 144px;
+  border-radius: 50%;
+  border: 3px solid var(--cyan);
+  box-shadow: 0 0 0 4px rgba(69, 237, 246, 0.15), 0 0 24px rgba(69, 237, 246, 0.3);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.author-header__name { font-size: 32px; color: var(--ice); margin: 0; }
+.author-header__role { color: var(--cyan); font-weight: 500; margin-top: 4px; }
+.author-header__bio { color: var(--text-2); max-width: 640px; margin-top: 12px; }
+.author-header__actions { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
+.author-header__social {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--navy); border: 1px solid var(--border);
+  color: var(--text-2); transition: all .25s ease;
+}
+.author-header__social:hover { color: var(--cyan); border-color: var(--cyan); }
+.author-header__social svg { width: 18px; height: 18px; }
+
+.author-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  margin: 32px 0;
+}
+.author-stat {
+  background: var(--navy);
+  padding: 24px 16px;
+  text-align: center;
+}
+.author-stat__num {
+  display: block;
+  font-size: 32px; font-weight: 700;
+  background: linear-gradient(135deg, var(--electric), var(--cyan));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+}
+.author-stat__label { font-size: 12px; color: var(--text-2); margin-top: 4px; text-transform: uppercase; letter-spacing: .05em; }
+
+.research-area { margin-bottom: 16px; }
+.research-area__head { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 14px; }
+.research-area__name { color: var(--text); font-weight: 500; }
+.research-area__pct { color: var(--cyan); font-weight: 600; }
+.research-bar { height: 6px; background: var(--navy-2); border-radius: var(--pill-radius); overflow: hidden; }
+.research-bar__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--electric), var(--cyan));
+  border-radius: var(--pill-radius);
+  transition: width 1s ease;
+}
+
+.mention-card {
+  padding: 16px;
+  border-left: 3px solid var(--cyan);
+  background: var(--navy-2);
+  border-radius: 0 var(--card-radius) var(--card-radius) 0;
+  margin-bottom: 12px;
+}
+.mention-card__source {
+  font-size: 11px; text-transform: uppercase; letter-spacing: .1em;
+  color: var(--cyan); font-weight: 600; margin-bottom: 6px;
+}
+.mention-card__quote { font-size: 14px; color: var(--text-2); font-style: italic; }
+
+.subscribe-cta {
+  background: linear-gradient(135deg, var(--electric), var(--cyan));
+  border-radius: var(--card-radius);
+  padding: 28px 24px;
+  text-align: center;
+  color: #fff;
+}
+.subscribe-cta h3 { font-size: 22px; color: #fff; margin: 0 0 8px; }
+.subscribe-cta p { color: rgba(255,255,255,0.85); margin-bottom: 16px; font-size: 14px; }
+.subscribe-cta .input { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.3); color: #fff; }
+.subscribe-cta .input::placeholder { color: rgba(255,255,255,0.6); }
+.subscribe-cta .btn-primary { background: #fff; color: var(--electric); }
+.subscribe-cta .btn-primary:hover { background: var(--ice); }
+
+/* ---------- 28. Pricing tier cards ----------
+   Three-column pricing layout. The middle "Pro" card
+   is highlighted with .tier--highlighted, which adds a
+   cyan glow and lifts the card slightly. */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  align-items: stretch;
+  margin: 48px 0;
+}
+@media (min-width: 1025px) {
+  .pricing-grid { grid-template-columns: repeat(3, 1fr); gap: 28px; }
+}
+.tier {
+  display: flex; flex-direction: column;
+  padding: 32px 28px;
+  background: var(--navy);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  position: relative;
+  transition: all .3s ease;
+}
+.tier:hover {
+  border-color: var(--cyan);
+  box-shadow: var(--cyan-glow-soft);
+  transform: translateY(-4px);
+}
+.tier--highlighted {
+  border-color: var(--electric);
+  box-shadow: 0 0 30px rgba(45, 92, 232, 0.18);
+  transform: scale(1.04);
+  z-index: 2;
+}
+.tier--highlighted:hover { transform: scale(1.04) translateY(-4px); }
+.tier__badge {
+  position: absolute; top: 0; right: 24px;
+  background: var(--electric); color: #fff;
+  font-size: 10px; font-weight: 700; letter-spacing: .15em;
+  padding: 6px 12px; border-radius: 0 0 8px 8px;
+  text-transform: uppercase;
+}
+.tier__name { font-size: 20px; color: var(--ice); margin: 0 0 4px; }
+.tier--highlighted .tier__name { color: var(--cyan); text-shadow: 0 0 8px rgba(69, 237, 246, 0.4); }
+.tier__tagline { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--text-2); margin-bottom: 24px; }
+.tier__price { display: flex; align-items: baseline; gap: 4px; margin-bottom: 24px; }
+.tier__amount { font-size: 48px; font-weight: 700; color: var(--ice); }
+.tier--highlighted .tier__amount { color: var(--cyan); }
+.tier__period { color: var(--text-2); font-size: 14px; }
+.tier__features { list-style: none; padding: 0; margin: 0 0 32px; flex-grow: 1; }
+.tier__features li { display: flex; align-items: center; gap: 10px; padding: 8px 0; color: var(--text-2); font-size: 15px; }
+.tier__features li::before {
+  content: "✓";
+  color: var(--cyan); font-weight: 700; font-size: 16px;
+  flex-shrink: 0;
+}
+.tier__features li strong { color: var(--text); }
+.tier__cta { width: 100%; }
+.tier__cta.btn { text-transform: uppercase; letter-spacing: .12em; font-size: 13px; padding: 16px 24px; }
+
+.compare-table { width: 100%; border-collapse: collapse; margin: 48px 0; }
+.compare-table th, .compare-table td {
+  padding: 16px 20px; text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.compare-table th {
+  font-size: 12px; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--text-2); font-weight: 600;
+}
+.compare-table th.is-pro { color: var(--cyan); }
+.compare-table td { color: var(--text-2); font-size: 15px; }
+.compare-table td.is-pro { text-align: center; }
+.compare-table tbody tr:hover { background: var(--navy-2); }
+.compare-table tbody tr:hover td:first-child { color: var(--cyan); }
+.compare-table .check { color: var(--cyan); font-size: 18px; }
+.compare-table .cross { color: var(--text-muted); font-size: 18px; }
+
+.faq-item {
+  background: var(--navy);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: 20px 24px;
+  margin-bottom: 12px;
+  transition: border-color .25s ease;
+}
+.faq-item:hover { border-color: var(--cyan); }
+.faq-item summary {
+  cursor: pointer; list-style: none;
+  display: flex; justify-content: space-between; align-items: center;
+  font-weight: 600; color: var(--ice); font-size: 17px;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after {
+  content: "+"; color: var(--cyan); font-size: 24px; font-weight: 300;
+  transition: transform .25s ease;
+}
+.faq-item[open] summary::after { content: "−"; }
+.faq-item p { color: var(--text-2); margin: 12px 0 0; font-size: 15px; line-height: 1.6; }
+
+/* ---------- 29. Checkout step form ----------
+   Three-step enterprise flow. The progress bar at the
+   top fills as the user advances. Each .step is
+   .step--active when reached, .step--done when finished. */
+.checkout-progress {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 3px; background: var(--navy-2); z-index: 100;
+}
+.checkout-progress__bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--electric), var(--cyan));
+  width: 33%;
+  transition: width .5s ease;
+}
+.checkout-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+@media (min-width: 1025px) {
+  .checkout-grid { grid-template-columns: 5fr 7fr; gap: 48px; }
+}
+.order-summary {
+  background: var(--navy);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: 32px;
+  position: relative; overflow: hidden;
+}
+.order-summary::before {
+  content: ""; position: absolute; top: -50%; right: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle, rgba(45, 92, 232, 0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+.order-summary__tier { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.order-summary__tier-icon {
+  width: 40px; height: 40px; border-radius: 8px;
+  background: rgba(45, 92, 232, 0.2);
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--electric);
+}
+.order-summary__tier h3 { margin: 0; font-size: 20px; color: var(--ice); }
+.order-summary__price { display: flex; align-items: baseline; gap: 6px; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+.order-summary__amount { font-size: 40px; color: var(--cyan); font-weight: 700; }
+.order-summary__period { color: var(--text-2); }
+.order-summary__includes h4 { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--text-2); margin: 0 0 12px; }
+.order-summary__includes ul { list-style: none; padding: 0; margin: 0 0 24px; }
+.order-summary__includes li { display: flex; align-items: center; gap: 10px; padding: 6px 0; color: var(--text-2); font-size: 14px; }
+.order-summary__includes li::before { content: "✓"; color: var(--cyan); font-weight: 700; }
+.order-summary__rep {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px; background: var(--navy-2);
+  border-radius: var(--card-radius);
+}
+.order-summary__rep-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+.order-summary__rep-name { font-size: 14px; color: var(--text); font-weight: 600; margin: 0; }
+.order-summary__rep-role { font-size: 12px; color: var(--text-2); margin: 0; }
+.order-summary__rep-chat { margin-left: auto; color: var(--cyan); font-size: 12px; }
+
+.step {
+  background: var(--navy);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: 32px;
+  margin-bottom: 16px;
+  transition: opacity .4s ease;
+}
+.step--inactive { opacity: .35; pointer-events: none; }
+.step__head { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.step__num {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--cyan); color: var(--void);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 14px;
+}
+.step--inactive .step__num { background: var(--border); color: var(--text-2); }
+.step--done .step__num { background: var(--electric); color: #fff; }
+.step--done .step__num::after { content: "✓"; }
+.step--done .step__num span { display: none; }
+.step__title { margin: 0; font-size: 20px; color: var(--ice); }
+
+.field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.field-grid--single { grid-template-columns: 1fr; }
+@media (max-width: 640px) { .field-grid { grid-template-columns: 1fr; } }
+.field { margin-bottom: 16px; }
+.field--full { grid-column: 1 / -1; }
+.field label {
+  display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--text-2); margin-bottom: 6px; font-weight: 600;
+}
+.field .input,
+.field select.input {
+  width: 100%; padding: 14px 16px;
+  background: var(--navy-2); border: 1px solid var(--border);
+  color: var(--text); border-radius: 6px;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.field .input:focus,
+.field select.input:focus {
+  outline: none; border-color: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(69, 237, 246, 0.15);
+}
+.field--invalid .input,
+.field--invalid select.input {
+  border-color: #FF6B6B;
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.15);
+}
+.author-follow.is-following {
+  background: var(--cyan) !important;
+  color: var(--void) !important;
+  border-color: var(--cyan) !important;
+}
+
+.pay-option {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px; border: 1px solid var(--border);
+  border-radius: var(--card-radius); cursor: pointer; margin-bottom: 12px;
+  transition: all .2s ease;
+}
+.pay-option:hover { border-color: var(--cyan); }
+.pay-option--active { border-color: var(--cyan); background: rgba(69, 237, 246, 0.08); }
+.pay-option--disabled { opacity: .45; cursor: not-allowed; }
+.pay-option__head { display: flex; align-items: center; gap: 12px; }
+.pay-option__icon { color: var(--cyan); }
+.pay-option__title { font-weight: 600; color: var(--text); margin: 0; }
+.pay-option__sub { font-size: 12px; color: var(--text-2); margin: 2px 0 0; }
+
+.deploy-option {
+  padding: 20px; border: 1px solid var(--border);
+  border-radius: var(--card-radius); cursor: pointer;
+  transition: all .2s ease;
+}
+.deploy-option:hover { border-color: var(--cyan); }
+.deploy-option--active { border-color: var(--cyan); background: rgba(69, 237, 246, 0.05); }
+.deploy-option__icon { color: var(--text-2); margin-bottom: 8px; display: block; }
+.deploy-option--active .deploy-option__icon { color: var(--cyan); }
+.deploy-option__title { font-weight: 600; color: var(--text); margin: 0 0 4px; }
+.deploy-option__sub { font-size: 12px; color: var(--text-2); margin: 0; line-height: 1.5; }
+
+.step__actions { display: flex; justify-content: space-between; margin-top: 24px; }
+.step__actions .btn-primary,
+.step__actions .btn-ghost { padding: 12px 24px; text-transform: uppercase; letter-spacing: .1em; font-size: 13px; }
+.step__actions--end { justify-content: flex-end; }
+.step__terms { display: flex; align-items: flex-start; gap: 8px; margin: 16px 0; padding-top: 16px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-2); }
+.step__terms input[type="checkbox"] { margin-top: 2px; accent-color: var(--cyan); }
+
+/* ---------- 30. Dashboard terminal ----------
+   12-column grid: 3-col sidebar (market + agents +
+   priority reports), 9-col main feed. The scanline is a
+   decorative top-to-bottom cyan beam that animates
+   slowly. signal-feed is a tall scrollable list. */
+.terminal-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin: 32px 0;
+  position: relative;
+}
+@media (min-width: 1025px) {
+  .terminal-grid { grid-template-columns: 3fr 9fr; gap: 32px; }
+}
+.terminal-sidebar { display: flex; flex-direction: column; gap: 24px; }
+.terminal-panel__head {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 16px;
+}
+.terminal-panel__head h3 {
+  font-size: 13px; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--text-2); margin: 0;
+}
+.terminal-panel__head .icon { color: var(--cyan); }
+.market-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.market-row:last-child { border-bottom: 0; }
+.market-row__sym { font-weight: 600; color: var(--text); margin: 0; }
+.market-row__name { font-size: 10px; color: var(--text-2); margin: 0; text-transform: uppercase; letter-spacing: .05em; }
+.market-row__change { font-size: 14px; font-weight: 600; }
+.market-row__change.is-up { color: var(--cyan); }
+.market-row__change.is-down { color: #FF6B6B; }
+.market-row__price { font-size: 10px; color: var(--text-2); text-align: right; margin: 2px 0 0; }
+
+.agent-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
+.agent-row__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); flex-shrink: 0; }
+.agent-row__dot.is-idle { background: var(--text-muted); }
+.agent-row__dot.is-pulse { animation: pulse 1.6s ease-in-out infinite; }
+.agent-row__name { font-size: 12px; font-weight: 600; color: var(--text); margin: 0; }
+.agent-row__meta { font-size: 10px; color: var(--text-2); margin: 0; }
+.agent-row--idle { opacity: .5; }
+
+.priority-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 12px; background: var(--navy-2); border-radius: 6px;
+  margin-bottom: 8px; font-size: 12px; color: var(--text-2);
+  transition: all .2s ease;
+}
+.priority-row:hover { background: var(--surface-2); color: var(--text); }
+.priority-row__name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.priority-row__dl { color: var(--cyan); opacity: 0; transition: opacity .2s ease; }
+.priority-row:hover .priority-row__dl { opacity: 1; }
+
+.feed-panel {
+  background: var(--navy);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  height: 800px;
+  display: flex; flex-direction: column; overflow: hidden;
+  position: relative;
+}
+.feed-panel__head {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 20px; border-bottom: 1px solid var(--border);
+  background: rgba(11, 28, 54, 0.5);
+}
+.feed-panel__head-title { display: flex; align-items: center; gap: 8px; }
+.feed-panel__head-title .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); }
+.feed-panel__head-title h3 {
+  font-size: 14px; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--text); margin: 0;
+}
+.feed-panel__head-meta { display: flex; gap: 12px; align-items: center; font-size: 10px; color: var(--text-muted); }
+.feed-panel__body { flex: 1; overflow-y: auto; padding: 16px 20px; }
+.feed-panel__fade {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 80px; background: linear-gradient(180deg, transparent, var(--navy));
+  pointer-events: none;
+}
+.feed-panel__body::-webkit-scrollbar { width: 4px; }
+.feed-panel__body::-webkit-scrollbar-track { background: var(--void); }
+.feed-panel__body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.feed-panel__body::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
+
+.signal {
+  display: flex; gap: 16px;
+  padding: 16px; border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  background: rgba(11, 28, 54, 0.4);
+  margin-bottom: 12px;
+  transition: border-color .2s ease;
+  animation: signalIn .5s ease-out;
+}
+@keyframes signalIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.signal:hover { border-color: var(--cyan); }
+.signal__time { font-size: 10px; color: var(--cyan); padding-top: 2px; font-family: 'SF Mono', Monaco, monospace; flex-shrink: 0; }
+.signal__body { flex: 1; }
+.signal__tags { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+.signal__tag {
+  font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px;
+  text-transform: uppercase; letter-spacing: .05em;
+}
+.signal__tag.is-model { background: rgba(69, 237, 246, 0.1); color: var(--cyan); border: 1px solid rgba(69, 237, 246, 0.2); }
+.signal__tag.is-market { background: rgba(45, 92, 232, 0.1); color: var(--electric); border: 1px solid rgba(45, 92, 232, 0.2); }
+.signal__tag.is-policy { background: rgba(96, 204, 255, 0.1); color: #60CCFF; border: 1px solid rgba(96, 204, 255, 0.2); }
+.signal__tag.is-compute { background: rgba(45, 92, 232, 0.1); color: var(--electric); border: 1px solid rgba(45, 92, 232, 0.2); }
+.signal__id { font-size: 10px; color: var(--text-muted); font-family: 'SF Mono', Monaco, monospace; }
+.signal__msg { color: var(--text); font-size: 14px; line-height: 1.6; margin: 0; }
+.signal__msg strong { color: var(--cyan); }
+.signal__footer { display: flex; gap: 16px; margin-top: 10px; align-items: center; font-size: 10px; color: var(--text-muted); }
+.signal__footer a { color: var(--text-muted); text-decoration: none; transition: color .2s ease; }
+.signal__footer a:hover { color: var(--cyan); }
+
+.welcome-strip {
+  display: flex; flex-direction: column; gap: 24px; margin-bottom: 32px;
+}
+/* Keep the welcome-strip stacked on mobile AND tablet so
+   the H1 and the 3 status cards never share a row in the
+   768-1024px band (where both would crowd the viewport).
+   Row layout only kicks in on desktop. */
+@media (min-width: 1025px) {
+  .welcome-strip { flex-direction: row; align-items: flex-end; justify-content: space-between; gap: 32px; }
+}
+.welcome-strip h1 { font-size: clamp(28px, 4.5vw, 40px); color: var(--ice); margin: 8px 0 0; line-height: 1.1; }
+.welcome-strip h1 .name { color: var(--sky); }
+.welcome-strip__status { font-size: 12px; color: var(--cyan); text-transform: uppercase; letter-spacing: .12em; margin: 0; }
+/* 3-column grid keeps the status cards as equal-width
+   tiles on phone/tablet. Switches to a flex row only on
+   desktop where there's room to let the H1 sit beside it. */
+.welcome-strip__stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+@media (min-width: 1025px) { .welcome-strip__stats { display: flex; gap: 16px; flex-shrink: 0; } }
+.welcome-stat { padding: 16px 20px; min-width: 140px; }
+.welcome-stat__label { font-size: 10px; text-transform: uppercase; letter-spacing: .12em; color: var(--text-muted); display: block; }
+.welcome-stat__value { font-weight: 700; color: var(--cyan); font-size: 16px; display: block; margin-top: 4px; }
+.welcome-stat__value.is-plain { color: var(--text); }
+/* Thicker, fully-rounded pill so the API-usage indicator
+   reads as a "data viz" element rather than a thin line.
+   The fill gets a cyan-to-sky gradient + soft glow. */
+.welcome-stat__bar {
+  width: 100%; height: 8px;
+  background: var(--border);
+  border-radius: 999px;
+  margin-top: 10px; overflow: hidden;
+}
+.welcome-stat__bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyan), var(--sky));
+  border-radius: 999px;
+  box-shadow: 0 0 12px rgba(69, 237, 246, 0.4);
+  transition: width .4s ease;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(69, 237, 246, 0.5); }
+  50% { opacity: .6; box-shadow: 0 0 0 6px rgba(69, 237, 246, 0); }
+}
+
+.scanline {
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px; background: rgba(69, 237, 246, 0.15);
+  animation: scan 8s linear infinite;
+  pointer-events: none; z-index: 10;
+}
+@keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+
+/* ---------- 31. Search results ----------
+   Two-column layout: sticky filter sidebar (cat, time,
+   content type) + main results column. The featured
+   tool "billboard" card spans the top. */
+.search-layout { display: grid; grid-template-columns: 1fr; gap: 32px; }
+@media (min-width: 1025px) { .search-layout { grid-template-columns: 240px 1fr; gap: 48px; } }
+
+.search-filters { display: flex; flex-direction: column; gap: 32px; }
+.search-filter-group h4 {
+  font-size: 11px; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--cyan); margin: 0 0 12px;
+}
+.filter-cat {
+  display: flex; justify-content: space-between; align-items: center;
+  width: 100%; padding: 10px 12px; border-radius: 6px;
+  background: transparent; border: 0; cursor: pointer;
+  color: var(--text-2); text-align: left; font-size: 14px;
+  transition: all .2s ease;
+}
+.filter-cat:hover { background: var(--navy-2); color: var(--text); transform: translateX(4px); }
+.filter-cat.is-active { background: rgba(45, 92, 232, 0.15); color: var(--cyan); }
+.filter-cat__count { font-size: 11px; color: var(--text-muted); }
+.filter-radio {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; cursor: pointer; color: var(--text-2);
+  font-size: 14px;
+}
+.filter-radio input { accent-color: var(--cyan); }
+.filter-chip {
+  display: inline-block; padding: 6px 14px; border-radius: var(--pill-radius);
+  border: 1px solid var(--border); color: var(--text-2); font-size: 13px;
+  cursor: pointer; background: transparent;
+  transition: all .2s ease;
+}
+.filter-chip:hover { border-color: var(--cyan); color: var(--cyan); }
+.filter-chip.is-active { background: var(--electric); color: #fff; border-color: var(--electric); }
+
+.sponsored-card {
+  background: rgba(45, 92, 232, 0.08);
+  border: 1px solid rgba(45, 92, 232, 0.25);
+  border-radius: var(--card-radius);
+  padding: 20px; position: relative; overflow: hidden;
+}
+.sponsored-card__tag {
+  font-size: 9px; color: var(--electric);
+  text-transform: uppercase; letter-spacing: .15em;
+  font-weight: 700; margin-bottom: 8px; display: block;
+}
+.sponsored-card h4 { margin: 0 0 6px; color: var(--text); font-size: 15px; }
+.sponsored-card p { font-size: 13px; color: var(--text-2); margin: 0 0 12px; line-height: 1.5; }
+
+.result-tool {
+  background: var(--navy);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: 24px; display: flex; gap: 16px; align-items: flex-start;
+  margin-bottom: 32px;
+  transition: all .25s ease;
+}
+.result-tool:hover { border-color: var(--cyan); box-shadow: var(--cyan-glow-soft); }
+.result-tool__logo {
+  width: 64px; height: 64px; border-radius: 12px;
+  background: linear-gradient(135deg, var(--electric), var(--cyan));
+  display: inline-flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 28px; flex-shrink: 0;
+}
+.result-tool__body { flex: 1; }
+.result-tool__head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; margin-bottom: 8px; }
+.result-tool__name { color: var(--text); margin: 0 0 4px; font-size: 20px; }
+.result-tool__vendor { color: var(--cyan); font-size: 13px; margin: 0; }
+.result-tool__rating {
+  background: rgba(69, 237, 246, 0.1); border: 1px solid rgba(69, 237, 246, 0.2);
+  color: var(--cyan); font-weight: 700; font-size: 12px;
+  padding: 4px 10px; border-radius: 6px;
+}
+
+.paper-row {
+  display: flex; gap: 12px; padding: 16px;
+  border-radius: var(--card-radius);
+  cursor: pointer; border: 1px solid transparent;
+  transition: all .2s ease;
+}
+.paper-row:hover { background: var(--navy-2); border-color: var(--border); }
+.paper-row__icon {
+  width: 40px; height: 40px; border-radius: 6px;
+  background: var(--surface-2); flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--text-2);
+}
+.paper-row:hover .paper-row__icon { background: rgba(69, 237, 246, 0.1); color: var(--cyan); }
+.paper-row__title { font-weight: 600; color: var(--text); margin: 0 0 4px; font-size: 14px; }
+.paper-row__authors { font-size: 12px; color: var(--text-2); margin: 0 0 8px; }
+.paper-row__meta { display: flex; gap: 12px; font-size: 11px; }
+.paper-row__pdf {
+  color: var(--electric); background: rgba(45, 92, 232, 0.1);
+  padding: 2px 8px; border-radius: 4px;
+}
+
+.research-bento {
+  background: var(--navy);
+  border: 1px solid rgba(45, 92, 232, 0.3);
+  border-radius: var(--card-radius);
+  padding: 32px; margin: 32px 0;
+  position: relative; overflow: hidden;
+}
+.research-bento::after {
+  content: ""; position: absolute;
+  right: -80px; bottom: -80px; width: 320px; height: 320px;
+  background: radial-gradient(circle, rgba(45, 92, 232, 0.06) 0%, transparent 70%);
+  border-radius: 50%; pointer-events: none;
+}
+.research-bento__head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+.research-bento__head h2 { color: var(--text); margin: 0 0 4px; font-size: 22px; }
+.research-bento__head p { color: var(--text-2); margin: 0; font-size: 14px; }
+
+.tool-mini {
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px; background: var(--navy); border: 1px solid var(--border);
+  border-radius: var(--card-radius); transition: all .2s ease;
+}
+.tool-mini:hover { transform: translateY(-2px); border-color: var(--cyan); }
+.tool-mini__icon {
+  width: 40px; height: 40px; border-radius: 6px;
+  background: var(--surface-2); flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--cyan);
+}
+.tool-mini h5 { color: var(--text); margin: 0; font-size: 14px; }
+.tool-mini p { font-size: 11px; color: var(--text-2); margin: 0; }
+
+.pagination { display: flex; justify-content: center; gap: 8px; padding-top: 32px; border-top: 1px solid var(--border); margin-top: 48px; }
+.pagination button {
+  width: 40px; height: 40px; border-radius: 6px;
+  background: transparent; border: 1px solid var(--border);
+  color: var(--text-2); cursor: pointer; font-size: 14px;
+  transition: all .2s ease;
+}
+.pagination button:hover { border-color: var(--cyan); color: var(--cyan); }
+.pagination button.is-active { background: var(--electric); border-color: var(--electric); color: #fff; font-weight: 700; }
+.pagination .ellipsis { display: inline-flex; align-items: center; padding: 0 8px; color: var(--text-2); }
+
+/* ---------- 32. Navigation mega-menu ----------
+   Two-column mega-menu: left = categorized list of
+   links (icon + heading + indented links), right =
+   featured-today column with hero image + 2 small
+   headlines + social icons. */
+.megamenu-grid { display: grid; grid-template-columns: 1fr; gap: 48px; }
+@media (min-width: 1025px) { .megamenu-grid { grid-template-columns: 2fr 1fr; } }
+.megamenu-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+@media (max-width: 768px) { .megamenu-cols { grid-template-columns: 1fr; gap: 24px; } }
+.megamenu-section h3 {
+  display: flex; align-items: center; gap: 10px;
+  color: var(--cyan); font-size: 20px; margin: 0 0 16px;
+}
+.megamenu-section h3 svg { width: 22px; height: 22px; }
+.megamenu-section ul {
+  list-style: none; padding: 0 0 0 36px; margin: 0;
+  border-left: 1px solid var(--border);
+}
+.megamenu-section li { margin-bottom: 12px; }
+.megamenu-section a {
+  color: var(--text-2); text-decoration: none; font-size: 15px;
+  transition: color .2s ease;
+}
+.megamenu-section a:hover { color: var(--text); }
+
+.megamenu-featured { display: flex; flex-direction: column; gap: 24px; }
+.megamenu-featured__head {
+  background: var(--navy); border: 1px solid var(--border);
+  border-radius: var(--card-radius); padding: 24px;
+}
+.megamenu-featured__head h4 {
+  font-size: 12px; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--cyan); margin: 0;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.megamenu-hero { position: relative; border-radius: var(--card-radius); overflow: hidden; aspect-ratio: 16/9; margin: 16px 0; }
+.megamenu-hero img { width: 100%; height: 100%; object-fit: cover; transition: transform .7s ease; }
+.megamenu-hero:hover img { transform: scale(1.05); }
+.megamenu-hero::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 50%, rgba(7, 11, 21, 0.8));
+}
+.megamenu-hero__content {
+  position: absolute; bottom: 16px; left: 16px; right: 16px; z-index: 2;
+}
+.megamenu-hero__tag {
+  display: inline-block; padding: 4px 10px;
+  background: rgba(45, 92, 232, 0.2); border: 1px solid rgba(45, 92, 232, 0.4);
+  color: var(--sky); font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .12em; border-radius: 6px;
+  margin-bottom: 8px;
+}
+.megamenu-hero h5 { color: var(--text); margin: 0; font-size: 18px; line-height: 1.3; }
+.megamenu-hero:hover h5 { color: var(--cyan); }
+
+.megamenu-mini { display: flex; gap: 16px; padding: 16px 0; border-top: 1px solid var(--border); cursor: pointer; }
+.megamenu-mini__img { width: 80px; height: 80px; border-radius: 6px; overflow: hidden; flex-shrink: 0; }
+.megamenu-mini__img img { width: 100%; height: 100%; object-fit: cover; }
+.megamenu-mini__tag { font-size: 10px; color: var(--sky); text-transform: uppercase; letter-spacing: .12em; font-weight: 700; margin-bottom: 4px; }
+.megamenu-mini h5 { color: var(--text); font-size: 14px; line-height: 1.4; margin: 0; }
+.megamenu-mini:hover h5 { color: var(--cyan); }
+
+.megamenu-social {
+  display: flex; justify-content: space-around; align-items: center;
+  padding: 20px; border: 1px solid var(--border); border-radius: var(--card-radius);
+  background: var(--navy-2);
+}
+.megamenu-social a { color: var(--text-2); transition: all .2s ease; }
+.megamenu-social a:hover { color: var(--cyan); transform: scale(1.1); }
+.megamenu-social svg { width: 28px; height: 28px; }
+
+/* ---------- 33. Category feed page ----------
+   Same archive header as news.html plus a hero card
+   for the category and a sub-filter strip for sub-tags. */
+.cat-header {
+  background: linear-gradient(135deg, rgba(45, 92, 232, 0.08), rgba(69, 237, 246, 0.04));
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: 40px 32px;
+  margin: 32px 0;
+  display: flex; flex-direction: column; gap: 16px;
+}
+@media (min-width: 768px) { .cat-header { flex-direction: row; align-items: center; justify-content: space-between; } }
+.cat-header__icon {
+  width: 64px; height: 64px; border-radius: 12px;
+  background: var(--electric); color: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 28px; flex-shrink: 0;
+}
+.cat-header__title { color: var(--ice); margin: 0 0 4px; font-size: 32px; }
+.cat-header__count { color: var(--text-2); font-size: 14px; margin: 0; }
+
+.sub-filter { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 32px; }
+.sub-filter button {
+  padding: 6px 14px; border-radius: var(--pill-radius);
+  background: transparent; border: 1px solid var(--border);
+  color: var(--text-2); font-size: 13px; cursor: pointer;
+  transition: all .2s ease;
+}
+.sub-filter button:hover { border-color: var(--cyan); color: var(--cyan); }
+.sub-filter button.is-active { background: var(--cyan); border-color: var(--cyan); color: var(--void); font-weight: 600; }
+
+/* ----------------------------------------------------
+   34. Toast / inline-notice
+   ----------------------------------------------------
+   Non-blocking replacement for the native alert()
+   dialog. Renders in the bottom-right corner with
+   slide-in animation, auto-dismisses after 3.4s.
+   ---------------------------------------------------- */
+.toast {
+  background: var(--navy, #0B1C36);
+  color: var(--ice, #A7F3FB);
+  border: 1px solid var(--border, rgba(255,255,255,0.08));
+  border-left-width: 3px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.4;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.45);
+  animation: toastIn .25s ease-out;
+  max-width: 360px;
+  word-wrap: break-word;
+}
+.toast--success { border-left-color: #45EDA0; }
+.toast--error   { border-left-color: #FF6B6B; }
+.toast--info    { border-left-color: var(--cyan, #45EDF6); }
+.toast.is-leaving { opacity: 0; transform: translateX(20px); transition: opacity .4s, transform .4s; }
+@keyframes toastIn { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+
+/* ----------------------------------------------------
+   35. Invalid field state (checkout, forms)
+   ----------------------------------------------------
+   Triggered by JS adding .field--invalid to the
+   .field wrapper when [required] is empty.
+   ---------------------------------------------------- */
+.field--invalid .input,
+.field--invalid select.input,
+.field--invalid textarea.input {
+  border-color: #FF6B6B !important;
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.15) !important;
+}
+.field--invalid .field__error {
+  display: block;
+  color: #FF6B6B;
+  font-size: 12px;
+  margin-top: 4px;
+}
+.field__error { display: none; }
+
+/* ----------------------------------------------------
+   36. Global mobile layout rules  (max-width: 768px)
+   ----------------------------------------------------
+   One single block of cross-cutting mobile overrides
+   that pulls together the most common responsive
+   adjustments in one place. Anything in this block
+   applies to every page; component-specific mobile
+   styling stays close to the component definition
+   above.
+
+   The `.container` rule is technically redundant with
+   the `min-width: 1025px` rule on line 221 (the mobile
+   padding is already 16px by default) but is left in
+   for explicitness — the value here is the single
+   source of truth, and the min-width rule at 1025px
+   overrides for desktop.
+
+   The `.grid-layout` selector is a no-op until/unless
+   someone adds a `.grid-layout` class to a page. The
+   pattern is here so future authors can reach for it
+   without re-discovering the rule.
+   ---------------------------------------------------- */
+@media (max-width: 768px) {
+  /* Global container spacing */
+  .container {
+    padding-left:  16px;
+    padding-right: 16px;
+  }
+
+  /* Flexbox & Grid column stacks — opt-in class for
+     ad-hoc layouts that should collapse to a single
+     column on phones. Component grids (featured-grid,
+     story-grid, terminal-grid) keep their own
+     responsive logic. */
+  .grid-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Image safety net: every <img> in the article body
+     scales fluidly and respects its 16:9 container.
+     Component-level rules (story-card .story-image,
+     story-card--featured, etc.) still take precedence. */
+  .article-content img,
+  .story-card .story-image img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+}
+
+/* ----------------------------------------------------
+   37. Mobile newsletter redundancy
+   ----------------------------------------------------
+   The featured-grid sidebar contains a small newsletter
+   card. On phone viewports we hide it — the full-width
+   newsletter at the bottom of the page (and the
+   header modal) is enough. The `.newsletter--inline`
+   class is the marker; the standalone `.newsletter`
+   blocks in category.html / about.html / tools.html
+   are NOT modified by this rule, so they stay visible
+   everywhere they appear.
+   ---------------------------------------------------- */
+@media (max-width: 768px) {
+  .newsletter--inline { display: none; }
+}
+
+/* ----------------------------------------------------
+   38. Per-page mobile polish (audit batch)
+   ----------------------------------------------------
+   The audit agents identified ~30 concrete mobile bugs
+   across the 13 pages other than index.html. They are
+   fixed in this single section so future authors can
+   audit one block instead of searching the file.
+
+   Order:
+     a. Contact + checkout + 404 (form & utility pages)
+     b. About + tools + navigation (marketing pages)
+     c. Pricing + dashboard (terminal pages)
+     d. Search + category (result / feed pages)
+     e. News + story (magazine pages)
+     f. Author (profile pages)
+   ---------------------------------------------------- */
+
+/* ---- (a) contact / checkout / 404 -------------------- */
+
+@media (max-width: 640px) {
+  .contact-form { padding: 20px; }
+  .contact-card { padding: 16px; min-width: 0; }
+  .step { padding: 20px; }
+  .order-summary { padding: 20px; }
+  .order-summary__rep { flex-wrap: wrap; }
+  .order-summary__rep-chat { margin-left: 0; width: 100%; text-align: right; padding-top: 4px; }
+}
+
+.contact-card .mono { word-break: break-word; }
+
+/* Inline deploy-grid (checkout.html) — replace inline 1fr 1fr
+   with a class so we can collapse on mobile. */
+.deploy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 640px) { .deploy-grid { grid-template-columns: 1fr; } }
+
+.step__actions { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+.step__actions .btn { flex: 1 1 auto; min-width: 0; }
+@media (max-width: 480px) {
+  .step__actions { flex-direction: column; align-items: stretch; }
+  .step__actions .btn { width: 100%; }
+}
+
+.step__terms { display: flex; align-items: flex-start; gap: 8px; margin: 16px 0; padding-top: 16px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-2); min-width: 0; }
+.step__terms label { word-break: break-word; min-width: 0; }
+
+.pay-option { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+@media (max-width: 480px) {
+  .pay-option__head { flex: 1 1 auto; min-width: 0; }
+  .pay-option__head > div { min-width: 0; }
+  .pay-option__sub { font-size: 11px; }
+}
+
+/* 404 actions */
+.not-found__actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.not-found__actions .btn { min-width: 0; flex: 1 1 auto; justify-content: center; }
+.not-found__actions .btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+@media (max-width: 380px) {
+  .not-found__actions { flex-direction: column; align-items: stretch; }
+}
+
+/* ---- (b) about / tools / navigation ----------------- */
+
+@media (max-width: 480px) {
+  .about-stats { grid-template-columns: 1fr; padding: 24px 16px; }
+}
+
+/* tool card badge: convert from absolute to inline on
+   mobile so it stops colliding with the title. */
+@media (max-width: 768px) {
+  .tool-card__head { flex-wrap: wrap; }
+  .tool-card__badge { position: static; align-self: flex-start; }
+}
+
+/* ---- (c) pricing + dashboard ------------------------ */
+
+@media (max-width: 768px) {
+  .tier { padding: 24px 20px; }
+  .tier__amount { font-size: 36px; }
+  .tier--highlighted { transform: none; }
+  .compare-table th, .compare-table td { padding: 12px 8px; font-size: 12px; }
+}
+
+/* dashboard welcome-strip 3-col grid breaks 1fr when
+   min-width: 140px on each cell exceeds the viewport. */
+@media (max-width: 1024px) { .welcome-stat { min-width: 0; } }
+@media (max-width: 480px) {
+  .welcome-strip__stats { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .feed-panel__head { flex-wrap: wrap; gap: 8px; }
+  .feed-panel__head-meta { width: 100%; justify-content: flex-end; }
+  .feed-panel__head-meta > span { display: none; }
+  .signal__tags { flex-wrap: wrap; }
+  .signal__id { width: 100%; }
+}
+
+/* Show the feed panel before the sidebar on phone so the
+   signal feed (the actual content) is above the fold. */
+@media (max-width: 1024px) {
+  .feed-panel { order: -1; }
+}
+
+/* ---- (d) search + category -------------------------- */
+
+@media (max-width: 480px) {
+  .research-bento { padding: 20px 16px; margin: 24px 0; }
+  .paper-row { padding: 12px; gap: 10px; }
+  .research-bento__head { flex-direction: column; gap: 12px; align-items: flex-start; }
+  .result-tool__head { flex-direction: column; align-items: flex-start; }
+  .result-tool__head .result-tool__actions { width: 100%; justify-content: space-between; min-width: 0; }
+  .sub-filter { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .sub-filter::-webkit-scrollbar { display: none; }
+  .cat-header { padding: 24px 18px; }
+  .pagination button { width: 36px; height: 36px; font-size: 13px; }
+}
+
+@media (max-width: 480px) {
+  .newsletter { padding: 28px 18px; }
+  .newsletter form { flex-direction: column; }
+}
+
+/* ---- (e) news + story ------------------------------- */
+
+/* The featured card uses inline grid-column: span 2. On
+   mobile we want the card to occupy the full row at 1col,
+   not the awkward half-row 2-col layout it would create
+   at 600-768px. */
+@media (max-width: 768px) {
+  .story-card--featured { grid-column: auto !important; }
+  .story-card--featured .story-body { padding: 18px; }
+}
+
+/* The first story-card after .story-grid is the featured
+   one in news.html and the inline style still says
+   "grid-column: span 2". Override that on mobile. */
+@media (max-width: 768px) {
+  .story-grid > [style*="grid-column"] { grid-column: auto !important; }
+}
+
+/* story.html — share rail under the article. */
+@media (max-width: 1024px) {
+  .article-share-rail { width: 100%; order: 2; justify-content: center; padding: 16px 0; }
+  .article-share-rail .share-label { margin-right: 12px; }
+}
+
+@media (max-width: 768px) {
+  .article-author-box { padding: 18px; gap: 14px; }
+  .article-author-box .author-photo { width: 60px; height: 60px; }
+}
+
+@media (max-width: 480px) {
+  .section-header a { font-size: 11px; }
+}
+
+/* ---- (f) author ------------------------------------- */
+
+@media (max-width: 1024px) {
+  .author-feed-layout { grid-template-columns: 1fr !important; gap: 32px !important; }
+}
+
+@media (max-width: 480px) {
+  .author-stats { grid-template-columns: 1fr; gap: 16px; }
+}
+
+.subscribe-cta form { display: flex; flex-direction: column; gap: 12px; }
+.research-area__name, .mention-card__quote { overflow-wrap: anywhere; }
+
+/* Reading progress bar — defensive full-width. */
+.reading-progress { left: 0; right: 0; }
+
+/* ----------------------------------------------------
+   39. Mobile icon navigation bar
+   ----------------------------------------------------
+   A row of 4 icon-only quick links (Home / News / Tools /
+   Pricing) plus a "More" button that opens the existing
+   mobile drawer. Hidden on desktop (>=768px). The row
+   appears at the bottom of the header bar, replacing the
+   single hamburger button. Reduces the number of taps
+   to reach the most-used pages.
+
+   .menu-toggle class is preserved on the "More" button
+   for backwards compatibility with the existing JS that
+   toggles the drawer. main.js queries by id, not class.
+   ---------------------------------------------------- */
+.mobile-icon-nav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: auto;
+}
+@media (min-width: 768px) {
+  .mobile-icon-nav { display: none; }
+}
+.mobile-icon-nav .icon-btn {
+  display: inline-flex;   /* override .header-actions .icon-btn { display: none } */
+  padding: 8px;
+}
+.mobile-icon-nav .icon-btn svg { width: 20px; height: 20px; }
+
+/* ----------------------------------------------------
+   40. Professional polish features
+   ----------------------------------------------------
+   Three new user-facing features:
+     a) Category-tab is-active indicator (cyan underline)
+     b) data-bookmark save button styling
+     c) Back-to-top floating button
+   Plus a story-grid empty state for the category filter.
+   ---------------------------------------------------- */
+
+/* (a) Active state on the sticky category tabs.
+      The category-tabs a is .is-active when the current
+      ?cat= matches, set by main.js section 18. */
+.category-tabs a {
+  position: relative;
+  padding: 4px 2px;
+  transition: color .2s ease;
+}
+.category-tabs a.is-active { color: var(--cyan); }
+.category-tabs a::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 2px;
+  background: var(--cyan);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .2s ease;
+}
+.category-tabs a.is-active::after { transform: scaleX(1); }
+.category-tabs a:hover { color: var(--cyan); }
+
+/* (b) Bookmark button — same shape as the share buttons. */
+[data-bookmark] {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-2);
+  transition: all .2s ease;
+  cursor: pointer;
+}
+[data-bookmark] svg { width: 18px; height: 18px; }
+[data-bookmark]:hover { color: var(--cyan); border-color: var(--cyan); }
+[data-bookmark].is-saved {
+  color: var(--cyan);
+  border-color: var(--cyan);
+  background: rgba(69, 237, 246, 0.08);
+}
+[data-bookmark].is-saved svg { fill: var(--cyan); }
+
+/* (c) Back-to-top floating button. Created on demand by
+      main.js section 29, hidden by default, slides up
+      when the user has scrolled past 600px. */
+.back-to-top {
+  position: fixed;
+  right: 20px; bottom: 20px;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--navy);
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  z-index: 90;
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: opacity .2s ease, transform .2s ease, background .2s ease;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.back-to-top.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.back-to-top:hover {
+  background: var(--cyan);
+  color: var(--void);
+}
+@media (max-width: 480px) {
+  .back-to-top { right: 14px; bottom: 14px; width: 40px; height: 40px; }
+}
+
+/* story-grid empty state — shows when the category filter
+   matches no cards. */
+.story-grid-empty {
+  grid-column: 1 / -1;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-2);
+  font-size: 15px;
+  border: 1px dashed var(--border);
+  border-radius: var(--card-radius);
+}
+
+/* ----------------------------------------------------
+   41. Mobile-only horizontal-scroll lock
+   ----------------------------------------------------
+   Scoped to @media (max-width: 768px) per the user's
+   request. Desktop view is not affected, so the
+   megamenu, compare table, and other intentional
+   horizontal arrangements keep their full layout.
+
+   The three rules:
+     1. Lock html + body so the page itself can never be
+        wider than the viewport, and any child that tries
+        to spill past the edge is clipped (no scrollbar,
+        no rubber-band).
+     2. Lock common containers explicitly, in case they
+        were positioned with negative offsets or absolute
+        children that escape their parent. The selectors
+        include both the user's named classes
+        (.nav-menu / .category-bar / .main-wrapper) and
+        the actual classes used in this codebase
+        (.site-header, .category-tabs, .featured-grid,
+        .terminal-grid, .story-grid) so the rule works
+        whether the future author reaches for the user's
+        naming or the existing naming.
+     3. Allow link labels inside the nav to wrap onto
+        multiple lines rather than forcing them onto one
+        line that could overflow the viewport.
+   ---------------------------------------------------- */
+@media (max-width: 768px) {
+  /* 1. Prevent all left-to-right / right-to-left layout shifting and swiping */
+  html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* 2. Lock any horizontally overflowing containers.
+        The user's named classes are first, then the
+        actual classes used in this codebase. */
+  .nav-menu,
+  .category-bar,
+  .main-wrapper,
+  .site-header,
+  .featured-grid,
+  .featured-grid__main,
+  .terminal-grid,
+  .story-grid,
+  .container,
+  main {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  /* 3. Ensure content wraps cleanly to fit the viewport
+        width instead of overflowing. */
+  .category-link,
+  .nav-item,
+  .primary-nav a,
+  .category-tabs a,
+  .drawer-nav a,
+  .drawer-categories a {
+    white-space: normal;
+  }
+
+  /* 4. EXCEPTIONS — these are intentional horizontal-scroll
+        containers that must keep working on mobile. The
+        category tabs (sticky under header), the sub-filter
+        chip row (category page), code blocks (story body),
+        and the pricing compare table all rely on
+        overflow-x: auto. We restore that here so the user
+        can still scroll through long chip rows. */
+  .category-tabs,
+  .category-tabs .container,
+  .sub-filter,
+  .article-content pre,
+  .compare-table-wrapper,
+  .article-content pre code,
+  .just-in__inner {
+    max-width: 100% !important;
+    overflow-x: auto !important;
+  }
+}
