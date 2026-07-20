@@ -71,14 +71,35 @@
 
 <main id="main">
 
-  <!-- Hero slider: 5 full-bleed slides, auto-advance every 5s
-       (see main.js section 5). Each <article> is one slide;
-       the .is-active class drives the cross-fade. -->
+  <!-- Hero slider: intro video + 5 featured-story image slides.
+       Slide 1 plays the branded Sinaquant intro video once,
+       then the carousel moves through 5 AI story images.
+       Auto-advance pauses on hover/touch; video pauses when
+       the slide is not active. -->
   <section class="container" style="padding-top:24px">
-    <div class="hero-slider" aria-roledescription="carousel" aria-label="Featured stories">
+    <div class="hero-slider hero-slider--media" aria-roledescription="carousel" aria-label="Featured stories">
       <div class="hero-slider__viewport">
 
-        <article class="hero-slider__slide is-active" style="background-image:linear-gradient(135deg,#0B1C36,#133B5C)">
+        <!-- Slide 1: Sinaquant intro video -->
+        <article class="hero-slider__slide is-active hero-slider__slide--video" data-slide-type="video">
+          <video class="hero-slider__media" id="heroIntroVideo" autoplay muted playsinline loop preload="auto">
+            <source src="assets/videos/sinaquant-intro.mp4" type="video/mp4">
+          </video>
+          <div class="hero-slider__content">
+            <span class="tag tag--solid-electric">Welcome</span>
+            <h1 class="hero-slider__title">Sinaquant — Intelligent Future AI News</h1>
+            <p class="hero-slider__excerpt">Daily intelligence on Agentic AI, LLMs, hardware, policy and the agentic future. Precision data for the architects of tomorrow.</p>
+            <div class="hero-slider__actions">
+              <a class="btn btn-primary" href="news.html">Explore Intelligence
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </a>
+              <a class="btn btn-ghost" href="#featured">View Data Map</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Slide 2 -->
+        <article class="hero-slider__slide hero-slider__slide--image" data-slide-type="image" style="background-image:url('https://images.unsplash.com/photo-1518770660439-4636190af475?w=1600&q=80')">
           <div class="hero-slider__content">
             <span class="tag tag--solid-electric">Exclusive Report</span>
             <h1 class="hero-slider__title">The Singularity Shift: How Agentic AI Is Rewriting the Global Economic Ledger</h1>
@@ -87,25 +108,12 @@
               <a class="btn btn-primary" href="story.html">Read Investigation
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
               </a>
-              <a class="btn btn-ghost" href="#featured">View Data Map</a>
             </div>
           </div>
         </article>
 
-        <article class="hero-slider__slide" style="background-image:linear-gradient(135deg,#133B5C,#070B15)">
-          <div class="hero-slider__content">
-            <span class="tag">Agentic AI</span>
-            <h1 class="hero-slider__title">The Sovereign Agent: How LLMs Are Becoming Autonomous Digital Entities</h1>
-            <p class="hero-slider__excerpt">Breakthrough protocols allow large language models to manage complex, multi-step tasks across isolated environments without human intervention.</p>
-            <div class="hero-slider__actions">
-              <a class="btn btn-primary" href="story.html">Read Report
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-              </a>
-            </div>
-          </div>
-        </article>
-
-        <article class="hero-slider__slide" style="background-image:linear-gradient(135deg,#0F1A2E,#2D5CE8)">
+        <!-- Slide 3 -->
+        <article class="hero-slider__slide hero-slider__slide--image" data-slide-type="image" style="background-image:url('https://images.unsplash.com/photo-1633412802994-5c058f151b66?w=1600&q=80')">
           <div class="hero-slider__content">
             <span class="tag tag--cyan">Hardware</span>
             <h1 class="hero-slider__title">Photonic Computing Hits Commercial Scale</h1>
@@ -118,20 +126,22 @@
           </div>
         </article>
 
-        <article class="hero-slider__slide" style="background-image:linear-gradient(135deg,#1A1F2E,#319CE7)">
+        <!-- Slide 4 -->
+        <article class="hero-slider__slide hero-slider__slide--image" data-slide-type="image" style="background-image:url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1600&q=80')">
           <div class="hero-slider__content">
-            <span class="tag tag--sky">Policy</span>
-            <h1 class="hero-slider__title">EU AI Act v2.0: The Compliance Paradox for Seed-Stage Startups</h1>
-            <p class="hero-slider__excerpt">New regulatory frameworks are inadvertently favoring incumbent tech giants over emerging architectural innovators. A Sinaquant special report.</p>
+            <span class="tag">Agentic AI</span>
+            <h1 class="hero-slider__title">The Sovereign Agent: How LLMs Are Becoming Autonomous Digital Entities</h1>
+            <p class="hero-slider__excerpt">Breakthrough protocols allow large language models to manage complex, multi-step tasks across isolated environments without human intervention.</p>
             <div class="hero-slider__actions">
-              <a class="btn btn-primary" href="story.html">Read Brief
+              <a class="btn btn-primary" href="story.html">Read Report
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
               </a>
             </div>
           </div>
         </article>
 
-        <article class="hero-slider__slide" style="background-image:linear-gradient(135deg,#0B1C36,#45EDF6)">
+        <!-- Slide 5 -->
+        <article class="hero-slider__slide hero-slider__slide--image" data-slide-type="image" style="background-image:url('https://images.unsplash.com/photo-1535378620166-273708d44e4c?w=1600&q=80')">
           <div class="hero-slider__content">
             <span class="tag">Research</span>
             <h1 class="hero-slider__title">Bio-Digital Convergence: LLMs in Drug Discovery</h1>
@@ -144,14 +154,29 @@
           </div>
         </article>
 
+        <!-- Slide 6 -->
+        <article class="hero-slider__slide hero-slider__slide--image" data-slide-type="image" style="background-image:url('https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=1600&q=80')">
+          <div class="hero-slider__content">
+            <span class="tag tag--sky">Policy</span>
+            <h1 class="hero-slider__title">EU AI Act v2.0: The Compliance Paradox for Seed-Stage Startups</h1>
+            <p class="hero-slider__excerpt">New regulatory frameworks are inadvertently favoring incumbent tech giants over emerging architectural innovators. A Sinaquant special report.</p>
+            <div class="hero-slider__actions">
+              <a class="btn btn-primary" href="story.html">Read Brief
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </a>
+            </div>
+          </div>
+        </article>
+
       </div>
 
       <div class="hero-slider__dots" role="tablist" aria-label="Slide navigation">
-        <button class="is-active" aria-label="Slide 1"></button>
-        <button aria-label="Slide 2"></button>
-        <button aria-label="Slide 3"></button>
-        <button aria-label="Slide 4"></button>
-        <button aria-label="Slide 5"></button>
+        <button class="is-active" aria-label="Intro video"></button>
+        <button aria-label="Economic ledger"></button>
+        <button aria-label="Photonic computing"></button>
+        <button aria-label="Sovereign agent"></button>
+        <button aria-label="Drug discovery"></button>
+        <button aria-label="EU AI Act"></button>
       </div>
 
       <div class="hero-slider__nav">

@@ -240,14 +240,15 @@ function sinaquantInit() { 'use strict';
   /* ----------------------------------------------------
      5. Hero slider
      ----------------------------------------------------
-     Cross-fade auto-advance every 5s. Supports:
+     Cross-fade auto-advance. Supports:
+     • Intro video slide (autoplay, pauses when hidden)
+     • 5 full-bleed image slides
      • Prev / next buttons
      • Dot pagination
      • Touch swipe (50px threshold)
      • Pause on hover or touch
-     Clicking any control also restarts the auto-advance
-     timer so the slide you jumped to gets a full window
-     before advancing.
+     The intro video slide gets a longer first interval so
+     the brand film can finish before the carousel starts.
      ---------------------------------------------------- */
   const slider = document.querySelector('.hero-slider');
   if (slider) {
@@ -255,17 +256,47 @@ function sinaquantInit() { 'use strict';
     const dots   = slider.querySelectorAll('.hero-slider__dots button');
     const prev   = slider.querySelector('[data-slider-prev]');
     const next   = slider.querySelector('[data-slider-next]');
+    const video  = slider.querySelector('#heroIntroVideo');
     let active = 0;
     let timer = null;
     const INTERVAL = 5000;
+    const INTRO_INTERVAL = 7000;   // allow the 7s intro video to play
+
+    const manageVideo = () => {
+      if (!video) return;
+      const isVideoSlide = slides[active].dataset.slideType === 'video';
+      if (isVideoSlide) {
+        video.currentTime = 0;
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    };
 
     const goTo = (i) => {
       active = (i + slides.length) % slides.length;
-      slides.forEach((s, idx) => s.classList.toggle('is-active', idx === active));
+      slides.forEach((s, idx) => {
+        s.classList.toggle('is-active', idx === active);
+        // Restart the CSS zoom animation on image slides.
+        if (idx === active && s.dataset.slideType === 'image') {
+          s.style.animation = 'none';
+          void s.offsetWidth; // force reflow
+          s.style.animation = '';
+        }
+      });
       dots.forEach((d, idx) => d.classList.toggle('is-active', idx === active));
+      manageVideo();
     };
-    const start = () => { stop(); timer = setInterval(() => goTo(active + 1), INTERVAL); };
-    const stop  = () => { if (timer) clearInterval(timer); };
+
+    const scheduleNext = () => {
+      const delay = active === 0 ? INTRO_INTERVAL : INTERVAL;
+      timer = setTimeout(() => {
+        goTo(active + 1);
+        scheduleNext();
+      }, delay);
+    };
+    const start = () => { stop(); scheduleNext(); };
+    const stop  = () => { if (timer) clearTimeout(timer); };
 
     if (slides.length) {
       goTo(0);
@@ -284,7 +315,7 @@ function sinaquantInit() { 'use strict';
       slider.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; }, { passive: true });
       slider.addEventListener('touchend',   (e) => {
         const dx = e.changedTouches[0].clientX - sx;
-        if (Math.abs(dx) > 50) goTo(active + (dx < 0 ? 1 : -1));
+        if (Math.abs(dx) > 50) { goTo(active + (dx < 0 ? 1 : -1)); start(); }
       });
 
       start();

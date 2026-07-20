@@ -820,6 +820,57 @@ body.is-locked { overflow: hidden; }
   content: ''; position: absolute; inset: 0;
   background: linear-gradient(to top, rgba(7,11,21,0.95) 0%, rgba(7,11,21,0.6) 40%, rgba(7,11,21,0.2) 70%, transparent 100%);
 }
+
+/* Media slides: video + image backgrounds need a different
+   scrim in light mode so the white text stays readable. */
+.light-mode .hero-slider__slide--image::after,
+.light-mode .hero-slider__slide--video::after {
+  background: linear-gradient(to top, rgba(7,11,21,0.92) 0%, rgba(7,11,21,0.55) 45%, rgba(7,11,21,0.15) 75%, transparent 100%);
+}
+
+/* Video slide: the branded intro fills the viewport without
+   distortion. A subtle zoom-in animation gives it momentum. */
+.hero-slider__slide--video {
+  align-items: center;            /* centre the welcome text */
+  justify-content: center;
+  text-align: center;
+}
+.hero-slider__slide--video .hero-slider__content {
+  align-items: center;
+  max-width: 900px;
+  padding-top: 120px;
+}
+.hero-slider__slide--video .hero-slider__title,
+.hero-slider__slide--video .hero-slider__excerpt {
+  text-shadow: 0 2px 20px rgba(7,11,21,0.8);
+}
+.hero-slider__media {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  transform: scale(1.05);
+  animation: heroVideoZoom 7s ease-out forwards;
+}
+@keyframes heroVideoZoom {
+  from { transform: scale(1.12); }
+  to   { transform: scale(1.05); }
+}
+
+/* Image slides get a slow Ken Burns zoom for a premium feel. */
+.hero-slider__slide--image {
+  animation: heroImageZoom 6s ease-out forwards;
+  animation-play-state: paused;
+}
+.hero-slider__slide--image.is-active { animation-play-state: running; }
+@keyframes heroImageZoom {
+  from { background-size: 105%; }
+  to   { background-size: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-slider__media,
+  .hero-slider__slide--image { animation: none; }
+}
 .hero-slider__content {
   position: relative; z-index: 2;
   max-width: 720px;
